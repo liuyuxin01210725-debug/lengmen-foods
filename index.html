@@ -1218,6 +1218,164 @@ const FOODS = [
     links:[{label:"FoodStruct：鸡胸 vs 鸡腿对比", url:"https://foodstruct.com/compare/chicken-breast-vs-chicken-thigh"}],
     secondary:null
   }
+  ,
+  // ── 第五批：日常高频 + 真有认知差（不无限扩冷门）──
+  {
+    name:"白米饭 / 糙米", tier:"amber",
+    verdict:"主食可以吃，但「煮熟冷藏再加热」比「换糙米」这个升级更值得做；糙米的砷反而值得注意。",
+    targets:["血糖","肠胃"], risks:["孕妇","婴儿","糖尿病用药"],
+    good:"米饭煮熟后冷藏 ≥12-24 小时再加热（隔夜饭/炒饭），会生成抗性淀粉，餐后血糖反应可降约 20-35%；1 型糖尿病人试验中峰值血糖 9.9 vs 11 mmol/L。",
+    warn:"糙米无机砷平均比白米高约 80%（砷富集在麸皮）；FDA 仅对婴儿米粉设限。网上「冷饭抗性淀粉↑10 倍、热量降 50%」是单个小研究的夸大，真实是降血糖反应 20-35%，不是减热量。",
+    hype:"「糙米一定比白米健康得多」——纤维/营养差距被夸大，砷还更高；真正被忽略的是「冷藏再热」这个免费升级。",
+    use:{freq:"作日常主食，每餐一拳大小。", scene:"想控糖时优先吃「隔夜冷藏后再加热」的饭。", caution:"孕妇、婴幼儿限制糙米/米制品（砷）；糖尿病人优选冷藏再热。"},
+    evChips:["冷藏 RCT：餐后血糖↓20-35%","1 型糖尿病人试验","糙米无机砷+80%","「10 倍抗性淀粉」是夸大"],
+    links:[{label:"Nutrition & Diabetes（2022）：冷藏米饭与 1 型糖尿病", url:"https://www.nature.com/articles/s41387-022-00196-1"},{label:"Wiley Risk Analysis（2025）：糙米 vs 白米砷", url:"https://onlinelibrary.wiley.com/doi/10.1111/risa.70008"}],
+    secondary:null
+  },
+  {
+    name:"土豆", tier:"amber",
+    verdict:"煮/蒸土豆是高饱腹低热量的好主食，「吃土豆发胖」是炸/加黄油的锅；但发青、发芽的土豆龙葵素是真有毒。",
+    targets:["血糖","营养密度","肠胃"], risks:["婴儿"],
+    good:"土豆是已知饱腹指数最高的主食之一；煮后冷却的抗性淀粉（RS3）进一步增加饱腹、改善饱腹激素。水煮土豆热量密度低。",
+    warn:"发青、发芽、损伤的土豆龙葵素（茄碱）升高：约 2-5 mg/kg 体重即可中毒、≥6 mg/kg 可致命，集中在芽眼、青皮、损伤处。儿童更敏感。",
+    hype:"「土豆是增肥食物」——发胖来自油炸/黄油/薯条等做法，不是土豆本身。",
+    use:{freq:"可作日常主食替代部分米面，每次 1-2 个中等。", scene:"减脂期想扛饿时，水煮/蒸/烤（不加油）。", caution:"发青发芽必须丢弃或大幅削除；油炸做法另算。"},
+    evChips:["饱腹指数最高之一","煮后冷却 RS3↑","龙葵素 2-5mg/kg 中毒","做法决定热量"],
+    links:[{label:"Food Chemistry（2016）：土豆抗性淀粉随烹饪/温度变化", url:"https://www.sciencedirect.com/science/article/abs/pii/S0308814616305052"},{label:"PMC（2022）：疑似龙葵素中毒病例", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC9648270/"}],
+    secondary:null
+  },
+  {
+    name:"红薯", tier:"amber",
+    verdict:"红薯升糖高低几乎全看做法——水煮 GI 约 41-50（低），烤红薯 GI 却高达 82-94（高）；「减肥神器」有理但它仍是碳水。",
+    targets:["血糖","肠胃","营养密度"], risks:["肾结石"],
+    good:"膳食纤维 + 高水分带来饱腹感，单位热量饱腹优于白米；维生素 A / 纤维丰富。",
+    warn:"高草酸，肾结石高危人群慎吃（每杯熟红薯约 28mg 草酸）；易产气胀气；烤制后 GI 很高（堪比白面包）。",
+    hype:"「红薯怎么吃都减肥/低升糖」——它本质是碳水，且烤红薯 GI 高达 82-94。",
+    use:{freq:"替代部分主食，每次拳头大小。", scene:"减脂控糖时优先「水煮/蒸」，弃掉煮的水可减草酸。", caution:"肾结石史者限量并搭配含钙食物；易胀气者减量。"},
+    evChips:["水煮 GI 41-50","烤 GI 82-94","草酸~28mg/杯","高饱腹纤维"],
+    links:[{label:"PMC 3205609：10 种红薯品种加工方式与 GI", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3205609/"}],
+    secondary:null
+  },
+  {
+    name:"花生 / 花生酱", tier:"amber",
+    verdict:"花生本身是好蛋白好脂肪，真正隐患是储存不当产生的黄曲霉毒素（一类致癌物、伤肝）；很多市售花生酱还偷加糖和棕榈油。",
+    targets:["心血管","营养密度","运动表现"], risks:["肝功能"],
+    good:"优质植物蛋白 + 单不饱和脂肪酸；RCT/荟萃显示花生摄入可改善部分心血管风险因素。",
+    warn:"储存不当的花生易长黄曲霉毒素（IARC 一类致癌物，与肝癌相关）；香港消委会检测 60% 花生酱样本检出、2 个超欧盟限值。市售花生酱常加糖 + 棕榈油，高脂高热量。花生过敏。",
+    hype:"「花生酱 = 健康」——很多产品加糖和棕榈油；霉变/哈喇味花生的黄曲霉风险才是重点。",
+    use:{freq:"每天一小把 / 1-2 汤匙纯花生酱。", scene:"运动后/代餐补蛋白；选配料表只有花生（和盐）的产品。", caution:"花生过敏者禁；密封冷藏，霉变/哈喇味丢弃；肝功能差者更要避开污染品。"},
+    evChips:["黄曲霉=一类致癌物","60% 花生酱样本检出","心血管 RCT/荟萃","MUFA+蛋白"],
+    links:[{label:"PMC 9011914：花生与心血管风险 RCT 及荟萃", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9011914/"},{label:"PMC 7009717：花生黄曲霉限值公共健康评估", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC7009717/"}],
+    secondary:null
+  },
+  {
+    name:"虾", tier:"green",
+    verdict:"「虾胆固醇高所以要少吃」是过时观念——对多数人膳食胆固醇对血胆固醇影响很小；虾试验里它反而升 HDL、降甘油三酯。",
+    targets:["心血管","营养密度","运动表现"], risks:["痛风"],
+    good:"高蛋白、低脂，富含维生素 B12 和硒（一份约 B12 78%DV、硒 102%DV）；交叉试验显示虾使 HDL 升约 12%、甘油三酯降约 13%。",
+    warn:"含嘌呤（中等），痛风/高尿酸人群需控制；部分海产可能含重金属；同一试验中 LDL 也升约 7%。",
+    hype:"「虾胆固醇太高、心脏病人不能吃」——现代证据显示膳食胆固醇对多数人血脂影响有限。",
+    use:{freq:"每周可吃数次，每次约 100-150g。", scene:"增肌/减脂期补优质蛋白；清蒸水煮优于油炸。", caution:"痛风/高尿酸发作期限量；甲壳类过敏者禁。"},
+    evChips:["膳食胆固醇影响小","HDL+12% / TG−13%","B12+硒高","嘌呤中等"],
+    links:[{label:"PubMed 8901790：虾摄入对血脂的交叉试验", url:"https://pubmed.ncbi.nlm.nih.gov/8901790/"}],
+    secondary:{text:"通俗版：", label:"Cleveland Clinic：虾营养", url:"https://health.clevelandclinic.org/is-shrimp-healthy"}
+  },
+  {
+    name:"无糖豆浆", tier:"green",
+    verdict:"「豆浆喝多了男人女性化、会得乳腺癌」是被 meta 反复证伪的谣言——异黄酮是植物雌激素，不等于人体雌激素。",
+    targets:["营养密度","心血管"], risks:["甲状腺","药物相互作用"],
+    good:"优质植物蛋白（含全部必需氨基酸）；41 项研究、1753 名男性的 meta 显示对睾酮、雌二醇、SHBG 均无显著影响；异黄酮摄入与乳腺癌风险呈负相关（亚洲人群 OR≈0.59）。",
+    warn:"吃甲状腺药（左甲状腺素）者需与豆浆错开时间——异黄酮可能干扰吸收；市售调味/甜豆浆每杯可加 5-15g 糖，别把含糖饮料当健康食品。",
+    hype:"「植物雌激素让男人女性化、诱发乳腺癌」——临床证据不支持；甜豆浆≠无糖豆浆。",
+    use:{freq:"每天 1-2 杯（约 240-480ml）无糖豆浆。", scene:"早餐替代含糖饮料；健身/控糖人群低糖蛋白补充。", caution:"选无糖/低糖款看配料表；吃甲状腺药者与服药间隔 ≥3 小时。"},
+    evChips:["meta（41 研究/1753 男性）","对男性激素无影响","乳腺癌不增/偏保护"],
+    links:[{label:"PubMed 33383165：大豆与男性激素 meta", url:"https://pubmed.ncbi.nlm.nih.gov/33383165/"},{label:"PLOS One：异黄酮与乳腺癌 meta", url:"https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0089288"}],
+    secondary:null
+  },
+  {
+    name:"猕猴桃", tier:"green",
+    verdict:"补维 C 大家想到橙子——但猕猴桃才是常见水果里的「维 C 之王」，每 100g 远超橙子。",
+    targets:["营养密度","免疫","睡眠","皮肤"], risks:["肾结石"],
+    good:"每 100g 绿猕猴桃约 93mg 维 C（金果可达约 161mg），橙子仅约 53mg。台湾 2011 小型试验：睡前 1 小时吃 2 颗、连续 4 周，主观睡眠评分/入睡潜伏期/入睡后清醒分别降约 42%/35%/29%。",
+    warn:"含主要过敏原 actinidin（猕猴桃蛋白酶），可致口腔过敏综合征，与桦树/草花粉交叉反应；草酸偏高（绿果约 13-84mg/100g），肾结石史者注意。",
+    hype:"睡眠改善的证据来自样本很小的试验（24-26 人，部分组间无显著差异），别当安眠药。",
+    use:{freq:"每天 1-2 颗。", scene:"想补维 C 时优于橙子；想试睡眠可睡前 1 小时吃 2 颗。", caution:"吃后口腔刺痒可能是 actinidin 或草酸；过敏体质、肾结石史者谨慎。"},
+    evChips:["维 C 约橙子 2-3 倍","睡眠小型 RCT（n=24）","高草酸"],
+    links:[{label:"Springer / Nutrire：猕猴桃睡眠 RCT 综述", url:"https://link.springer.com/article/10.1186/s41110-024-00297-0"},{label:"PMC：猕猴桃草酸含量", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5302238/"}],
+    secondary:null
+  },
+  {
+    name:"榴莲", tier:"amber",
+    verdict:"「水果之王、随便吃」是误区——榴莲是高糖高热量水果，还跟酒精有真实的生化「打架」。",
+    targets:["营养密度"], risks:["糖尿病用药","肾病/高钾","药物相互作用"],
+    good:"营养上富含钾、纤维、维生素；适量（100-150g / 2-3 瓣）对健康人无碍。",
+    warn:"每 100g 约 147 kcal、19g 糖，是热量最高的水果之一。含硫化合物会抑制乙醛脱氢酶（ALDH，体外最高约 70%），与酒同食可能引发类双硫仑反应（脸红、恶心、心悸）。高钾（约 436mg/100g，高于香蕉），肾病/透析者有诱发高钾血症的个案。",
+    hype:"「水果之王营养全面可以多吃」——它实际高糖高热量；「榴莲配酒会致命」是夸大（无致死证据），但确有不适的生化基础。",
+    use:{freq:"偶尔吃，每次约 100-150g（2-3 瓣）。", scene:"当高热量甜食而非日常水果；糖尿病/减重者严格限量。", caution:"吃榴莲前后避免饮酒；慢性肾病、高钾、透析者避免。"},
+    evChips:["147kcal/100g·19g 糖","抑制 ALDH（体外 70%）","高钾 436mg/100g"],
+    links:[{label:"Food Chemistry：榴莲提取物抑制 ALDH", url:"https://www.sciencedirect.com/science/article/abs/pii/S0308814609004324"},{label:"PMC 8649430：榴莲致高钾血症个案", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8649430/"}],
+    secondary:null
+  },
+  {
+    name:"三文鱼 / 沙丁鱼", tier:"green",
+    verdict:"「鱼油胶囊没用 = 吃鱼没用」是混淆——吃整条鱼和吞鱼油胶囊，证据完全不同。",
+    targets:["心血管","抗炎","关节骨骼","营养密度"], risks:["孕妇"],
+    good:"多项大型 RCT 显示鱼油补充剂对一般人群心血管无显著获益，但每周吃 1-2 次鱼始终与更低心血管风险、猝死相关。沙丁鱼低汞、连骨吃每罐约 350mg 钙（约孕期日需 1/3）+ 富含 DHA/EPA。",
+    warn:"养殖三文鱼脂肪更高、单位 omega-3 比例较低，早期污染物（PCB/二噁英）较高（近年因监管改善已大幅下降）；孕期需选低汞鱼并控制总量。",
+    hype:"「鱼油胶囊护心」——大型 RCT 多为阴性；别把吃鱼的好处等同于补鱼油。",
+    use:{freq:"每周约 2 份（每份约 100g 熟重）。", scene:"日常优先用整鱼替代鱼油胶囊；孕期选沙丁鱼等低汞鱼补 DHA+钙。", caution:"孕期遵低汞鱼指南、每周约 2-3 份；养殖/野生多样化食用。"},
+    evChips:["吃鱼↓心血管","鱼油胶囊 RCT 多阴性","沙丁鱼低汞·钙 350mg/罐"],
+    links:[{label:"美国心脏病学会 ACC：吃鱼 vs 鱼油与心血管", url:"https://www.acc.org/Latest-in-Cardiology/Articles/2021/11/01/12/41/Fish-Intake-Fish-Oil-and-Cardiovascular-Health"}],
+    secondary:{text:"通俗版：", label:"Consumer Reports：沙丁鱼", url:"https://www.consumerreports.org/health/nutrition-healthy-eating/are-sardines-good-for-you-a5107347379/"}
+  },
+  {
+    name:"辣椒", tier:"green",
+    verdict:"「吃辣伤胃、长痔疮」被严重夸大——大型队列里吃辣的人全因死亡率反而更低；真正的禁忌是「已有」病灶的人。",
+    targets:["心血管","抗炎"], risks:[],
+    good:"56 万人荟萃：吃辣 vs 几乎不吃，全因死亡风险 HR≈0.87（低 13%）、心血管死亡 HR≈0.89、癌症死亡 HR≈0.92（观察性）。辣椒素临床上还被发现能促进胃黏膜黏液分泌、对抗酒精和 NSAIDs 造成的胃损伤。",
+    warn:"「吃辣→溃疡」是旧观念：消化性溃疡真凶是幽门螺杆菌和 NSAIDs。但已有活动性溃疡、肠易激（IBS）或急性痔疮发作的人，吃辣会诱发/加重不适（不是制造新病灶）。",
+    hype:"「辣椒伤胃壁」「直接导致痔疮/溃疡」——无人体证据支持辣椒素损伤健康胃黏膜，方向反而可能相反。",
+    use:{freq:"每周 ≥1 次即与较低死亡率相关，无需顿顿吃。", scene:"正常人日常佐餐。", caution:"活动性胃溃疡、IBS 发作期、痔疮急性发作期先避开——这些是「有病灶才忌」，不是普遍禁忌。"},
+    evChips:["56 万人队列荟萃","全因死亡↓13%","观察性·非因果","溃疡真凶是幽门螺杆菌"],
+    links:[{label:"PMC 8463741：辣椒摄入与死亡率荟萃", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8463741/"},{label:"PMC 5222470：红辣椒摄入与死亡率队列", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5222470/"}],
+    secondary:null
+  },
+  {
+    name:"茶（红茶 / 乌龙）", tier:"amber",
+    verdict:"你那杯浓茶正在「拦截」饭里的铁——尤其是植物来源的非血红素铁。",
+    targets:["心血管"], risks:["孕妇","抗凝/手术","药物相互作用"],
+    good:"38 项队列、约 196 万人荟萃：高茶摄入与全因死亡↓约 10%、心血管死亡↓约 14%；每天 3 杯与缺血性卒中↓24% 相关（观察性）。",
+    warn:"鞣酸（单宁）与非血红素铁形成不溶复合物：随餐喝红茶可使铁吸收下降约 60-70%、剂量依赖。注意：只影响植物铁/铁剂，对肉类血红素铁影响小。",
+    hype:"把茶当「护心血管神药」——是观察性关联不是因果；氟在每天 ≤1 升常规量下通常不超推荐线。",
+    use:{freq:"日常可饮；关键是「时间」不是「禁喝」。", scene:"餐间喝（两餐之间）把铁抑制从~60-70% 降到~20%。", caution:"缺铁/孕妇/素食者：富铁餐和铁剂前后至少隔 1-2 小时再喝茶；服华法林者咨询医生。"},
+    evChips:["196 万人队列荟萃","随餐铁吸收↓60-70%","剂量依赖","观察性·非因果"],
+    links:[{label:"PMC 11573487：茶与死亡率 38 队列荟萃", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC11573487/"},{label:"PubMed 1168162：茶对铁吸收的影响", url:"https://pubmed.ncbi.nlm.nih.gov/1168162/"}],
+    secondary:{text:"二级参考：", label:"Linus Pauling Institute：茶", url:"https://lpi.oregonstate.edu/mic/food-beverages/tea"}
+  },
+  {
+    name:"胡萝卜", tier:"green",
+    verdict:"生啃胡萝卜≠高效补 β-胡萝卜素——煮熟+加油才能真正吸收，吃太多还会把皮肤染橙黄。",
+    targets:["营养密度","皮肤","免疫"], risks:[],
+    good:"β-胡萝卜素被细胞壁锁住：煮熟比生吃多约 32% 可利用量，同餐加 5g 脂肪可再提升约 3-5 倍。β-胡萝卜素是维 A 前体，身体按需转化、不会因吃多而维 A 中毒。",
+    warn:"长期大量（约每天 10 根、持续数周）会出现「胡萝卜素血症」：手掌、脚底、面部泛橙黄。区别于黄疸——不染眼白、肝功能正常，停吃后几个月内消退，无害。",
+    hype:"「吃胡萝卜显著改善夜视」——源于二战误导宣传；只有真正维 A 缺乏者补充才改善夜盲。",
+    use:{freq:"日常蔬菜常吃即可。", scene:"蒸/煮/炒到软，搭配一点油脂一起吃。", caution:"别长期单一巨量吃（如每天大量胡萝卜汁），皮肤变橙黄提示吃过头。"},
+    evChips:["煮熟+油吸收提升数倍","胡萝卜素血症可逆","食物 β-胡萝卜素无中毒","夜视是二战神话"],
+    links:[{label:"British J Nutrition（Cambridge）：烹饪对胡萝卜类胡萝卜素生物利用度", url:"https://www.cambridge.org/core/journals/british-journal-of-nutrition/article/effect-of-food-preparation-on-the-bioavailability-of-carotenoids-from-carrots-using-intrinsic-labelling/C4E2B9F580B2F6D142A7E48DC52953D9"},{label:"PMC 5306026：膳食脂肪调节类胡萝卜素吸收", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC5306026/"}],
+    secondary:null
+  },
+  {
+    name:"蘑菇", tier:"green",
+    verdict:"把蘑菇拿去晒太阳——它会像皮肤一样自己「合成」大量维生素 D，量能比肩补剂；但要煮熟吃。",
+    targets:["免疫","关节骨骼","营养密度"], risks:["痛风"],
+    good:"蘑菇含麦角固醇，受 UV/阳光照射转化成维生素 D2：双孢菇晒 15 分钟即升至约 17.6µg/100g 鲜重（约 704 IU），与多脂鱼相当；UV-B 照射可更高。买「UV 处理」蘑菇或自己晒，是廉价补 D 途径。",
+    warn:"生菇含 agaritine（肼类，小鼠弱致癌物），加热降解——所以彻底煮熟。嘌呤中等（约 50-150mg/100g），但真菌嘌呤与痛风关联较弱，适量即可。野生菇有真正的中毒/致命风险，绝不采食来源不明的。",
+    hype:"把「普通货架蘑菇」当现成高维 D 来源——只有经 UV/日晒的才富含维 D2，暗处栽培的含量很低。",
+    use:{freq:"日常常吃，务必煮熟。", scene:"想补维 D：买 UV 处理蘑菇，或鲜菇切面朝上晒 15 分钟~1 小时再煮。", caution:"不吃生蘑菇；绝不食用来源不明的野生菇；痛风者适量。"},
+    evChips:["晒 15 分钟≈704 IU 维 D2","比肩多脂鱼","煮熟降解 agaritine","嘌呤中等"],
+    links:[{label:"J Agric Food Chem：阳光对双孢菇维 D2 生成", url:"https://pubs.acs.org/doi/abs/10.1021/acs.jafc.5b02945"},{label:"PMC 7464819：UV 照射对蘑菇维 D2", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7464819/"}],
+    secondary:null
+  }
 ];
 
 // 深度层：剂量·见效 + 相互作用，按名字合并进 FOODS（加食物时这里可留空）
@@ -1303,6 +1461,20 @@ const DEPTH = {
   "甜菊糖":{dose:"JECFA ADI 4 mg/kg 甜菊糖苷（按糖苷当量算）。", interactions:"无明确药物冲突；与降糖药联用通常无叠加风险（不升血糖）。"},
   "加工肉 vs 未加工红肉":{dose:"加工肉：每周 ≤1 次；未加工红肉：每周 ≤2-3 次约 100-150g/次。", interactions:"无急性药物冲突；与抗凝/痛风用药叠加时注意嘌呤负荷。"},
   "鸡胸肉 vs 鸡腿肉":{dose:"作为主要蛋白来源每周 2-4 次；按目标选部位。", interactions:"无明确药物冲突；带皮版饱和脂肪高。"}
+,
+  "白米饭 / 糙米":{dose:"煮熟后 4°C 冷藏 ≥12-24 小时再加热；糙米先充分淘洗、多水煮降砷。", interactions:"无明确药物冲突。"},
+  "土豆":{dose:"水煮/蒸后冷却提高抗性淀粉；避免油炸。青皮芽眼削除，发绿发芽整颗丢弃。", interactions:"无明确药物冲突。"},
+  "红薯":{dose:"水煮/蒸优于烤；煮后弃水降草酸；搭配含钙食物在肠道结合草酸。", interactions:"无明确药物冲突（肾结石者注意整体草酸）。"},
+  "花生 / 花生酱":{dose:"每天一小把/1-2 汤匙纯花生酱；密封冷藏，霉变/哈喇味不吃。", interactions:"无明确药物冲突。"},
+  "虾":{dose:"清蒸/水煮为主，控油炸和高盐酱；痛风急性期暂避、缓解期适量。", interactions:"无明确药物冲突（痛风注意整体嘌呤）。"},
+  "无糖豆浆":{dose:"每天 1-2 杯（约 240-480ml）无糖豆浆；约 50g 大豆蛋白/天仍无激素影响。", interactions:"⚠️ 左甲状腺素：异黄酮可能降低吸收，服药与豆浆间隔 ≥3 小时。"},
+  "猕猴桃":{dose:"维 C：绿果~93mg、金果~161mg/100g；睡眠试验为睡前 2 颗。", interactions:"与桦树/草花粉过敏交叉反应（口腔过敏综合征）；无明确药物冲突。"},
+  "榴莲":{dose:"单次 100-150g（2-3 瓣）；钾约 436mg/100g。", interactions:"⚠️ 酒精：硫化合物抑制乙醛脱氢酶、乙醛蓄积，类双硫仑反应，与酒同食慎。"},
+  "三文鱼 / 沙丁鱼":{dose:"每周约 2 份（每份约 100g 熟重）；孕期每周约 2-3 份低汞鱼。", interactions:"高剂量 omega-3 补剂理论上影响抗凝/出血（食物量级风险低）；孕期以汞暴露为主要考量。"},
+  "辣椒":{dose:"队列以「每周 ≥1 次」即见关联；无公认上限，按耐受度。", interactions:"对已有溃疡/IBS/急性痔疮者诱发症状；辣椒素对 NSAIDs 胃损伤观察到的是保护方向（不构成用药建议）。"},
+  "茶（红茶 / 乌龙）":{dose:"心血管信号约每天 3 杯；护铁角度避免随餐/紧贴铁剂的浓茶。", interactions:"⚠️ 强抑制非血红素铁与口服铁剂吸收；可能干扰华法林等——服药者需医生评估。"},
+  "胡萝卜":{dose:"常规食用即可；同餐 ≥5g 脂肪显著提升吸收；持续每天~10 根才会染色。", interactions:"食物来源 β-胡萝卜素不致维 A 过量；吸烟者大剂量 β-胡萝卜素补剂另有风险（指补剂非食物）。"},
+  "蘑菇":{dose:"补 D：UV/日晒后 100g 鲜菇可达数百 IU 维 D2；嘌呤约 50-150mg/100g，痛风者适量。", interactions:"生菇 agaritine 加热降解；野生菇可能含致命肼类毒素——只吃熟的、来源明确的栽培菇。"},
 };
 Object.entries(DEPTH).forEach(([n,d])=>{ const f=FOODS.find(x=>x.name===n); if(f) Object.assign(f,d); else console.warn("DEPTH 无匹配食物（检查改名/错字）：", n); });
 
@@ -1390,6 +1562,20 @@ const HOOKS = {
   "甜菊糖":"FDA / EFSA / JECFA 都认定安全；T2D RCT 显示对血糖胰岛素无负面影响——是目前证据最干净的零热量替糖之一。",
   "加工肉 vs 未加工红肉":"IARC 把加工肉定为 1 类致癌物（与烟草、石棉同级，但「同级」≠「同样危险」）——每天 50g 加工肉，结直肠癌风险升 18%。",
   "鸡胸肉 vs 鸡腿肉":"「瘦肉永远更健康」是谬误——鸡腿铁是鸡胸 2 倍多、锌 2 倍多，还是吸收率高的血红素铁。"
+,
+  "白米饭 / 糙米":"煮熟后冷藏过夜的米饭会生成抗性淀粉，再加热反而升糖更慢——而糙米因为麸皮，无机砷比白米高约 80%。",
+  "土豆":"土豆是饱腹感最强的主食之一，「吃土豆发胖」是炸/加黄油的锅；但发青发芽的龙葵素是真有毒。",
+  "红薯":"红薯升糖几乎全看做法——水煮 GI 约 41-50（低），烤红薯却高达 82-94（堪比白面包）。",
+  "花生 / 花生酱":"花生本身是好蛋白，真隐患是储存不当的黄曲霉毒素（一类致癌物、伤肝）；市售花生酱还常偷加糖和棕榈油。",
+  "虾":"「虾胆固醇高要少吃」是过时观念——对多数人膳食胆固醇影响很小，虾试验里反而升 HDL、降甘油三酯。",
+  "无糖豆浆":"「豆浆喝多了男人女性化、得乳腺癌」是被 meta 反复证伪的谣言——异黄酮是植物雌激素，不等于人体雌激素。",
+  "猕猴桃":"补维 C 大家想到橙子，但猕猴桃才是常见水果里的维 C 之王，每 100g 远超橙子。",
+  "榴莲":"「水果之王随便吃」是误区——它是热量最高的水果之一，还含硫化合物抑制乙醛脱氢酶、跟酒精真打架。",
+  "三文鱼 / 沙丁鱼":"「鱼油胶囊没用 = 吃鱼没用」是混淆——吃整条鱼和吞鱼油胶囊，证据完全不同。",
+  "辣椒":"「吃辣伤胃长痔疮」被严重夸大——56 万人队列里吃辣的人全因死亡率反而更低；溃疡真凶是幽门螺杆菌。",
+  "茶（红茶 / 乌龙）":"你那杯随餐的浓茶正在拦截饭里的铁——非血红素铁吸收可掉 60-70%，对素食/孕妇/缺铁的人是真问题。",
+  "胡萝卜":"生啃胡萝卜≠高效补 β-胡萝卜素——煮熟加油吸收才翻几倍；吃太多还会把皮肤染橙黄（无害可逆）。",
+  "蘑菇":"把蘑菇拿去晒太阳，它会自己合成大量维生素 D，量能比肩补剂——但要煮熟吃，生菇含肼类。",
 };
 Object.entries(HOOKS).forEach(([n,h])=>{ const f=FOODS.find(x=>x.name===n); if(f) f.hook=h; else console.warn("HOOKS 无匹配食物：", n); });
 
@@ -1416,7 +1602,7 @@ function srcAccess(url){
 }
 function linkHost(u){ try{return new URL(u).host;}catch(e){return "";} }
 // 出处分级：一级=一手文献/权威机构；二级=科普/百科/诊所博客/Examine（可读但不算强证据）
-const SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","cacmap.fda.gov","hhs.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu"];
+const SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","cacmap.fda.gov","hhs.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu","acc.org","cambridge.org","acs.org","plos.org","jacionline.org","clinicaltrials.gov"];
 const SRC_TIER2=["examine.com","healthline.com","medicalnewstoday.com","drugs.com","goodrx.com","clevelandclinic.org","mskcc.org","arthritis.org","breastcancer.org","wikipedia.org","foodstruct.com","omegaquant.com","glycemicsnap.com","merckvetmanual.com","ucihealth.org","associatesinnephrologypc.com","drkarafitzgerald.com","westonaprice.org","chriskresser.com","aafp.org"];
 const TRUSTED_HOSTS=[...SRC_TIER1,...SRC_TIER2];
 function srcRank(u){ const h=linkHost(u); if(SRC_TIER1.some(d=>h===d||h.endsWith("."+d))) return 1; if(SRC_TIER2.some(d=>h===d||h.endsWith("."+d))) return 2; return 0; }
