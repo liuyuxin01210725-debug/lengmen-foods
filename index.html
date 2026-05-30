@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>冷门食物 · 证据分级</title>
+<style>
+  :root{
+    --bg:#fafaf7; --card:#fff; --ink:#1f1f1d; --muted:#6b6b66; --line:#e7e6e0;
+    --green:#2e7d32; --green-bg:#eef6ee;
+    --amber:#b26a00; --amber-bg:#fbf3e6;
+    --red:#c0392b;   --red-bg:#fbeceb;
+    --focus:#1a73c2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink); line-height:1.6;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:960px; margin:0 auto; padding:28px 18px 60px}
+  header h1{font-size:1.55rem; margin:0 0 6px; letter-spacing:.5px}
+  header .sub{color:var(--muted); margin:0; font-size:.95rem}
+  .disclaimer{color:var(--muted); font-size:.8rem; margin:14px 0 0; border-left:3px solid var(--line); padding:4px 0 4px 10px}
+  .vh{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0}
+
+  .controls{margin:22px 0 18px; display:flex; flex-direction:column; gap:10px}
+  .search input{width:100%; font:inherit; font-size:.95rem; padding:10px 14px; border:1px solid var(--line); border-radius:10px; background:#fff}
+  .fgroup{display:flex; flex-wrap:wrap; align-items:center; gap:8px}
+  .glab{font-size:.78rem; color:var(--muted); min-width:64px; font-weight:600}
+  .fgroup button{font:inherit; font-size:.84rem; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink); padding:6px 12px; border-radius:999px; transition:.15s}
+  .fgroup button:hover{border-color:#cfcfc8}
+  .fgroup button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .utility{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:2px}
+  .viewtoggle{display:flex; flex-wrap:wrap; align-items:center; gap:8px}
+  .utility button{font:inherit; font-size:.84rem; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink); padding:6px 12px; border-radius:8px; transition:.15s}
+  .utility button:hover{border-color:#cfcfc8}
+  .utility button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .utility .ghost{color:var(--muted)}
+  .profile{margin:2px 0 0; padding:12px; border:1px solid var(--line); border-radius:10px; background:#fff}
+  .profile .fgroup + .fgroup{margin-top:8px}
+  .profile button{font:inherit; font-size:.84rem; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink); padding:6px 12px; border-radius:999px; transition:.15s}
+  .profile button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .profile-results{display:none; grid-template-columns:1fr; gap:10px; margin-top:12px}
+  .profile-results.show{display:grid}
+  .utility .toggle.has-active{border-color:var(--ink); font-weight:600}
+  .utility .push-right{margin-left:auto}
+  .cnt{font-variant-numeric:tabular-nums}
+  .collapsible{display:none}
+  #more-filters.open{display:flex; flex-direction:column; gap:10px; margin-top:2px}
+  #profile-panel.open{display:block}
+  .profile-intro{margin:0 0 10px; font-size:.82rem; color:var(--muted)}
+  @media(min-width:760px){.profile-results{grid-template-columns:1fr 1fr 1fr}}
+  .screen-col{border-top:1px dashed var(--line); padding-top:10px}
+  .screen-col h3{font-size:.84rem; margin:0 0 6px; color:var(--muted)}
+  .screen-list{display:flex; flex-direction:column; gap:6px}
+  .screen-item{padding:8px 9px; background:#fafaf7; border-radius:8px; font-size:.82rem}
+  .screen-item b{display:block; font-size:.9rem; color:var(--ink)}
+  .screen-item span{display:block; color:var(--muted); line-height:1.45}
+  :focus-visible{outline:3px solid var(--focus); outline-offset:2px; border-radius:6px}
+
+  .count{font-size:.8rem; color:var(--muted); margin:0 0 12px}
+  .summary{display:flex; flex-wrap:wrap; gap:6px; margin:-4px 0 12px}
+  .summary:empty{display:none}
+  .summary span{font-size:.74rem; padding:3px 8px; border:1px solid var(--line); border-radius:6px; background:#fff; color:#555}
+  .grid{display:grid; grid-template-columns:1fr; gap:16px}
+  @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card); border:1px solid var(--line); border-left-width:5px; border-radius:12px; padding:18px}
+  .card.t-green{border-left-color:var(--green)} .card.t-amber{border-left-color:var(--amber)} .card.t-red{border-left-color:var(--red)}
+  .card.hide{display:none}
+  .top{display:flex; align-items:baseline; justify-content:space-between; gap:10px}
+  .head{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+  .card h2{font-size:1.18rem; margin:0}
+  .badge{font-size:.72rem; padding:3px 9px; border-radius:999px; white-space:nowrap; font-weight:600}
+  .t-green .badge{background:var(--green-bg); color:var(--green)} .t-amber .badge{background:var(--amber-bg); color:var(--amber)} .t-red .badge{background:var(--red-bg); color:var(--red)}
+  .compare-toggle{font:inherit; font-size:.76rem; cursor:pointer; border:1px solid var(--line); border-radius:7px; padding:3px 8px; background:#fff; color:var(--muted)}
+  .compare-toggle.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .verdict{margin:10px 0 4px; font-size:1.02rem}
+  .hook{margin:4px 0 12px; font-size:.86rem; padding:7px 10px 7px 13px; border-left:3px solid #f0c040; background:#fefce8; border-radius:0 8px 8px 0; color:#6b5500; line-height:1.5}
+  body.compact .hook{display:none}
+
+  .tags{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px}
+  .tag{font-size:.72rem; padding:2px 8px; border-radius:6px; background:#eef0ef; color:#444}
+  .tag.risk{background:#fbeceb; color:var(--red)}
+  .tag.action{font-weight:700}
+  .tag.action.a-green{background:var(--green-bg); color:var(--green)}
+  .tag.action.a-amber{background:var(--amber-bg); color:var(--amber)}
+  .tag.action.a-red{background:var(--red-bg); color:var(--red)}
+  .claims{margin:12px 0; display:flex; flex-direction:column; gap:8px}
+  .claim{border:1px solid var(--line); border-radius:10px; padding:9px 10px; background:#fff; font-size:.86rem}
+  .claim .ctop{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:4px}
+  .claim b{font-size:.88rem}
+  .claim p{margin:0; color:#37372f}
+  .claim-badge{font-size:.68rem; font-weight:700; border-radius:999px; padding:2px 7px}
+  .claim-badge.green{background:var(--green-bg); color:var(--green)}
+  .claim-badge.amber{background:var(--amber-bg); color:var(--amber)}
+  .claim-badge.red{background:var(--red-bg); color:var(--red)}
+
+  .row{margin:9px 0; font-size:.92rem}
+  .row .lab{display:block; font-weight:600; font-size:.82rem; margin-bottom:2px}
+  .row.good .lab{color:var(--green)} .row.warn .lab{color:var(--amber)} .row.hype .lab{color:var(--red)}
+  .row p{margin:0; color:#37372f}
+
+  .use{margin:14px 0 0; padding:12px 12px 8px; background:#f6f6f2; border-radius:10px; font-size:.88rem}
+  .use .lab{font-weight:700; font-size:.82rem; display:block; margin-bottom:6px}
+  .use dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:4px 10px}
+  .use dt{color:var(--muted); white-space:nowrap; font-size:.82rem}
+  .use dd{margin:0; color:#37372f}
+  .inter{margin:10px 0 0; padding:10px 12px; background:#fff7f3; border:1px solid #f3ddd2; border-radius:10px; font-size:.86rem}
+  .inter .lab{font-weight:700; font-size:.82rem; display:block; margin-bottom:4px; color:#b2480d}
+  .inter p{margin:0; color:#37372f}
+
+  .ev{margin-top:14px; padding-top:12px; border-top:1px dashed var(--line); font-size:.83rem}
+  .ev .lab{font-weight:600; color:var(--muted); display:block; margin-bottom:6px}
+  .evchips{display:flex; flex-wrap:wrap; gap:5px; margin-bottom:7px}
+  .evchip{font-size:.7rem; font-variant-numeric:tabular-nums; padding:2px 7px; border:1px solid var(--line); border-radius:5px; background:#fff; color:#555}
+  .ev a{color:#0a6; text-decoration:none; border-bottom:1px solid #bde6d3}
+  .ev a:hover{background:#eafaf2}
+  .ev .secondary{color:var(--muted); font-size:.78rem; margin-top:5px}
+  .ev .srcline{margin:4px 0; line-height:1.6}
+  .acc{display:inline-block; font-size:.66rem; padding:1px 6px; border-radius:5px; margin-left:6px; white-space:nowrap; vertical-align:1px}
+  .acc.free{background:#eef6ee; color:#2e7d32}
+  .acc.abs{background:#eef0f6; color:#41557a}
+  .acc.pay{background:#f7efe9; color:#9a5b3b}
+  .acc.sec{background:#f0f0ec; color:#666}
+  .srcq{font-size:.68rem; padding:1px 7px; border-radius:999px; margin-left:8px; font-weight:600; white-space:nowrap}
+  .srcq.q1{background:#eef6ee; color:#2e7d32}
+  .srcq.q2{background:#fbf3e6; color:#b26a00}
+  .muted{color:var(--muted)}
+
+  .compare-panel{display:none; margin:0 0 16px; padding:12px; border:1px solid var(--line); border-radius:10px; background:#fff}
+  .compare-panel.show{display:block}
+  .panel-head{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px}
+  .panel-head strong{font-size:.92rem}
+  .panel-head span{font-size:.8rem; color:var(--muted)}
+  .panel-head button{font:inherit; font-size:.82rem; border:1px solid var(--line); background:#fff; color:var(--muted); padding:5px 10px; border-radius:8px; cursor:pointer}
+  .compare-scroll{overflow-x:auto}
+  .compare-table{width:100%; min-width:680px; border-collapse:collapse; font-size:.82rem}
+  .compare-table th,.compare-table td{border-top:1px solid var(--line); padding:8px; vertical-align:top; text-align:left}
+  .compare-table th:first-child{width:92px; color:var(--muted); font-weight:600}
+  .compare-table thead th{border-top:0; color:var(--ink)}
+
+  body.compact .card{padding:14px}
+  body.compact .row, body.compact .use, body.compact .inter{display:none}
+  body.compact .tags{margin-bottom:10px}
+  body.compact .ev{margin-top:10px; padding-top:10px}
+  body.compact .ev .lab, body.compact .ev .srcline{display:none}
+  body.compact .evchips{margin-bottom:0}
+
+  #noresults{display:none; text-align:center; color:var(--muted); padding:40px 0}
+  #noresults button{font:inherit; margin-left:8px; border:1px solid var(--line); background:#fff; color:var(--ink); padding:5px 10px; border-radius:8px; cursor:pointer}
+  footer{margin-top:34px; color:var(--muted); font-size:.8rem; text-align:center}
+  code{background:#f0f0ec; padding:1px 5px; border-radius:4px; font-size:.85em}
+  @media(max-width:520px){
+    .top{align-items:flex-start; flex-direction:column; gap:6px}
+    .head{justify-content:flex-start}
+    .badge{white-space:normal}
+    .glab{width:100%; min-width:0}
+    .utility{align-items:stretch}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>冷门食物 · 证据分级</h1>
+    <p class="sub">网红/冷门食物，查完证据后哪个真有用、哪个是智商税、该怎么吃。</p>
+    <p class="disclaimer">⚠️ 做着玩的小工具。结论按公开证据的读数写，能核实的研究才标年份/类型/样本量/效应；核不到精确数字的只写结论 + 真实出处，不编。<b>不替代医生 / 营养师判断。</b></p>
+  </header>
+
+  <div class="controls">
+    <div class="search">
+      <label for="q" class="vh">搜索食物或关键词</label>
+      <input id="q" type="search" placeholder="🔍 搜索食物或关键词（如 血糖、孕妇、华法林、胶原）…" autocomplete="off">
+    </div>
+    <div class="fgroup" data-group="tier" role="group" aria-label="按证据等级筛选">
+      <span class="glab">证据</span>
+      <button data-g="tier" data-v="all" class="active" aria-pressed="true">全部</button>
+      <button data-g="tier" data-v="green" aria-pressed="false">🟢 比较扎实</button>
+      <button data-g="tier" data-v="amber" aria-pressed="false">🟡 有营养但有坑</button>
+      <button data-g="tier" data-v="red" aria-pressed="false">🔴 大头是营销</button>
+    </div>
+    <div class="utility">
+      <button type="button" id="toggle-filters" class="toggle" aria-expanded="false" aria-controls="more-filters">⚙ 更多筛选<span id="filter-count" class="cnt"></span></button>
+      <button type="button" id="toggle-profile" class="toggle" aria-expanded="false" aria-controls="profile-panel">🎯 按我的情况看</button>
+      <div class="viewtoggle push-right" role="group" aria-label="切换卡片显示密度">
+        <button type="button" data-mode="full" class="active" aria-pressed="true">完整</button>
+        <button type="button" data-mode="compact" aria-pressed="false">紧凑</button>
+      </div>
+      <button type="button" id="clear" class="ghost">清空</button>
+      <button type="button" id="copylink" class="ghost">复制链接</button>
+    </div>
+    <div id="more-filters" class="collapsible">
+      <div class="fgroup" data-group="target" role="group" aria-label="按目标筛选">
+        <span class="glab">目标</span>
+        <button data-g="target" data-v="all" class="active" aria-pressed="true">全部</button>
+      </div>
+      <div class="fgroup" data-group="risk" role="group" aria-label="按谨慎人群筛选">
+        <span class="glab">谨慎人群</span>
+        <button data-g="risk" data-v="all" class="active" aria-pressed="true">全部</button>
+      </div>
+    </div>
+    <section class="profile collapsible" id="profile-panel" aria-label="个人筛查">
+      <p class="profile-intro">选你的目标和身体情况，自动分成「值得优先看 / 谨慎·先问医生 / 别为功效花钱」三组。</p>
+      <div class="fgroup profile-target" role="group" aria-label="我的目标">
+        <span class="glab">我的目标</span>
+        <button type="button" data-profile-target="all" class="active" aria-pressed="true">全部</button>
+      </div>
+      <div class="fgroup profile-risks" role="group" aria-label="我的情况">
+        <span class="glab">我的情况</span>
+      </div>
+      <div class="profile-results" id="profile-results" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <p class="count" id="count" role="status" aria-live="polite"></p>
+  <div class="summary" id="summary" aria-live="polite"></div>
+  <section class="compare-panel" id="compare-panel" aria-label="食物对比">
+    <div class="panel-head">
+      <div><strong>对比</strong> <span id="compare-count"></span></div>
+      <button type="button" id="clear-compare">清空对比</button>
+    </div>
+    <div class="compare-scroll" id="compare-table"></div>
+  </section>
+  <main class="grid" id="grid"></main>
+  <p id="noresults">没有匹配的食物。换个筛选或清空搜索试试。<button type="button" id="clear-empty">清空</button></p>
+
+  <footer>
+    <span id="total"></span> 食物 · 加食物：在 <code>FOODS</code> 数组里加一条对象即可，筛选按钮会自动出现。
+  </footer>
+</div>
+
+<script>
+const FOODS = [
+  {
+    name:"红菜根", tier:"green",
+    verdict:"这几样里证据最稳的——降血压是真的，幅度温和。",
+    targets:["血压","运动表现"], risks:["肾结石"],
+    good:"含膳食硝酸盐，进体内转成一氧化氮、让血管舒张。多项系统综述/meta 一致显示能温和降低血压；另有提升耐力运动表现的研究。",
+    warn:"草酸偏高，有肾结石史的人注意量。吃后尿、便变红是甜菜红素正常现象，不是出血。",
+    hype:'"排毒""抗癌神器""一杯逆转高血压"。降压是温和辅助，不替代药物。',
+    use:{freq:"研究多用约 250–500 ml 甜菜根汁或等量根菜，可日常吃。", scene:"高血压辅助、耐力运动前。", caution:"肾结石病史者控制量。"},
+    evChips:["2022/24","系统综述·meta","收缩压 ≈ −5 mmHg（高血压）"],
+    links:[{label:"Frontiers in Nutrition（2022）：甜菜根降血压 meta", url:"https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2022.823039/full"}],
+    secondary:{text:"二级参考：", label:"Examine 硝酸盐", url:"https://examine.com/supplements/nitrate/", tail:"（2024 一项 11 试验/349 人，收缩压 −5.3 mmHg）"}
+  },
+  {
+    name:"西兰花芽苗", tier:"green",
+    verdict:"有真科学（萝卜硫素），但效果温和且有条件——别神化。",
+    targets:["血糖"], risks:["孕妇","甲状腺"],
+    good:"富含萝卜硫素，激活 Nrf2 抗氧化/解毒通路；芽苗浓度高于成熟西兰花。在 2 型糖尿病有 RCT 证据。",
+    warn:'效果温和且有条件：2017 RCT 只在"肥胖+血糖控制差"亚组降了血糖；2025 一项预糖尿病 RCT 未达主要终点，效果还取决于肠道菌群。研究用的是高浓度提取物，吃菜 ≠ 吃提取物。',
+    hype:'"抗癌""万能解毒""自闭症神药"——从早期/小样本外推过头。',
+    use:{freq:'当蔬菜日常吃即可，没有公认"治疗剂量"。', scene:"想多摄入十字花科/萝卜硫素的人。", caution:"生芽苗有沙门氏菌风险，孕妇/免疫低下者避免生食；甲状腺问题者大量生吃十字花科需留意。"},
+    evChips:["2017 RCT n=97","仅亚组 ↓ 血糖","2025 RCT n=74 未达主要终点"],
+    links:[{label:"Science Transl. Med.（2017）", url:"https://www.science.org/doi/10.1126/scitranslmed.aah4477"},{label:"Nature Microbiology（2025）", url:"https://www.nature.com/articles/s41564-025-01932-w"}],
+    secondary:{text:"二级参考：", label:"Examine 萝卜硫素", url:"https://examine.com/supplements/sulforaphane/"}
+  },
+  {
+    name:"纳豆", tier:"green",
+    verdict:"维生素 K2 的最强食物来源，骨骼有料，心血管证据混合。",
+    targets:["关节骨骼","心血管"], risks:["抗凝/手术"],
+    good:"发酵大豆，MK-7 型维生素 K2 含量极高（~775µg/100g，远超其他食物）。K2 参与激活骨钙素，3 年 RCT（375µg/日）改善骨代谢；观察性研究中 K2 摄入高与冠脉钙化/心血管死亡更低相关。",
+    warn:"心血管的 RCT 结果混合，目前不足以把它当护心补剂。最要紧：维生素 K 对抗华法林等抗凝药，吃华法林的人不要突然吃纳豆或改变摄入量。",
+    hype:'"纳豆激酶溶血栓""逆转动脉硬化"——人体证据远没到这一步。',
+    use:{freq:"当发酵豆制品日常吃没问题。", scene:"想补 K2/骨骼健康、喜欢发酵食品的人。", caution:"服华法林等抗凝药者务必先问医生，别自行增减。"},
+    evChips:["MK-7 ~775µg/100g","骨骼 RCT 375µg/日·3年","心血管证据混合"],
+    links:[{label:"PMC：纳豆/MK-7 与骨密度 meta", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12699326/"}],
+    secondary:{text:"抗凝相互作用：", label:"低 MK-7 纳豆 × 华法林临床试验", url:"https://www.liebertpub.com/doi/10.1089/jmf.2021.0036"}
+  },
+  {
+    name:"亚麻籽", tier:"green",
+    verdict:"降血压的证据在这堆里算很硬的一个。",
+    targets:["血压","心血管"], risks:["抗凝/手术"],
+    good:"富含 α-亚麻酸（植物 omega-3）、木酚素和纤维。RCT meta 显示降血压：一项 5 RCT meta 在高血压人群收缩压 −8.6/舒张 −4.9 mmHg；更大范围 18 RCT 约 −4.8 mmHg。对血脂也有改善。",
+    warn:"要磨碎吃（整粒多半原样排出）。高纤维/木酚素大量摄入可能影响药物吸收；omega-3 在抗凝/术前需留意。",
+    hype:'"亚麻籽油防癌""木酚素治百病"——别从初步证据外推。',
+    use:{freq:"研究多用约 30g/日磨碎亚麻籽，可拌进食物。", scene:"高血压辅助、想补植物 omega-3/纤维。", caution:"服抗凝药、近期手术者注意；和其他药隔开时间吃。"},
+    evChips:["meta(5 RCT) 收缩压 −8.6 mmHg（高血压）","18 RCT −4.8 mmHg","30g/日磨碎"],
+    links:[{label:"PubMed：亚麻籽降血压 meta（2024）", url:"https://pubmed.ncbi.nlm.nih.gov/39526211/"}],
+    secondary:{text:"经典 RCT：", label:"Hypertension（2013）：膳食亚麻籽强效降压", url:"https://www.ahajournals.org/doi/10.1161/hypertensionaha.113.02094"}
+  },
+  {
+    name:"牛肝", tier:"amber",
+    verdict:"营养密度天花板——但正因为太猛，天天大量吃反而危险。",
+    targets:["营养密度"], risks:["孕妇"],
+    good:"维生素 B12、视黄醇形式维生素 A、铁、铜、叶酸密度极高，少量就能补足多种微量营养。",
+    warn:"维生素 A 脂溶、会蓄积：约 100g 牛肝含 ~4970µg 维 A，已超成人每日上限（3000µg）。长期大量吃 → 维 A 中毒（头痛、肝损、骨问题）。孕期过量维 A 致畸，孕妇/备孕应避免肝类。",
+    hype:'"超级食物天天吃""越多越好"——脂溶性维生素恰恰不是越多越好。',
+    use:{freq:"成人小份、偶尔吃（约 ≤100g，别每周多次）——100g 已超每日维 A 上限。", scene:"需要补铁/B12、想要高营养密度。", caution:"孕妇/备孕避免；同时吃维 A 补剂者注意叠加。"},
+    evChips:["维A ~4970µg/100g","成人上限 3000µg/日","孕期致畸"],
+    links:[{label:"NIH ODS：维生素 A（专业版，含上限/中毒/孕期）", url:"https://ods.od.nih.gov/factsheets/VitaminA-HealthProfessional/"}],
+    secondary:null
+  },
+  {
+    name:"巴西坚果", tier:"amber",
+    verdict:"补硒利器——但正因为太猛，多吃几颗就过量。",
+    targets:["营养密度"], risks:["甲状腺"],
+    good:"硒含量极高，平均一颗就含 ~70–90µg 硒（成人每日需求约 55µg）。硒参与抗氧化和甲状腺功能。",
+    warn:"成人硒上限 400µg/日，每天超过约 4 颗就可能超标，长期过量 → 硒中毒（脱发、指甲变脆、口中蒜味、恶心、神经症状）。",
+    hype:'"超级坚果天天大把吃""补硒越多越好"——硒是越多越毒的典型。',
+    use:{freq:"每天 1–2 颗就够补硒，别当零食大把吃。", scene:"想简单补硒的人。", caution:"已在吃含硒复合维生素者注意叠加；甲状腺病史者留意硒负荷。"},
+    evChips:["硒 ~70–90µg/颗","成人需 ~55µg/日·上限 400µg",">4 颗/日易超"],
+    links:[{label:"NIH ODS：硒（专业版，含上限/中毒）", url:"https://ods.od.nih.gov/factsheets/Selenium-HealthProfessional/"}],
+    secondary:null
+  },
+  {
+    name:"肉桂", tier:"amber",
+    verdict:"降血糖效果小而且混合，桂皮还有香豆素伤肝的坑。",
+    targets:["血糖"], risks:["糖尿病用药","肝功能"],
+    good:"部分 meta/RCT 显示能小幅降空腹血糖、改善血脂（一项 RCT HbA1c −0.83% vs 对照 −0.37%）。",
+    warn:'效果混合——也有 RCT 显示对 HbA1c/血糖无显著作用，没有高质量大型 RCT 证明临床意义。更要紧：常见的"桂皮(cassia)"含香豆素 2–5mg/g，长期大量有肝毒性风险；锡兰肉桂(Ceylon)几乎不含。',
+    hype:'"天然胰岛素""肉桂治糖尿病"——证据撑不起。',
+    use:{freq:"当调味料用没问题；想多吃选锡兰肉桂，别把桂皮当药大剂量长期吃。", scene:"喜欢这个味道、想辅助一点点血糖的人。", caution:"服降糖药者注意叠加低血糖；肝病人群避免大量桂皮。"},
+    evChips:["血糖效应 小/混合","一项 RCT HbA1c −0.83%","桂皮香豆素 2–5mg/g（伤肝）"],
+    links:[{label:"PMC：肉桂用于 2 型糖尿病 系统综述/meta", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC3767714/"}],
+    secondary:null
+  },
+  {
+    name:"海带 / 紫菜", tier:"amber",
+    verdict:"补碘很好，但浓缩海带极易碘过量、扰乱甲状腺。",
+    targets:["补碘"], risks:["甲状腺"],
+    good:"天然碘的好来源（干海带碘约 1500µg/g），偶尔吃有助于满足每日碘需求（成人约 150µg）。也含一些矿物质和膳食纤维。",
+    warn:"碘极易过量：每日额外 >150µg 来自海带就可能诱发短暂甲亢/甲状腺紊乱，即使原本甲状腺正常；案例中海带补剂摄入达 580–4200µg/日。浓缩海带粉/补剂风险最大。",
+    hype:'"海带排毒甲状腺""每天喝海带汤养甲状腺"——反而可能害甲状腺。',
+    use:{freq:"当菜偶尔吃补碘可以；别天天大量，更别吃浓缩海带补剂。", scene:"饮食缺碘、想从食物补碘的人。", caution:"甲状腺疾病史、孕期者尤其当心碘过量，最好遵医嘱。"},
+    evChips:["碘 ~1500µg/g 干海带","成人需 ~150µg/日","过量 → 甲状腺紊乱"],
+    links:[{label:"PMC：市售海带/紫菜——碘来源还是过量风险？", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8035890/"}],
+    secondary:null
+  },
+  {
+    name:"姜黄 / 姜黄素", tier:"amber",
+    verdict:"抗炎/关节有初步证据，但吸收差，高浓缩补剂有肝损报告。",
+    targets:["抗炎","关节骨骼"], risks:["孕妇","肾结石","抗凝/手术","肝功能"],
+    good:"多项 meta 显示口服姜黄/姜黄素能改善膝骨关节炎的疼痛和僵硬（证据初步、需更高质量研究）。",
+    warn:"姜黄素口服吸收极差，常加胡椒碱把吸收提到 ~20 倍——但这也放大肝毒性，近年有姜黄+胡椒碱补剂导致药物性肝损伤的病例。普通做菜量的姜黄是安全的。",
+    hype:'"姜黄素抗癌/抗衰老/万能抗炎"——从初步证据外推过头。',
+    use:{freq:"当香料做菜安全；高浓缩+胡椒碱补剂别长期大剂量。", scene:"想辅助关节不适、喜欢这个味道的人。", caution:"孕妇（大剂量）、肾结石（草酸）、服抗凝药/术前、胆道阻塞者谨慎。"},
+    evChips:["OA meta 改善疼痛（初步）","吸收差·需胡椒碱","高剂量+胡椒碱 → 肝损报告"],
+    links:[{label:"NCCIH：姜黄", url:"https://www.nccih.nih.gov/health/turmeric"},{label:"PMC：姜黄素治骨关节炎 meta", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8202067/"}],
+    secondary:null
+  },
+  {
+    name:"螺旋藻", tier:"amber",
+    verdict:"血压/血脂有些小信号，但真正该担心的是来源和污染。",
+    targets:["血压","心血管"], risks:["孕妇"],
+    good:"meta RCT 显示能小幅降血压（收缩压 −4.6/舒张 −7 mmHg，高血压人群更明显），并改善总胆固醇/LDL/甘油三酯。蛋白质含量高。常用 3–6g/日。",
+    warn:"最大变量是污染：劣质螺旋藻可能含微囊藻毒素（伤肝/致癌）、重金属。要认准第三方检测（COA）的产品。苯丙酮尿症（PKU）者禁用；自身免疫病者理论上慎用（可能刺激免疫）。",
+    hype:'"排毒""超级食物""增强免疫包治百病"——夸大了，且回避了污染问题。',
+    use:{freq:"3–6g/日，认准有第三方检测的品牌。", scene:"想补点植物蛋白、辅助血脂/血压的人。", caution:"孕妇、自身免疫病、PKU 患者谨慎或避免。"},
+    evChips:["meta 收缩压 −4.6/舒张 −7 mmHg","血脂改善","污染风险看来源"],
+    links:[{label:"PMC：螺旋藻与血压 meta", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8468496/"}],
+    secondary:{text:"二级参考：", label:"Examine 螺旋藻", url:"https://examine.com/supplements/spirulina/research/"}
+  },
+  {
+    name:"牛骨汤", tier:"red", targetVerb:"宣称",
+    verdict:"要按用途看：补胶原/治肠漏是营销；睡前一碗帮助放松/助眠，可以作为个人可尝试项。",
+    targets:["皮肤","肠胃","睡眠"], risks:[],
+    good:"提供蛋白质、甘氨酸等氨基酸和少量矿物质，温热补水。当日常汤品没问题；甘氨酸补充剂有小型人体试验显示睡前约 3g 改善主观睡眠质量，但这不是骨汤本身的直接试验。",
+    warn:'喝下去的胶原会被消化拆成氨基酸，不原样跑去关节/皮肤；"修复肠漏/养关节/补胶原"在像样人体试验里证据很弱。骨汤铅含量的担忧"有争议"——常被引的那篇发在非同行评审期刊。',
+    hypeHtml:'"喝胶原长胶原""治肠漏""抗衰老"——把基础食物吹成功能神药。<br><span class="muted">注：胶原肽补剂是另一回事（见下），别和骨汤混为一谈。</span>',
+    use:{freq:'当普通汤喝即可；若用于睡前放松，按自己耐受喝小碗，别期待剂量-效应。', scene:"想喝口热汤、补点蛋白/水分；睡前需要一个温热、低刺激的放松仪式。", caution:'想靠它"补胶原/治肠漏"的人——证据不支持，别为此花钱。'},
+    claims:[
+      {tier:"amber", goal:"睡眠", title:"助眠/睡前放松", text:"有温热饮品 + 甘氨酸的间接证据和个体体验合理性；但缺骨汤本身 RCT，甘氨酸含量也不稳定。"},
+      {tier:"red", title:"补胶原/养关节/治肠漏", text:"骨汤不是胶原肽补剂，缺直接人体证据支持这些功能性宣称。"}
+    ],
+    evChips:["甘氨酸睡眠：小型人体试验","骨汤功能宣称：直接证据弱","铅研究质量有限"],
+    links:[{label:"PubMed：甘氨酸与睡眠小型试验", url:"https://pubmed.ncbi.nlm.nih.gov/22293292/"},{label:"PubMed：骨汤铅含量研究（2013，Medical Hypotheses，有争议）", url:"https://pubmed.ncbi.nlm.nih.gov/23375414/"}],
+    secondary:{text:"二级参考：", label:"Examine 胶原蛋白", url:"https://examine.com/supplements/collagen/"}
+  },
+  {
+    name:"苹果醋", tier:"amber",
+    verdict:'不能简单叫智商税：控糖有小到中等信号；但"排毒/碱化/燃脂"仍是营销。',
+    targets:["血糖"], risks:["糖尿病用药"],
+    good:"2017 醋类 meta 支持降低餐后血糖/胰岛素 AUC；2025 一篇 T2D 患者 GRADE meta 纳入 7 项控制试验，显示 FBS 与 HbA1c 改善。信号不等于可替代降糖药。",
+    warn:"证据集中在短期、小样本和特定人群，盲法/偏倚控制不一。酸性强，直接喝蚀牙釉质、刺激咽喉食道；对降糖药、胃病人群可能有相互作用。",
+    hype:'"排毒""碱化体质""快速燃脂""包治百病"——这些仍无可靠证据；"碱化体质"本身是伪科学。',
+    use:{freq:"若要试：≤1 次/天、务必稀释（约 1 汤匙兑一大杯水）、随餐、用吸管，之后漱口。", scene:"高碳水餐或 2 型糖尿病饮食管理中，想小幅辅助控糖。", caution:"胃病/反流、服降糖药、牙釉质敏感者；别空腹猛灌原醋。"},
+    claims:[
+      {tier:"amber", goal:"血糖", title:"辅助控糖", text:"餐后血糖/胰岛素和 T2D 指标有 meta 信号；定位是饮食辅助，不是药。"},
+      {tier:"red", title:"排毒/碱化/快速燃脂", text:"没有可靠证据，且碱化体质是伪科学叙事。"}
+    ],
+    evChips:["2017 醋类 meta：餐后血糖/胰岛素 AUC ↓","2025 T2D meta：7 试验","不能替代药物"],
+    links:[{label:"PubMed：醋与餐后血糖 系统综述/meta（2017）", url:"https://pubmed.ncbi.nlm.nih.gov/28292654/"},{label:"Frontiers in Nutrition：苹果醋与 2 型糖尿病 GRADE meta（2025）", url:"https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2025.1528383/full"}],
+    secondary:{text:"二级参考：", label:"Examine 苹果醋", url:"https://examine.com/supplements/apple-cider-vinegar/"}
+  },
+  {
+    name:"椰子油", tier:"red", targetVerb:"宣称",
+    verdict:'食用护心是营销；用来漱口是另一件事，证据弱但可作为不替代刷牙牙线的个人习惯。',
+    targets:["心血管","口腔"], risks:[],
+    good:"作为油脂能提供能量和风味；含中链甘油三酯（MCT），耐高温。",
+    warn:"16 项试验 meta：相比非热带植物油，椰子油升高总胆固醇约 15、LDL 约 10、HDL 约 4。AHA 顾问声明明确：椰子油升高坏胆固醇 LDL、不建议用、没有心血管益处。",
+    hype:'"心脏健康油""护脑/燃脂/抗病"——与证据相反，它是高饱和脂肪。',
+    use:{freq:'食用：当普通油偶尔调味，别当"健康油"天天大量用。漱口：若个人觉得舒服，可短时使用后吐掉并正常刷牙。', scene:"食用只为风味；漱口只能作为口腔清洁的附加习惯。", caution:"高血脂/心血管风险者别把它当护心油；漱口不能替代含氟牙膏、牙线、洗牙或牙医治疗。"},
+    claims:[
+      {tier:"red", title:"食用护心/燃脂", text:"高饱和脂肪且升 LDL，不能当健康油。"},
+      {tier:"amber", goal:"口腔", title:"椰子油漱口", text:"有限综述提示可能改善牙菌斑/牙龈指标，但证据质量不高；可作为不替代标准护理的个人习惯。"},
+      {tier:"red", title:"美白/逆转蛀牙/治疗牙周炎", text:"证据不足，不应替代牙医治疗。"}
+    ],
+    evChips:["食用：meta(16 试验) LDL↑~10","AHA 不推荐食用护心","漱口：证据有限"],
+    links:[{label:"AHA：膳食脂肪与心血管 顾问声明", url:"https://www.ahajournals.org/doi/10.1161/cir.0000000000000510"},{label:"PMC：椰子油漱口系统综述", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC7475120/"}],
+    secondary:{text:"通俗版：", label:"Harvard 营养来源：椰子油", url:"https://nutritionsource.hsph.harvard.edu/food-features/coconut-oil/"}
+  },
+  {
+    name:"枸杞", tier:"red",
+    verdict:'不错的水果，但"抗衰老/增强免疫"是营销，吃华法林要当心。',
+    targets:[], risks:["抗凝/手术"],
+    good:"含玉米黄质（zeaxanthin），少量小试验显示能改善眼底黄斑色素密度——这是它较站得住的点。也含抗氧化物。",
+    warn:"整体证据质量低（一篇 meta 是 7 项低质量 RCT），治疗性宣称撑不起。已有多例枸杞（茶/大量）与华法林相互作用、升高 INR/出血的报告。",
+    hype:'"抗衰老神果""增强免疫""明目养肝长寿"——好水果一个，但不是药。',
+    use:{freq:"当零食、泡水、煮粥都行，正常吃就好。", scene:"喜欢这个味道、想补点护眼的玉米黄质。", caution:"服华法林等抗凝药者避免大量；其余人群正常吃无虞。"},
+    evChips:["7 项低质量 RCT","护眼（玉米黄质）有点信号","华法林相互作用报告"],
+    links:[{label:"Drugs.com：枸杞（证据与安全）", url:"https://www.drugs.com/npp/goji-berry.html"}],
+    secondary:null
+  },
+  {
+    name:"胶原蛋白肽", tier:"amber",
+    verdict:"比骨汤靠谱——皮肤/关节有 RCT，但效果温和、且受药企资助偏倚影响。",
+    targets:["皮肤","关节骨骼"], risks:[],
+    good:'水解胶原肽（不是骨汤）有较多 RCT：2025 一篇 23 RCT meta 显示改善皮肤含水量、弹性、皱纹；关节 RCT 显示减轻关节疼痛/僵硬。这就是牛骨汤卡里说的"另一回事"。',
+    warn:"关键 caveat：上述 meta 在剔除药企资助的试验后，皮肤获益不再显著——存在资助偏倚，效果温和，需要更多独立大型 RCT。",
+    hype:'"喝胶原逆龄""一周见效紧致"——夸大且无视资助偏倚与起效时间。',
+    use:{freq:"想试约 2.5–10g/日，连续数周到数月才可能见到温和效果。", scene:"想辅助皮肤/关节、愿意长期吃且预期合理的人。", caution:"效果因人而异；别替代防晒/护肤基本功。"},
+    evChips:["2025 meta(23 RCT) 皮肤改善","剔除药企资助后不显著","关节痛 ↓"],
+    links:[{label:"Am J Med（2025）：胶原与皮肤老化 meta", url:"https://www.amjmed.com/article/S0002-9343(25)00283-9/abstract"},{label:"PMC：口服胶原抗皮肤老化 meta", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10180699/"}],
+    secondary:null
+  },
+  {
+    name:"燕麦 β-葡聚糖", tier:"green",
+    verdict:"降胆固醇是真的，但得吃够量、长期吃，效果温和不是药。",
+    targets:["心血管","肠胃"], risks:[],
+    good:"可溶性 β-葡聚糖能降 LDL：一篇 2016 系统综述/meta（RCT）显示中位 3.5g/日降 LDL 约 −0.19 mmol/l；对 HDL/甘油三酯基本无影响。FDA/EFSA 已认可相关健康声称。",
+    warn:"关键是剂量——要 ≥3g/日 β-葡聚糖（约一大碗整燕麦/钢切燕麦），即食燕麦片/燕麦饮料往往不够。突然加量易腹胀，需多喝水。",
+    hype:"「吃燕麦清血管/降三高」——它主要只动 LDL，加糖燕麦棒基本抵消好处。",
+    use:{freq:"每天 ≥3g β-葡聚糖（约一大碗整燕麦）。", scene:"LDL 偏高、想用饮食辅助调脂当早餐。", caution:"易腹胀者从小量起、多喝水。"},
+    evChips:["2016 系统综述·meta(RCT)","LDL ↓~0.19 mmol/l","需 ≥3g/日 β-葡聚糖","HDL/TG 无变化"],
+    links:[{label:"PubMed：燕麦 β-葡聚糖与 LDL meta（2016）", url:"https://pubmed.ncbi.nlm.nih.gov/27724985/"}],
+    secondary:null
+  },
+  {
+    name:"鱼油 / 深海鱼 omega-3", tier:"amber",
+    verdict:"降甘油三酯实打实，但高剂量胶囊会抬高房颤风险，别当万能保健品猛吞。",
+    targets:["心血管","抗炎"], risks:["抗凝/手术"],
+    good:"omega-3（EPA/DHA）显著降甘油三酯；部分大型分析显示与心血管事件下降相关（EPA 单药信号更强）。AHA 在二级预防建议 1–2g/日 EPA+DHA。",
+    warn:"剂量是双刃剑：高剂量补充剂（>1g/日，尤其 1.8–4g/日）升高房颤风险，并增出血风险——这风险来自胶囊，不是吃鱼。大型鱼注意汞。",
+    hype:"「鱼油护心人人该吃」「越多越好」——甘油三酯正常的健康人，多数大型 RCT 未见明确心血管获益。",
+    use:{freq:"优先每周 2 次多脂海鱼；补充剂遵医嘱、警惕 >2–3g/日。", scene:"甘油三酯明显偏高、或医生建议的二级预防。", caution:"服抗凝/抗血小板药、近期手术、房颤史者用前问医生。"},
+    evChips:["TG 显著 ↓","高剂量胶囊房颤 ↑","吃鱼 ≠ 补充剂风险","AHA 二级预防 1–2g/日"],
+    links:[{label:"NIH ODS：Omega-3（专业版）", url:"https://ods.od.nih.gov/factsheets/Omega3FattyAcids-HealthProfessional/"},{label:"JAHA：omega-3 剂量-反应 meta（2023）", url:"https://www.ahajournals.org/doi/10.1161/JAHA.123.029512"}],
+    secondary:null
+  },
+  {
+    name:"洋车前子壳", tier:"green",
+    verdict:"便宜好用的可溶纤维，降 LDL、稳血糖、治便秘都靠谱，关键是配够水。",
+    targets:["肠胃","血糖","心血管"], risks:["糖尿病用药"],
+    good:"AJCN 一篇 28 试验 meta 显示约 10g/日显著降 LDL（低脂饮食下约 −7%）；另有 meta 显示降 HbA1c、空腹血糖。也改善便秘。",
+    warn:"要 ≥10g/日才出效果；常见胀气腹胀。必须随大量水服，否则可能噎住/肠梗阻；与口服药同服影响吸收，间隔 1–2 小时。",
+    hype:"「减肥刮油神器」——主要靠膨胀增饱腹、调脂调糖，对体重独立作用有限，不是燃脂。",
+    use:{freq:"约 10g/日，分次，每次配 250ml+ 水。", scene:"便秘、LDL 偏高、2 型糖尿病辅助控糖。", caution:"吞咽困难/肠梗阻史者慎用；服药者错开时间。"},
+    evChips:["AJCN meta(28 试验)","LDL ↓~7%","HbA1c/空腹血糖 ↓","需 ≥10g/日+足量水"],
+    links:[{label:"PubMed：洋车前子与血脂 meta（AJCN 2018）", url:"https://pubmed.ncbi.nlm.nih.gov/30239559/"}],
+    secondary:null
+  },
+  {
+    name:"大蒜", tier:"amber",
+    verdict:"对高血压人群确实能小幅降压，但别指望替代降压药，术前要停。",
+    targets:["血压","心血管"], risks:["抗凝/手术"],
+    good:"一篇更新 meta（约 20 试验）显示收缩压平均降约 5 mmHg、舒张压约 2.5 mmHg；高血压亚组降幅更大（收缩压约 −8.7 mmHg）。对血脂有轻度改善。",
+    warn:"可能增加出血风险，尤其与华法林/DOAC/阿司匹林/氯吡格雷同用；术前约 2 周宜停。生蒜大量刺激肠胃。（出血证据有冲突，谨慎为上。）",
+    hype:"「抗癌/抗病毒/万能免疫增强」——免疫和抗癌的人体证据弱。",
+    use:{freq:"膳食用蒜日常即可；陈蒜提取物补充剂遵说明。", scene:"血压偏高、想饮食辅助降压。", caution:"服抗凝/抗血小板药、近期手术者停用并问医生。"},
+    evChips:["meta(约 20 试验)","SBP ↓~5 mmHg","高血压亚组 ↓~8.7","术前停 2 周"],
+    links:[{label:"The Journal of Nutrition：大蒜降压更新 meta", url:"https://jn.nutrition.org/article/S0022-3166(23)00519-9/fulltext"}],
+    secondary:null
+  },
+  {
+    name:"黑巧克力 / 可可", tier:"amber",
+    verdict:"可可黄烷醇能小幅降压、改善血管，但市售黑巧的糖和热量可能把好处吃回去。",
+    targets:["血压","心血管"], risks:[],
+    good:"2017 Cochrane（约 40 项对比）显示血压小幅但显著降约 1.8 mmHg；高血压人群约 −4 mmHg。也改善血流介导舒张（血管内皮）。黄烷醇 ≥900mg/日更明显。",
+    warn:"「黑巧克力」≠「高黄烷醇」——多数商品加工已破坏大量黄烷醇，且含糖、脂肪、热量；为这点降压猛吃巧克力会增重。咖啡因敏感者注意。",
+    hype:"「黑巧抗衰老/护心/燃脂超级食物」——降压效应很小，起作用的是提纯黄烷醇而非糖块。",
+    use:{freq:"少量高可可(≥70–85%)黑巧，或标注高黄烷醇的可可粉。", scene:"血压偏高、能控糖的人小幅辅助。", caution:"需控糖控重、咖啡因敏感者适量。"},
+    evChips:["2017 Cochrane(40 对比)","SBP ↓~1.8 mmHg","高血压 ↓~4 mmHg","需高黄烷醇·非糖块"],
+    links:[{label:"Cochrane（可可与血压，Ried 2017）", url:"https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD008893.pub3/full"}],
+    secondary:null
+  },
+  {
+    name:"蓝莓", tier:"amber",
+    verdict:"营养是真好，调血脂有点用，但「超级食物补脑降压」大多被夸大。",
+    targets:["营养密度","心血管","抗炎"], risks:[],
+    good:"一篇 44 RCT meta（提纯花青素）显示降 LDL、甘油三酯、升 HDL，并降炎症标志物 TNF-α；蓝莓花青素密度高。",
+    warn:"主要「坑」不是危险而是期望落空：同一 meta 对收缩压、舒张压、CRP 无显著汇总效应；很多正面数据来自「提纯花青素」大剂量，吃几颗达不到。果干/果酱含糖另算。",
+    hype:"「抗氧化之王/防癌/补脑神果」——降压抗炎硬终点未被证实，认知获益仍初步。",
+    use:{freq:"每天一把（约 80–150g）新鲜或冷冻蓝莓。", scene:"想增加营养密度、配合整体健康饮食。", caution:"选无糖；果干/含糖制品控量。"},
+    evChips:["44 RCT meta","LDL/TG ↓ HDL ↑","血压无显著效应","认知证据偏弱"],
+    links:[{label:"Advances in Nutrition：花青素心代谢 meta（44 RCT）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8714924/"}],
+    secondary:null
+  },
+  {
+    name:"红曲米", tier:"amber",
+    verdict:"它就是没说明书的低剂量他汀——能降胆固醇，但你不知道每粒吃进多少药。",
+    targets:["心血管"], risks:["肝功能","孕妇"],
+    good:"含 monacolin K（与洛伐他汀同一分子），多项 meta 显示显著降 LDL，幅度可与低剂量他汀相当。",
+    warn:"既然是他汀，副作用也一样（肌痛、肝肾损伤）。市售产品 monacolin K 含量天差地别（NCCIH：从测不到到 5.48mg/份，差 60 倍）；霉菌毒素橘霉素污染常见。FDA 视含显著 monacolin K 者为未批准药物。",
+    hype:"「天然温和、比他汀安全」——它就是他汀，剂量不透明反而更不可控。",
+    use:{freq:"若用，选标注 monacolin K 剂量且检测橘霉素的产品，并知情这是他汀。", scene:"轻中度高胆固醇、明确知情者。", caution:"孕妇、肝功能异常、已服他汀或多药者禁用/慎用，先问医生。"},
+    evChips:["monacolin K = 洛伐他汀","meta 显著降 LDL","含量品牌差 60 倍","橘霉素污染"],
+    links:[{label:"NCCIH：红曲米", url:"https://www.nccih.nih.gov/health/red-yeast-rice"}],
+    secondary:{text:"meta：", label:"Atherosclerosis 系统综述/meta（2015）", url:"https://www.sciencedirect.com/science/article/pii/S0021915015002221"}
+  },
+  {
+    name:"甘草 / 甘草根", tier:"amber",
+    verdict:"当药材短期可以，当零食或天天泡水喝就危险——它会偷偷拉高血压、压低血钾。",
+    targets:["肠胃","抗炎"], risks:["高血压","孕妇"],
+    good:"传统药用（消化、咽喉、抗炎），但高质量疗效证据有限。",
+    warn:"甘草甜素抑制 11-β-HSD2，造成「假性醛固酮增多」：钠水潴留、高血压、低血钾、碱中毒。多篇病例报告记录严重高血压、低血钾甚至危及生命的心律失常。停用后多可恢复。",
+    hype:"「润肺排毒抗炎万能养生根」——长期/大量的升压降钾风险被严重淡化。",
+    use:{freq:"短期、小量；避免每日长期喝甘草茶或大量甘草糖。", scene:"偶尔药用、疗程明确。", caution:"高血压、心脏病、肾病、低血钾、孕妇及服利尿剂/降压药者避免。"},
+    evChips:["升血压","低血钾","假性醛固酮增多","可致心律失常"],
+    links:[{label:"Frontiers in Nutrition：甘草假性醛固酮增多综述（2021）", url:"https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2021.719197/full"}],
+    secondary:null
+  },
+  {
+    name:"绿茶（及绿茶提取物）", tier:"amber",
+    verdict:"茶随便喝，但别买高浓度 EGCG 减肥胶囊——大剂量提取物伤肝有监管文件背书。",
+    targets:["心血管","抗炎"], risks:["肝功能","孕妇"],
+    good:"作为饮品的绿茶/儿茶素普遍被认为安全，含抗氧化多酚。",
+    warn:"关键区别在「提取物补剂」而非茶饮：高剂量 EGCG（每日 ≥800mg 补剂）可能升高转氨酶、增加肝损伤风险。EFSA 据此认定风险，EU 法规限制并要求警示标签。空腹大剂量更危险。",
+    hype:"「绿茶提取物燃脂、抗癌、排毒」——减肥胶囊把温和/不确定效果包装成神效，却隐瞒肝毒性。",
+    use:{freq:"首选直接喝茶；若用提取物，单日 EGCG <800mg 且勿空腹。", scene:"日常饮品；不建议靠高剂量提取物减肥。", caution:"肝功能异常者、孕妇慎用高剂量提取物；出现乏力/黄疸立即停用就医。"},
+    evChips:["茶饮安全","提取物 ≥800mg EGCG 伤肝","EFSA 限值","EU 强制警示"],
+    links:[{label:"NIH LiverTox：绿茶", url:"https://www.ncbi.nlm.nih.gov/books/NBK547925/"}],
+    secondary:null
+  },
+  {
+    name:"羽衣甘蓝", tier:"green",
+    verdict:"实打实的营养密度王者，热量低维生素多——除非你在吃抗凝药，否则放心吃。",
+    targets:["营养密度","心血管","血糖"], risks:["抗凝/手术","肾结石"],
+    good:"营养密度极高、热量低，富含维生素 K、C、维A/类胡萝卜素、钙、钾。叶菜类整体与较低的心血管/2 型糖尿病风险相关（流行病学关联，非单食物 RCT 因果）。",
+    warn:"高维生素 K 影响华法林等抗凝药——不是不能吃，而是要「保持摄入量稳定」避免 INR 波动。含草酸，肾结石体质大量生食需注意；十字花科大量生食对个别甲状腺问题者需留意。",
+    hype:"「超级食物排毒抗癌」——它营养但不是药，单一食物不排毒不防癌，多样蔬菜才是关键。",
+    use:{freq:"每周数次、当蔬菜常量摄入。", scene:"想补维生素/纤维、控糖控热量。", caution:"服华法林者保持摄入稳定并告知医生；结石/甲状腺体质避免长期超大量生食。"},
+    evChips:["营养密度极高","维 K/C 丰富","叶菜流行病学关联","华法林需稳定"],
+    links:[{label:"PMC：维生素 K 摄入与 VKA 抗凝 系统综述", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC4998867/"}],
+    secondary:null
+  },
+  {
+    name:"接骨木莓", tier:"amber",
+    verdict:"可能让感冒早好一两天，但证据不算硬——而且生的有毒，千万别吃没煮过的。",
+    targets:["免疫"], risks:["孕妇"],
+    good:"一篇 4 RCT meta 显示症状初起服用可缩短上呼吸道症状；一项旅行者试验感冒平均缩短约 2 天。",
+    warn:"但也有 RCT 显示对流感无获益，证据矛盾、样本小。生接骨木莓/汁/叶/茎含氰苷，可致恶心呕吐腹痛甚至中毒，必须充分煮熟；商业糖浆已处理。",
+    hype:"「抗病毒免疫神器、预防流感新冠」——实际只是可能略缩短感冒症状，预防作用被夸大。",
+    use:{freq:"仅用煮熟制品/标准糖浆，症状初起短期服用。", scene:"感冒/流感样症状刚开始时辅助。", caution:"绝不生食；孕妇、自身免疫病、儿童用前咨询医生。"},
+    evChips:["4 RCT meta","感冒约缩短 2 天","证据有矛盾·样本小","生果含氰苷有毒"],
+    links:[{label:"Complement Ther Med：黑接骨木莓 meta（2019）", url:"https://www.sciencedirect.com/science/article/abs/pii/S0965229918310240"}],
+    secondary:null
+  },
+  {
+    name:"生姜", tier:"green",
+    verdict:"止孕吐是真有用、证据等级高；缓解关节痛也有据——便宜安全的食疗。",
+    targets:["肠胃","抗炎","关节骨骼"], risks:["抗凝/手术"],
+    good:"止孕吐证据最强（效应大、GRADE 高），ACOG 认可可减轻孕期恶心。膝骨关节炎：meta 显示显著减轻疼痛（镇痛效应小、GRADE 高）。",
+    warn:"总体安全，孕期常量未见显著风险。理论上大剂量可能影响出血/抗凝，术前及服抗凝药者宜谨慎；其余人群常量很安全。",
+    hype:"「燃脂、抗癌、提升免疫、降血糖神效」——大多缺强证据；它真正确凿的是止呕和缓解关节痛。",
+    use:{freq:"止吐约每日 1g 左右分次；日常烹饪佐餐。", scene:"孕吐、晕动/术后恶心、关节炎隐痛。", caution:"服抗凝药者及术前慎用大剂量；孕期常量安全。"},
+    evChips:["孕吐 GRADE 高","ACOG 认可","膝 OA 止痛","安全性好"],
+    links:[{label:"NCCIH：生姜", url:"https://www.nccih.nih.gov/health/ginger"},{label:"PMC：孕吐 meta（2014）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC3995184/"}],
+    secondary:null
+  },
+  {
+    name:"椰子水", tier:"amber",
+    verdict:"好喝、补点钾，但不比白水更「补水」，肾不好的人别灌。",
+    targets:["血压","运动表现"], risks:["肾病/高钾","糖尿病用药"],
+    good:"含钾（约 600mg/杯），钾能部分抵消钠的升压作用。",
+    warn:"系统综述未发现它补水优于白水或运动饮料；降压数据来自小样本观察。钾高：有多例急性高钾血症个案（大量饮用后心律异常/横纹肌溶解/急性肾损伤）。慢性肾病、服保钾利尿剂/ACEI/ARB 者当心。",
+    hype:"「超级补水/运动后最佳补水神器/排毒养颜」——证据不支持优于白水或常规运动饮料。",
+    use:{freq:"当普通饮料偶尔喝，一天 1 杯内，别当水猛灌。", scene:"日常解渴、轻度出汗后补点电解质。", caution:"慢性肾病、高钾血症、服保钾类降压药/利尿剂、糖尿病肾病者。"},
+    evChips:["钾约 600mg/杯","补水不优于白水","多例高钾个案","降压证据弱"],
+    links:[{label:"PubMed：椰子水诱发高钾血症个案", url:"https://pubmed.ncbi.nlm.nih.gov/24326247/"}],
+    secondary:null
+  },
+  {
+    name:"康普茶", tier:"amber",
+    verdict:"当好喝的低糖发酵饮料没问题，但别指望它「排毒」或治肠胃，证据还很弱。",
+    targets:["肠胃","免疫"], risks:["孕妇","肝功能"],
+    good:"2025 系统综述纳入 8 项小试验；加纤维的康普茶试验显示双歧杆菌增加、自评肠胃舒适改善；含有机酸和多酚。",
+    warn:"一项 8 周 RCT 未见炎症/生化指标在整体人群显著改变。自酿有污染和过酸风险；含微量酒精和咖啡因。市售多含糖。",
+    hype:"「排毒清肠增强免疫治肠漏」——人体证据不足，菌群变化没对应到明确健康改善。",
+    use:{freq:"当低糖饮料偶尔喝，每天 1 小瓶内，挑低糖款。", scene:"想替代含糖饮料、喜欢发酵口感。", caution:"孕妇、免疫抑制、肝功能异常者；避免来路不明的自酿。"},
+    evChips:["系统综述 8 项小试验","↑双歧杆菌","炎症指标无显著变化","样本小周期短"],
+    links:[{label:"PMC：加纤维康普茶肠道菌群 RCT（2025）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC12271789/"}],
+    secondary:null
+  },
+  {
+    name:"巴西莓", tier:"red",
+    verdict:"营养还行的深色浆果，但「超级食物、排毒、减肥」全是营销，别为噱头花高价。",
+    targets:["抗炎","营养密度"], risks:[],
+    good:"实验室抗氧化值很高；几项小研究显示改善人体抗氧化防御、可能轻微降炎症标志物。",
+    warn:"据 NIH/CSPI 检索，几乎没有支持其健康宣称的人体研究。最大「风险」是当冤大头：高价果粉/胶囊/碗，营养并不比普通深色浆果强；巴西莓碗常加大量糖和谷物，热量高。",
+    hype:"「排毒/减肥神器/抗衰老/超级食物」——被专家直言是「营销的胜利而非科研成果」。",
+    use:{freq:"当普通水果偶尔吃即可，没必要追高价补剂。", scene:"想换口味的深色浆果、做思慕雪。", caution:"减肥/排毒补剂宣传一律不信；注意加糖热量。"},
+    evChips:["实验室抗氧化高","NIH/CSPI 无人体证据","无减肥证据","营销 > 科研"],
+    links:[{label:"NCCIH：巴西莓（有效性与安全）", url:"https://www.nccih.nih.gov/health/acai"}],
+    secondary:null
+  },
+  {
+    name:"防弹咖啡 / MCT 油", tier:"red", targetVerb:"宣称",
+    verdict:"本质是给咖啡加一大坨脂肪，「燃脂、抗饿」没站住脚，还白增饱和脂肪热量。",
+    targets:["心血管"], risks:["肝功能"],
+    good:"2015 一篇 13 RCT 综述显示用 MCT 替代长链脂肪有「适度」减重信号，主要靠饱腹和略升代谢率；但效应很小、随适应减弱。",
+    warn:"上述研究多质量存疑、可能受行业资助；目前不推荐用 MCT 减肥。一项双盲试验未见防弹咖啡改善饥饿/饱腹。防弹咖啡富含饱和脂肪（黄油+椰油），可能升 LDL；MCT 过量易腹泻恶心腹痛。",
+    hype:"「燃脂/生酮减肥神器/持续供能不饿」——防弹咖啡本身没有研究支持这些功效。",
+    use:{freq:"不必每天喝；若用 MCT 从小剂量(5–10g)起。", scene:"生酮饮食者想补点酮体来源时少量用 MCT。", caution:"高胆固醇/心血管风险者（大量饱和脂肪）、肝功能异常、肠胃敏感者。"},
+    evChips:["13 RCT 综述效果微弱","研究质量差/行业资助","防弹咖啡无饱腹证据","饱和脂肪偏高"],
+    links:[{label:"PMC：咖啡因+MCT 生酮双盲试验（2021）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8221889/"}],
+    secondary:null
+  },
+  {
+    name:"奇亚籽", tier:"green",
+    verdict:"真有料的高纤维种子，能温和降血压和坏胆固醇，但记得泡开再吃、别干吞。",
+    targets:["血压","心血管","营养密度"], risks:["抗凝/手术"],
+    good:"一篇 14 RCT / 729 人 meta 显示显著降收缩压和 LDL：高剂量（约 25g/日、>10 周）收缩压约 −2.78 mmHg、LDL 约 −4.77 mg/dL；含高纤维和植物 omega-3(ALA)。",
+    warn:"干吞危险：吸水膨胀约 27 倍，有个案因干吞后喝水造成食管完全梗阻需内镜处理。对空腹血糖/HbA1c 无显著改善。与华法林等抗凝药同用需谨慎。",
+    hype:"「超级食物/减肥神器/降血糖」——meta 显示对体重和血糖指标并无显著效果。",
+    use:{freq:"每天约 20–25g（1–2 汤匙），务必先泡水/拌入液体 10 分钟以上。", scene:"增加膳食纤维、做布丁/燕麦/思慕雪。", caution:"吞咽困难/食管狭窄者不可干吞；服抗凝药、近期手术者谨慎并缓慢增量。"},
+    evChips:["14 RCT/729 人 meta","收缩压 ↓~2.8 mmHg(高剂量)","LDL ↓~4.8 mg/dL","干吞致食管梗阻个案"],
+    links:[{label:"PubMed：奇亚籽 14 RCT meta-回归（2024）", url:"https://pubmed.ncbi.nlm.nih.gov/39299649/"}],
+    secondary:null
+  },
+  {
+    name:"藜麦", tier:"green",
+    verdict:"营养更全面的主食、完全蛋白来源；血脂/血糖信号很温和，别把它当药。",
+    targets:["心血管","血糖","营养密度"], risks:[],
+    good:"一篇 5 RCT/206 人 meta 显示血脂指标小幅改善：总胆固醇约 −6.86 mg/dL、LDL 约 −3.08 mg/dL；另有 2024 小型 meta 指向空腹血糖改善。含完全蛋白、高纤维、天然无麸质。",
+    warn:"整体安全，但目前人体试验样本小、效应小。表皮含皂苷，味苦且可能刺激肠胃，烹煮前应充分淘洗。一次吃太多高纤维可能腹胀。降糖证据还需更大试验确认。",
+    hype:"「超级食物/减肥圣品/能治糖尿病」——实为营养优秀的主食，降糖等效果温和且证据参差。",
+    use:{freq:"当主食替代部分精米白面，每餐约半碗到一碗(熟)。", scene:"需要完全蛋白的素食者、想用全谷替换精制主食、无麸质饮食。", caution:"肠胃敏感者循序渐进；务必淘洗去皂苷；按主食计入碳水。"},
+    evChips:["5 RCT/206 人","LDL ↓~3.08 mg/dL","完全蛋白+高纤维","降糖证据仍小样本"],
+    links:[{label:"PubMed：藜麦与心血管风险 RCT meta（2020）", url:"https://pubmed.ncbi.nlm.nih.gov/33037704/"}],
+    secondary:null
+  },
+  // ── 大众食物的冷门作用 ──────────────────────────────────────────
+  {
+    name:"葡萄柚（西柚）", tier:"amber",
+    verdict:"营养普通的柑橘，但服药人群的真实地雷——一杯果汁能让某些药物的血药浓度在三天内翻倍。",
+    targets:["营养密度","免疫"], risks:["药物相互作用"],
+    good:"富含维生素 C 和类黄酮；柚皮素有初步抗炎信号。作为普通水果补充维生素 C 没问题。",
+    warn:"含呋喃香豆素，不可逆抑制肠道 CYP3A4 酶（负责代谢约 50% 临床处方药），效果可持续约 72 小时。已确认严重互作药物 43 种以上，涵盖他汀类、钙通道阻滞剂、免疫抑制剂、苯二氮卓类。即使与服药时间错开也无法完全回避风险。",
+    hype:'"减肥水果""西柚酵素燃脂"——早期小型研究未能重复，无可靠代谢促进证据。',
+    use:{freq:"完全不服药的健康成人正常食用即可；服药人群完全回避。", scene:"早餐鲜果；不用任何处方药的健康成年人。", caution:"服用任何他汀类、降压钙拮抗剂、免疫抑制剂、安眠药、抗心律失常药者——禁食西柚及其果汁。"},
+    evChips:["CYP3A4 不可逆抑制","43 种严重/致命级药物互作","72 小时效果持续","200ml 一小杯即可引发互作"],
+    links:[{label:"FDA：葡萄柚汁与药物——不能混用", url:"https://www.fda.gov/consumers/consumer-updates/grapefruit-juice-and-some-drugs-dont-mix"},{label:"AAFP：葡萄柚-药物相互作用管理（2006）", url:"https://www.aafp.org/pubs/afp/issues/2006/0815/p605.html"}],
+    secondary:null
+  },
+  {
+    name:"鸡蛋", tier:"amber",
+    verdict:"绝大多数健康成人每天 1 个鸡蛋不升血脂、不增心脏病风险——但让全美减少吃蛋几十年的那条建议，2016 年才被悄悄撤掉。",
+    targets:["营养密度","运动表现"], risks:["糖尿病用药"],
+    good:"高质量完全蛋白（约 6g/个）、胆碱（神经功能）、叶黄素和玉米黄质（护眼）、维生素 D / B12 / 硒。大型前瞻队列 meta（215 万人次）：每天 ≤1 个对多数健康人 CVD 风险无显著影响（SRR≈0.94）。",
+    warn:"心衰风险：每天 1 个与心衰风险轻微上升相关（SRR≈1.15），证据仍需确认。糖尿病患者大量摄入（>1 个/天）与 CVD 风险上升相关；健康人无此信号。真正需要控制的是同餐的饱和脂肪，不只是鸡蛋本身。",
+    hype:'"蛋黄要扔掉只吃蛋白""吃蛋直接升胆固醇"——蛋黄含大部分有益微量营养素；膳食胆固醇对血清胆固醇的影响远小于饱和脂肪，约 70% 的人几乎不受影响。',
+    use:{freq:"健康成人每天 1 个为安全区，每周最多 7 个合理。", scene:"早餐、运动后蛋白质补充；水煮蛋比煎蛋少饱和脂肪。", caution:"糖尿病、已有心脏病、家族性高胆固醇血症患者，不建议每天超过 1 个，先咨询医生。"},
+    evChips:["215 万人次前瞻队列 meta","2016 年膳食指南撤销胆固醇上限","心衰信号仍存（SRR 1.15）","糖尿病患者高摄入需注意"],
+    links:[{label:"PMC：鸡蛋与心血管 剂量-反应 meta（2021）", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8137614/"}],
+    secondary:{text:"二级参考：", label:"PMC：鸡蛋与胆固醇综述（2021）", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7996514/"}
+  },
+  {
+    name:"黑咖啡", tier:"green",
+    verdict:"证据最扎实的功能性饮品之一——护肝、降帕金森和 2 型糖尿病风险都有 meta 级证据，但没过滤的咖啡会偷偷升你的 LDL。",
+    targets:["护肝","血糖","心血管"], risks:["孕妇"],
+    good:"护肝：高咖啡摄入 vs 不喝，肝硬化风险降低约 47%（OR=0.53），肝癌降低约 50%（OR=0.50，含 16 项研究）。帕金森：咖啡因摄入者 PD 风险降低约 20%（HR=0.80）。2 型糖尿病：每天 5 杯 vs 不喝 RR≈0.71；去咖啡因咖啡也有保护效果（RR≈0.94/杯）。",
+    warn:"咖啡醇（cafestol）问题：法压壶、土耳其煮法不过滤，保留大量 cafestol，每天 5–6 杯可使 LDL 升高 9–14%——cafestol 被称为食物中已知最强的胆固醇升高化合物。纸质滤纸可去除 >90%。咖啡因影响睡眠和焦虑；孕期需限量。",
+    hype:'"功能咖啡""咖啡减肥"——添加剂成分无证据；短期代谢促进微弱且快速耐受。',
+    use:{freq:"每天 3–5 杯（约 300–500mg 咖啡因）是研究中护肝/降风险的区间；1–2 杯已有保护效果。", scene:"纸质滤纸过滤的黑咖啡最优（去除 cafestol、保留多酚）；避免大量糖和奶油。", caution:"孕妇限 200mg/天（约 1–2 杯）；严重焦虑或失眠者限量；胃食管反流者注意刺激性。"},
+    evChips:["肝硬化风险降低 47%（meta）","肝癌降低 50%（16 项研究）","帕金森降低约 20%","法压咖啡 LDL↑9–14%（不过滤）"],
+    links:[{label:"PMC：咖啡与肝硬化/肝纤维化 meta（2015）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC4640566/"},{label:"PMC：咖啡与帕金森风险 meta（2020）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC7353179/"}],
+    secondary:{text:"二级参考：", label:"PMC：咖啡醇与 LDL 机制", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11173301/"}
+  },
+  {
+    name:"菠菜", tier:"amber",
+    verdict:"菠菜含铁是真的，但实际吸收率只有约 2%——你需要吃 5 杯以上生菠菜才能抵上一块小牛排提供的可吸收铁。",
+    targets:["营养密度","抗炎","关节骨骼"], risks:["抗凝/手术","肾结石","孕妇"],
+    good:"维生素 K1（凝血/骨骼）、叶酸（孕期关键）、维生素 A 前体、硝酸盐（可能改善运动血流）、抗氧化多酚。水煮 12–15 分钟可将可溶性草酸从约 975mg 降至约 477mg/100g，并提高铁的相对可及性。搭配维生素 C 食物（柠檬汁/彩椒）可将铁吸收率提升最多 4 倍。",
+    warn:"草酸含量高（约 750–1000mg/100g），与铁形成不可吸收复合物，使非血红素铁吸收率仅约 2%（肉类铁吸收率 15–35%）；草酸也与肾结石相关。高维生素 K1 需与华法林剂量稳定配合，突然大量吃会让 INR 波动。",
+    hype:'"菠菜补铁效果和红肉一样好"——无论大力水手的故事来源是否是小数点错误，铁的吸收率差距才是核心变量，远比含铁量数字重要。',
+    use:{freq:"每日 1–2 份（约 80–100g 熟），搭配维生素 C 食物帮助铁吸收。", scene:"炒、焯、做汤；搭配柠檬汁/彩椒；叶酸需求高者（孕期）的优质蔬菜。", caution:"服用华法林者保持摄入量稳定（不是禁吃，是稳定）；肾结石史者控量；贫血者不应视菠菜为主要补铁来源。"},
+    evChips:["非血红素铁吸收率约 2% vs 肉类 15–35%","草酸锁铁机制明确","水煮可将草酸降低约 50%","维生素 C 可提升铁吸收 4 倍"],
+    links:[{label:"European Journal of Clinical Nutrition：草酸与非血红素铁吸收（2007）", url:"https://www.nature.com/articles/1602721"}],
+    secondary:null
+  },
+  {
+    name:"豆腐 / 大豆", tier:"green",
+    verdict:"大豆让男人女性化——流传最广的营养学谣言之一，多项 RCT 和 meta 显示正常膳食摄入量对男性睾酮无显著影响。",
+    targets:["心血管","营养密度","运动表现"], risks:["甲状腺","药物相互作用"],
+    good:"高质量植物完全蛋白（含全部必需氨基酸）；大豆异黄酮可能降低乳腺癌复发风险（尤其绝经后 HR+ 型）；每 10mg/天异黄酮与乳腺癌风险降低约 3% 相关；2020 和 2025 年两项独立荟萃分析一致显示对男性睾酮/游离睾酮/SHBG 无显著影响。",
+    warn:"极大量摄入（远超正常饮食）的少数病例报告了激素异常，属极端情况。甲状腺功能减退患者避免与左甲状腺素同时服用（可能减少药物吸收）。大豆过敏者禁食。",
+    hype:'"大豆让男性雌激素化""吃豆腐致乳腺癌"——证据方向完全相反：正常摄入量对男性激素无影响，且高摄入可能对女性有乳腺癌保护作用。',
+    use:{freq:"每日 1–2 份豆腐（约 100–150g）或等量豆浆，合理摄入范围。", scene:"替代红肉作为优质蛋白；植物性饮食者的主要蛋白来源。", caution:"服用左甲状腺素者前后 ≥2 小时避免大量食用；大豆过敏者禁食。"},
+    evChips:["2025 meta：大豆对男性生殖激素无显著影响","2020 meta：同上，两项独立结论一致","每 10mg/天异黄酮降乳腺癌风险约 3%","完全蛋白（含全部必需氨基酸）"],
+    links:[{label:"ScienceDirect：大豆/异黄酮对男性激素影响 meta（2021）", url:"https://www.sciencedirect.com/science/article/pii/S0890623820302926"},{label:"PMC：大豆与乳腺癌风险（2020）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC7320952/"}],
+    secondary:null
+  },
+  {
+    name:"香蕉", tier:"green",
+    verdict:"同一根香蕉，青绿时升糖指数约 30，满布黑斑时可飙到 65+——成熟度决定了它是血糖友好食物还是高糖零食。",
+    targets:["血糖","肠胃","运动表现","血压"], risks:["糖尿病用药","肾病/高钾"],
+    good:"未熟香蕉：高抗性淀粉（约占干重 70–80%），喂养肠道益生菌，不引起血糖快速升高（GI≈30）。成熟香蕉：钾（约 422mg/根）支持血压；维生素 B6、镁；运动后快速补能。哈佛数据：成熟黄香蕉 GI 约 51（中等）。",
+    warn:"过熟香蕉 GI 可达 65+，糖尿病患者选未熟品种并搭配蛋白质/脂肪。每根约含 422mg 钾，肾病或服保钾利尿剂/ACEI/ARB 患者注意累加。",
+    hype:'"香蕉含糖高不能吃"——成熟度是关键变量；成熟黄香蕉 GI 约 51，仍属中等，且有膳食纤维缓冲。',
+    use:{freq:"每日 1 根（约 120g），注意成熟度。", scene:"运动前/中选成熟香蕉快速补能；日常肠道健康选青绿香蕉；下午点心替代精制甜食。", caution:"肾病/高钾血症患者限量；糖尿病患者优先选未熟、搭配蛋白质/脂肪降低血糖响应。"},
+    evChips:["未熟 GI≈30，过熟 GI≥65","抗性淀粉约占未熟干重 70–80%","哈佛：成熟香蕉 GI≈51","钾约 422mg/根"],
+    links:[{label:"Harvard T.H. Chan：香蕉营养", url:"https://nutritionsource.hsph.harvard.edu/food-features/bananas/"},{label:"PMC：香蕉成熟度与淀粉消化率（2020）", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7000695/"}],
+    secondary:null
+  },
+  {
+    name:"蜂蜜", tier:"amber",
+    verdict:"对成人是相对优于白糖的甜味剂，但 1 岁以下婴儿绝对禁止——包括麦卢卡蜂蜜，没有任何品牌的例外。",
+    targets:["免疫","皮肤","口腔"], risks:["婴儿","糖尿病用药"],
+    good:"GI 约 60–61，略低于白糖（GI≈65）；含微量多酚、酶、矿物质（白砂糖完全没有）；麦卢卡蜂蜜体外抗菌活性强（MGO 高达 1541mg/kg，vs 普通蜂蜜 24mg/kg）；外用伤口有医疗级应用。",
+    warn:"1 岁以下婴儿绝对禁忌（肉毒杆菌孢子可能在婴儿肠道萌发致婴儿肉毒中毒）——任何品牌、任何剂量，零容忍。成人胃酸和菌群可中和，不适用于婴儿的禁忌。麦卢卡抗菌均为体外证据，迄今无临床人体 RCT 支持系统性抗菌。GI 与白糖差距仅 4–5 点，糖尿病患者不能视为安全替代品。",
+    hype:'"麦卢卡天然抗生素""蜂蜜比白糖健康得多"——GI 差距微小；抗菌无临床人体 RCT 证据。',
+    use:{freq:"成人每日不超过 1–2 汤匙（约 20–40g），作为白砂糖的温和替代。", scene:"冲泡草药茶替代白糖；外用伤口护理（麦卢卡，医疗级）；咽喉痛临时缓解。", caution:"1 岁以下婴儿：绝对禁止，无例外；糖尿病患者纳入碳水计算；蜂产品过敏者禁用。"},
+    evChips:["婴儿禁忌：WHO/NHS 明确禁止 <1 岁","麦卢卡 MGO 高达 1541mg/kg（vs 普通 24mg/kg）","抗菌体外证据扎实，无临床人体 RCT","GI≈61 vs 白糖 65（差距微小）"],
+    links:[{label:"PMC：蜂蜜抗菌机制综述（2019）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC6613335/"},{label:"PMC：婴儿肉毒中毒与蜂蜜（2024）", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12875325/"}],
+    secondary:null
+  },
+  {
+    name:"全脂牛奶", tier:"amber",
+    verdict:"脱脂才安全？最新伞状综述显示 63% 的研究认为全脂乳制品对心血管无显著不良影响——「低脂越健康」可能是 40 年的营养学过度简化。",
+    targets:["营养密度","心血管","关节骨骼"], risks:["肾病/高钾"],
+    good:"钙、维生素 D、K2、脂溶性维生素（A/E）吸收率更高；含脂肪球膜（MFGM）有抗炎潜力；儿童研究显示全脂奶与更低超重率相关（约降 16–18%）；整体乳制品摄入与中风风险降低相关（meta）。",
+    warn:"东亚人群（含中国）证据与欧洲出现分歧——中国大型队列显示牛奶与冠心病风险轻微上升相关，可能与乳糖耐受基因和肠道菌群差异有关。热量密度较高，高碳水饮食中需控制总摄入量。",
+    hype:'"脱脂奶必然更健康"——这一说法建立在孤立饱和脂肪酸而非整体食物基质的旧框架上，现有证据复杂得多。',
+    use:{freq:"每天 1–2 杯（200–300ml）为合理范围。", scene:"儿童生长发育；高强度运动后蛋白质补充；与蔬菜搭配的混合饮食。", caution:"乳糖不耐受者；已有高 LDL-C 者建议与医生确认；东亚人群对心血管影响的个体差异较大。"},
+    evChips:["2024 综述：63% 研究全脂乳 CVD 无显著不良影响","儿童全脂奶与超重降低 16–18%（队列）","中国大型队列与欧洲结果出现分歧","food matrix ≠ 游离饱和脂肪"],
+    links:[{label:"Frontiers in Nutrition：全脂乳制品与心血管综述（2024）", url:"https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2024.1386257/full"},{label:"Nature Communications：全球乳制品与 CVD 分析（2024）", url:"https://www.nature.com/articles/s41467-024-55585-0"}],
+    secondary:{text:"伞状综述：", label:"PMC / Nutrients（2025）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC12430323/"}
+  },
+  {
+    name:"红酒", tier:"red", targetVerb:"宣称",
+    verdict:"喝红酒护心几乎是史上最成功的酒精营销神话——WHO 2023 年明确：不存在安全饮酒量，任何酒精摄入都增加癌症风险。",
+    targets:[], risks:["孕妇","抗凝/手术","肝功能","药物相互作用"],
+    good:"几乎没有净正向获益。观察性研究中「适量饮酒者更健康」的现象，被证实主要来自「病人不喝酒偏差」（sick quitter bias）：戒酒者往往已因病戒酒，人为拉低了不饮酒组的健康基线。",
+    warn:"酒精是 IARC I 类致癌物（与石棉、烟草同级），至少引发 7 种癌症（乳腺癌、结直肠癌等）；欧洲数据：轻到中度饮酒每年新增约 2.3 万例癌症；升高血压；增加房颤风险；肝脏损伤；孕期无安全线。",
+    hype:'"红酒白藜芦醇护心"——一瓶红酒的白藜芦醇约 1–2mg，达到动物实验有效剂量需每天喝 500–1000 瓶；J 型曲线已被统计方法批判瓦解（sick quitter bias）。',
+    use:{freq:"理想摄入：零。若社交场合饮用，控制最低量，但不是健康选择。", scene:"无推荐健康场景。", caution:"孕妇/备孕者：绝对禁止；服华法林：酒精增强药效导致出血风险；肝病患者/乳腺癌家族史：额外高风险。"},
+    evChips:["WHO 2023：不存在安全饮酒量（I 类致癌物）","J 型曲线被 sick quitter bias 解释","白藜芦醇生物利用度约 2%，快速代谢成非活性物","欧洲：轻中度饮酒每年新增约 2.3 万例癌症"],
+    links:[{label:"WHO Europe（2023）：没有安全饮酒量", url:"https://www.who.int/europe/news/item/04-01-2023-no-level-of-alcohol-consumption-is-safe-for-our-health"},{label:"PMC：白藜芦醇生物利用度与代谢（2023）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10140952/"}],
+    secondary:{text:"J 型曲线争议：", label:"Lancet Rheumatology（2023）", url:"https://www.thelancet.com/journals/lanrhe/article/PIIS2665-9913(23)00073-5/fulltext"}
+  },
+  {
+    name:"西红柿", tier:"green",
+    verdict:"生吃西红柿是在浪费番茄红素——烹饪后生物利用度提升约 35%，加橄榄油再翻倍，意大利人天天吃番茄酱比吃沙拉更营养。",
+    targets:["抗炎","心血管","皮肤","免疫","营养密度"], risks:["肾病/高钾"],
+    good:"番茄红素（lycopene）强抗氧化，与前列腺癌、心血管疾病风险降低相关。烹饪将 all-trans-lycopene 转化为更易吸收的 cis-isomers，生物利用度提升约 35%；加脂肪（如橄榄油）进一步促进脂溶性吸收。含维生素 C（生食更高）、钾、叶酸。",
+    warn:"肾病患者注意钾含量；番茄酱/罐头注意加工中额外的钠和糖；个别 IBS 患者对茄科植物敏感（属少数）。",
+    hype:'"茄科蔬菜致炎/加重关节炎"——关节炎基金会和关节炎协会均明确指出这是流传广泛的迷思，现有证据方向相反（西红柿有抗炎潜力）。',
+    use:{freq:"每天 1–2 份；追求番茄红素，每周至少 3 次熟食（番茄酱、炖煮、炒制）。", scene:"搭配橄榄油烹饪（脂溶性番茄红素需脂肪载体）；地中海饮食核心食材。", caution:"肾病/低钾饮食需控量；茄科过敏者极罕见但存在。"},
+    evChips:["烹饪番茄红素吸收率+35%（J Agric Food Chem）","cis-isomers 更易穿过肠壁","茄科致炎说无证据（关节炎基金会）","维生素 C 生食更高（加热损失）"],
+    links:[{label:"PubMed：烹饪对番茄红素生物利用度影响", url:"https://pubmed.ncbi.nlm.nih.gov/23478703/"},{label:"Arthritis Foundation：茄科蔬菜与关节炎迷思", url:"https://www.arthritis.org/health-wellness/healthy-living/nutrition/anti-inflammatory/how-nightshades-affect-arthritis"}],
+    secondary:null
+  },
+  {
+    name:"核桃", tier:"amber",
+    verdict:"坚果界 ALA omega-3 含量冠军，但摄入的 ALA 只有 5–10% 能转化为大脑真正需要的 DHA——核桃对心血管是真实的，「补脑」是另一回事。",
+    targets:["心血管","抗炎","营养密度"], risks:["抗凝/手术"],
+    good:"每 28g（约 7 颗）含 2.5g ALA，是所有坚果中最高。ALA 与约 10% 心血管风险降低、20% 致死性冠心病风险降低相关（meta）；观察性研究显示核桃与中风风险降低 17–20%；富含多酚、维生素 E、镁。",
+    warn:"ALA→DHA 转化率约 5–10%（男性更低），不能视为鱼油替代品——吃核桃不等于补 DHA。热量密度高（约 185kcal/28g），过量易超热量。认知方面多数研究来自工业资助，RCT 结论不一致。",
+    hype:'"吃核桃补脑/补 DHA"——核桃的 omega-3 是 ALA，到达大脑的 DHA 极少；真正补脑 DHA 需要深海鱼或藻油。',
+    use:{freq:"每天约 1 小把（28–30g，约 7 颗），每周 5 天以上效果更稳定。", scene:"早餐麦片、沙拉；植物性饮食者的重要 omega-3 来源。", caution:"树坚果过敏者禁用；服华法林等抗凝药者大量摄入时监测 INR；减重期注意热量控制。"},
+    evChips:["PMC meta：ALA 降 CVD 风险 10%、致死性 CHD 降 20%","中风风险降低 17–20%（观察性）","ALA→EPA 转化率仅 5–10%，→DHA 几乎可忽略","认知 RCT 结论不一致（工业资助问题）"],
+    links:[{label:"PMC：ALA 与心血管健康综述（2022）", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9526859/"},{label:"PMC：核桃认知与风险因素系统综述（2021）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8211141/"}],
+    secondary:null
+  }
+  ,
+  // ── 第三批：调味料 / 坚果种子 / 水果与油 ──────────────────────
+  {
+    name:"醋（陈醋/米醋）", tier:"green",
+    verdict:"便宜、机制清楚的餐后血糖钝化器——但只有液态醋有效，醋片胶囊在 RCT 里没出现同样效果。",
+    targets:["血糖"], risks:["糖尿病用药"],
+    good:"随高碳水餐摄入约 1.5g 乙酸（约 15-20ml 醋）可显著降低餐后血糖与胰岛素 AUC（2017 meta 分析）。机制是抑制双糖酶、延缓胃排空、加速骨骼肌摄糖。",
+    warn:"对已确诊 2 型糖尿病人群效果不稳定；空腹大量饮用伤食道和牙釉质；与降糖药叠加可能低血糖。",
+    hype:'"喝醋减肥/排毒/降胆固醇"——本条只针对烹饪用陈醋/米醋的血糖效应，不要外推。',
+    use:{freq:"高碳水餐前或餐中 15-20ml（约 1 大勺），稀释后饮用或拌进菜里。", scene:"面、米饭、饺子等高 GI 餐。", caution:"胃食管反流、胃溃疡、正在用降糖药者；不要直接对嘴喝原醋。"},
+    evChips:["RCT meta 餐后血糖↓","约 1.5g 乙酸/餐有效","醋片胶囊无效","机制清楚（双糖酶+胃排空）"],
+    links:[{label:"PubMed：醋与餐后血糖 meta（2017）", url:"https://pubmed.ncbi.nlm.nih.gov/28292654/"}],
+    secondary:null
+  },
+  {
+    name:"黑胡椒（胡椒碱）", tier:"amber",
+    verdict:"调味用没问题——但同样的胡椒碱机制会让他汀、环孢素等药在体内浓度异常升高，姜黄+胡椒碱补剂长期吃要当心。",
+    targets:["抗炎"], risks:["药物相互作用"],
+    good:"胡椒碱抑制肠道 P-糖蛋白和肝脏 CYP3A4，显著增强多种营养素/药物的吸收，最经典是把姜黄素生物利用度提高约 20 倍。",
+    warn:"PBPK 建模显示，每天 20mg 胡椒碱连续 7 天可使辛伐他汀 AUC 升约 59%、三唑仑 36%、环孢素 35%、硝苯地平 34%、利托那韦 31%——这是补剂级剂量，不是做菜剂量。",
+    hype:'"黑胡椒燃脂/抗癌/抗炎"——做菜里那点量基本无功能性作用，外推过头。',
+    use:{freq:"做菜随手撒，1 餐 1 撮无忧。", scene:"搭配姜黄做菜（一起吸收）；高脂菜里现磨提味。", caution:"服 CYP3A4 底物药（他汀、免疫抑制剂、部分抗病毒、苯二氮卓类）者，避免长期高剂量姜黄+胡椒碱补剂。"},
+    evChips:["CYP3A4/P-gp 抑制","姜黄素吸收+20 倍","PBPK：他汀 AUC↑59%","常规调味剂量无忧"],
+    links:[{label:"PMC：胡椒碱-药物相互作用 PBPK 模型（2024）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC11506926/"},{label:"PMC：姜黄/胡椒碱 CYP/UGT 抑制综述", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC2574793/"}],
+    secondary:null
+  },
+  {
+    name:"盐（钠）", tier:"amber",
+    verdict:"绝大多数人少吃盐更健康，但「越低越好」对心衰患者已经被新证据挑战。",
+    targets:["补碘"], risks:["高血压","肾病/高钾"],
+    good:"DASH-Sodium 等 RCT 一致显示：减钠 + 富含蔬果低脂奶的 DASH 饮食独立降低血压；高血压患者减钠能降低全因死亡风险。",
+    warn:'"低钠也增加死亡"的 J 型曲线大多来自单次尿钠测量+反向因果（病人本身病重才吃得淡），多次测量后曲线消失；但 2024 心衰患者 meta 显示极低钠饮食可能没好处甚至偏向有害。盐敏感性个体差异大（黑人、老人、肥胖、糖尿病人更敏感）。',
+    hype:'"盐根本不影响血压""必须降到 1500mg 才安全"——两个相反的极端，都不全对。',
+    use:{freq:"一般人群目标 <5-6g 盐/天（约 2g 钠）。", scene:"高血压、心血管病、肾病者更严格；运动员/大量出汗者不必过度限。", caution:"心衰患者不要自行追求极低钠；服用利尿剂/RAAS 抑制剂者需医生指导。"},
+    evChips:["DASH-Sodium RCT","J 曲线存疑（反向因果）","盐敏感个体差异大","心衰患者例外"],
+    links:[{label:"NEJM：DASH-Sodium 原文（2001）", url:"https://www.nejm.org/doi/full/10.1056/NEJM200101043440101"},{label:"PMC：心衰患者钠限制 meta（2024）", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12862654/"}],
+    secondary:null
+  },
+  {
+    name:"添加糖", tier:"amber",
+    verdict:"明确该少吃，但「果糖独家有毒」被夸大——等热量替换实验里果糖和葡萄糖差异远小于网红说法，过量+液体形式才是主因。",
+    targets:[], risks:["糖尿病用药","肝功能"],
+    good:"限制添加糖能降低甘油三酯、减重、改善牙齿和肝脏脂肪。天然水果不算添加糖。",
+    warn:"AHA 上限：女性 ≤25g/天（6 茶匙），男性 ≤36g/天（9 茶匙）；一罐可乐就接近女性上限。果糖几乎只在肝脏代谢、不直接升血糖却更容易转脂肪——但前提是过量+液体形式。",
+    hype:'"果糖比葡萄糖更毒""糖是独家毒药"——在等热量对照下差异远小于宣传，关键变量是过量+液体形式（含糖饮料 > 水果）。',
+    use:{freq:"含糖饮料尽量 0；偶尔甜点接受；天然水果不必恐惧。", scene:"运动后碳水补充可适度用。", caution:"脂肪肝、糖尿病、高甘油三酯者收紧；儿童 <2 岁不建议任何添加糖。"},
+    evChips:["AHA 上限：女 25g/男 36g","果糖几乎只在肝代谢","等热量对比差异小","液态最坑"],
+    links:[{label:"AHA：添加糖与心血管健康", url:"https://www.heart.org/en/healthy-living/healthy-eating/eat-smart/sugar/added-sugars"},{label:"Circulation：儿童添加糖科学声明（2016）", url:"https://www.ahajournals.org/doi/10.1161/cir.0000000000000439"}],
+    secondary:null
+  },
+  {
+    name:"酱油", tier:"amber",
+    verdict:"调味没问题，但隐性钠 + 生物胺（组胺/酪胺）让它成为偏头痛和吃 MAOI 的人最该计量的调料。",
+    targets:["血压"], risks:["高血压","药物相互作用"],
+    good:"提供谷氨酸鲜味和发酵风味，少量替代盐时不一定让总钠飙升。",
+    warn:"中国市售酱油里组胺最高可到约 478mg/L、酪胺约 257mg/L；老抽组胺约是生抽的 3.7 倍。与单胺氧化酶抑制剂（MAOI）同服+富酪胺食物可致高血压危象；可触发偏头痛、潮红、心悸。1 茶匙（约 5ml）≈250-350mg 钠。",
+    hype:'"酿造酱油比配制更健康"——传统高盐酿造里生物胺反而可能更高；低钠款生物胺也可能升高。',
+    use:{freq:"1 茶匙（约 5ml）≈ 250-350mg 钠，按天总量算进去。", scene:"凉拌、蘸食用生抽；上色用老抽（但组胺更高）。", caution:"高血压、偏头痛、组胺不耐受、服用 MAOI 类药物者（异烟肼、利奈唑胺也有酪胺反应风险）。"},
+    evChips:["组胺最高 ~478mg/L","老抽 vs 生抽 ~3.7 倍","钠 250-350mg/茶匙","MAOI 禁忌"],
+    links:[{label:"PMC：中国市售酱油生物胺比较（2019）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC6515320/"},{label:"PMC：食品生物胺综述（2018）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC6049710/"}],
+    secondary:null
+  },
+  {
+    name:"味精（MSG）", tier:"green",
+    verdict:'"中餐馆综合征"源自 1968 年 NEJM 一封带种族色彩的读者来信——从未被严谨双盲实验复现，FDA 列为 GRAS 公认安全。',
+    targets:["血压"], risks:[],
+    good:"普通人每天从天然食物（番茄、奶酪、母乳）摄入谷氨酸约 13g，外加 MSG 仅约 0.55g。每克 MSG 的钠含量约为食盐的 1/3，用 MSG 部分替代盐可在保留咸鲜感的同时降低总钠摄入。",
+    warn:"极少数自报「MSG 复合症候群」个案在双盲对照下基本不能复现；过量灌胃动物实验和人类正常饮食剂量无关。",
+    hype:'"MSG 致脑损伤/致癌/致脱发"——全是营销/民间叙事，无人体证据；FDA、WHO、欧盟 EFSA 均认定常规摄入安全。',
+    use:{freq:"做菜代替部分盐，1 餐 0.3-0.5g 即足够提鲜。", scene:"汤、炒菜、卤味——配低钠策略尤其有用。", caution:"对自报 MSG 敏感者可空腹双盲自测；婴儿食品按各国常规不额外添加。"},
+    evChips:["FDA GRAS 公认安全","双盲实验无法复现","钠含量仅为盐 1/3","污名源于文化偏见"],
+    links:[{label:"PMC：MSG 公共健康综述（2018）", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5938543/"}],
+    secondary:null
+  },
+  {
+    name:"杏仁", tier:"green",
+    verdict:"心血管证据扎实（meta 显示降 LDL-C），但 22 颗就含约 122mg 草酸——反复肾结石者需控量。",
+    targets:["心血管","营养密度"], risks:["肾结石"],
+    good:"48 个 RCT 数据集（2485 人）meta 显示：每天 42.5g 杏仁可显著降低 LDL-C 约 0.13mmol/L、总胆固醇、ApoB；降低 10 年 Framingham 冠心病风险。1 盎司提供维生素 E、镁、纤维。",
+    warn:"每盎司含约 122mg 草酸，属高草酸食物——反复肾结石史 / CKD 患者应控制摄入，同时保证钙摄入（钙在肠道结合草酸降低吸收）。热量密度高，过量易超热量。",
+    hype:'"杏仁减肥神食"——热量密度高，每天 20-23 颗就够；超过反而增重。',
+    use:{freq:"健康成人每天 20-23 颗（约 28g），同时保证钙摄入。", scene:"零食替代精制零食；早餐/沙拉配料。", caution:"反复肾结石史、慢性肾病（CKD）者控量；扁桃仁过敏者禁。"},
+    evChips:["meta（48 RCT 数据集/2485 人）","LDL-C↓0.13mmol/L","草酸 122mg/oz","每天 28g 为优"],
+    links:[{label:"MDPI Nutrients：杏仁与心血管 meta（2025）", url:"https://www.mdpi.com/2072-6643/17/17/2791"},{label:"PMC：杏仁与心血管标志物（2016）", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5048189/"}],
+    secondary:null
+  },
+  {
+    name:"腰果", tier:"green",
+    verdict:'市售"生"腰果其实都蒸过或烤过——真正生腰果壳含漆酚（urushiol，毒葛同款），直接吃会起水泡。',
+    targets:["营养密度","心血管"], risks:[],
+    good:"镁含量优秀（1 盎司约 83mg，约日推荐 20%）；富含铜、锌、植物蛋白和单不饱和脂肪。补镁对睡眠、肌肉、血压都有帮助。",
+    warn:"腰果壳含漆酚类化合物（anacardic acid，约 80% 壳油成分），与毒葛同属漆树科——直接接触壳油或未经处理的生腰果会引发严重接触性皮炎。",
+    hype:'"生腰果更营养"——是误解，市售"生腰果"均经蒸汽/烘焙脱毒，没有真正能直接吃的纯生腰果。',
+    use:{freq:"每天 1 盎司（约 28g，16-18 颗）。", scene:"零食、炒菜、坚果奶替代乳制品。", caution:"树坚果过敏者禁；漆树/芒果接触性皮炎史者偶尔交叉反应；不要尝试「树上现摘」。"},
+    evChips:["镁 ~83mg/oz（20% DV）","漆酚约 80% 壳油成分","属漆树科 Anacardiaceae","市售一律已脱毒"],
+    links:[{label:"Wikipedia：腰果（含壳油毒性）", url:"https://en.wikipedia.org/wiki/Cashew"},{label:"Medical News Today：腰果营养与风险", url:"https://www.medicalnewstoday.com/articles/309369"}],
+    secondary:null
+  },
+  {
+    name:"开心果", tier:"green",
+    verdict:"5 岁以上唯一被 PDCAAS 认证为「完全蛋白」的坚果（9 种必需氨基酸齐全），但也是黄曲霉污染高风险品类——买正规渠道很重要。",
+    targets:["血糖","心血管","营养密度"], risks:["肝功能","孕妇"],
+    good:"完全蛋白：1 盎司约 6g 蛋白，9 种必需氨基酸齐全。RCT 显示日常摄入降低糖尿病人群餐后血糖、HbA1c 下降约 0.2%；CGM 数据显示早餐后血糖峰值降低约 28%。",
+    warn:"开心果在成熟时果壳自然开裂，给曲霉菌（Aspergillus flavus）创造入口——多国调查中是干果中黄曲霉素污染率最高品类之一。霉变或异味立即丢弃。黄曲霉素是已知肝致癌物。",
+    hype:'"完全蛋白"营销不能让你忽略它仍是高脂坚果，不能替代主要蛋白来源（如肉/鱼/蛋）。',
+    use:{freq:"每天 1-2 盎司（约 28-56g，约 49-98 颗）。", scene:"零食、糖尿病人群餐后血糖管理。", caution:"选择带壳、密封、干燥储存的产品；孕妇/肝病者注意黄曲霉风险，认准正规品牌。"},
+    evChips:["PDCAAS 完全蛋白（5 岁+）","餐后血糖↓28%","HbA1c↓0.2%","黄曲霉污染高风险"],
+    links:[{label:"Frontiers in Nutrition：开心果与餐后血糖（2019）", url:"https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2019.00186/full"},{label:"PMC：开心果与糖尿病代谢（2019）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC6927994/"}],
+    secondary:null
+  },
+  {
+    name:"夏威夷果", tier:"green",
+    verdict:"所有坚果中单不饱和脂肪比例最高（75-82%），对人类心血管友好——但对狗剧毒（机制至今未明），养狗家庭务必锁好。",
+    targets:["心血管"], risks:[],
+    good:"MUFA 比例最高（油酸 61-66% + 棕榈油酸 13-22%）；棕榈油酸（omega-7）含量是其他坚果的 3-4 倍。JAMA Internal Medicine 研究显示对血脂有改善。",
+    warn:"对犬科有特异性毒性，剂量低至 2.4g/kg 即出现中毒（呕吐、虚弱、高热、CNS 抑制、后肢无力），3-24 小时出现症状，机制不明。热量密度极高（约 200kcal/oz）。",
+    hype:'"棕榈油酸代谢神奇收益"——人体 RCT 证据有限；高棕榈酸成分可能部分抵消 omega-7 益处。',
+    use:{freq:"每天 10-12 颗（约 28g）。", scene:"零食、烘焙；高脂生酮饮食者可作为脂肪来源。", caution:"不要喂狗，存放位置避开宠物；减重期注意热量。"},
+    evChips:["MUFA 75-82%（坚果之最）","棕榈油酸 15-22%","ASPCA：犬科 LD 2.4g/kg","热量密度极高"],
+    links:[{label:"JAMA Internal Medicine：坚果与血脂", url:"https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/415741"},{label:"Merck Vet Manual：夏威夷果对狗毒性", url:"https://www.merckvetmanual.com/toxicology/food-hazards/macadamia-nut-toxicosis-in-dogs"}],
+    secondary:null
+  },
+  {
+    name:"葵花籽（瓜子）", tier:"amber",
+    verdict:"维生素 E 密度顶级（1 盎司 ~7.4mg，接近每日 RDA 50%）——但向日葵是已知的镉超富集植物，产地不明的瓜子可能镉超标。",
+    targets:["营养密度","抗炎","心血管"], risks:["孕妇","肾病/高钾"],
+    good:"1 盎司含 α-生育酚约 7.4mg（约 RDA 50%）；硒约 22µg/oz（约 27-40% DV）；富含亚油酸、铜、镁。维生素 E 是脂溶抗氧化的核心。",
+    warn:"向日葵强烈累积土壤镉，研究中田间样本镉含量 0.76-0.88mg/kg，均超过欧盟食品限值 0.5mg/kg；ConsumerLab 测试发现市售产品广泛含镉，部分超 Prop 65 警示水平 5 倍。镉是慢性肾毒素，无法排出。",
+    hype:'"每天一把瓜子补维 E"——剂量没错，但忽略了累计镉负荷与高钠（盐焗瓜子）问题。',
+    use:{freq:"每天 1 盎司（约 28g）以内。", scene:"无盐烤制作为零食。", caution:"选择产地透明、第三方检测过重金属的品牌；避免盐焗/重口味产品；孕妇注意镉累积风险。"},
+    evChips:["维 E 7.4mg/oz（~50% RDA）","硒 ~27-40% DV","田间镉超欧盟限值（0.5mg/kg）","ConsumerLab：市售普遍含镉"],
+    links:[{label:"Springer：向日葵镉富集研究（2024）", url:"https://link.springer.com/article/10.1007/s11356-023-31631-0"},{label:"PMC：植物镉富集综述（2023）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10001555/"}],
+    secondary:null
+  },
+  {
+    name:"南瓜籽", tier:"green",
+    verdict:"锌含量在植物中名列前茅；真正有大 RCT 的是前列腺（BPH），不是睡眠——1431 人一年研究里全粒有效、提取物无效，但作者明说需确证。",
+    targets:["营养密度","免疫"], risks:[],
+    good:"1 盎司含锌约 2.2mg（20% DV）、镁约 37% DV。1431 人一年 RCT（GRANU）：全粒南瓜籽响应率 58.5% vs 安慰剂 47.3%、IPSS 临床相关下降，但提取物胶囊与安慰剂无差异，作者强调需确证研究。",
+    warn:"热量密度高（脂肪含量高），过量易超热量。BPH 严重症状不能用南瓜籽替代正规治疗（α-阻断剂/5α-还原酶抑制剂）。「助眠」只有镁/色氨酸的理论支持，无强证据。",
+    hype:'"睡前一把南瓜籽治失眠"——临床试验级证据仍弱，理论上合理但效应温和。',
+    use:{freq:"BPH 辅助：每天 10g（约 1 汤匙）全粒；日常营养：每天 1 盎司（28g）。", scene:"零食、烘焙、撒在沙拉上；BPH 男性可作为长期辅助。", caution:"坚果种子过敏者禁；BPH 不能替代医生治疗；优选无盐烤制。"},
+    evChips:["BPH RCT n=1431（12 月）","全粒响应 58.5% vs 47.3%","提取物胶囊无效·需确证","锌 2.2mg/oz"],
+    links:[{label:"PubMed：南瓜籽 BPH 一年 RCT（GRANU，2014）", url:"https://pubmed.ncbi.nlm.nih.gov/25196580/"},{label:"PMC：南瓜籽营养与健康综述", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7024187/"}],
+    secondary:null
+  },
+  {
+    name:"牛油果", tier:"green",
+    verdict:"用牛油果替代饱和脂肪能降 LDL（meta 约 -3.75mg/dL），但前提是「替代」不是「加餐」——多吃只是多 240kcal。",
+    targets:["心血管","营养密度"], risks:[],
+    good:"2025 年 GRADE meta（10 RCT）显示 LDL 降约 3.75mg/dL（p<0.001）；2015 年早期 meta（229 人）效应偏高（-16.5mg/dL）。油酸（MUFA）占总脂肪约 52%。",
+    warn:"乳胶过敏者约 30-50% 出现「latex-fruit 综合征」，牛油果是高交叉反应食物。热量密度高，加在原饮食上而非替代会增重。",
+    hype:'"牛油果减肥/抗衰老/超级食物"——它是不错的脂肪来源，但替代效应才是关键，不是单吃就有魔法。',
+    use:{freq:"每天约半个到 1 个（约 100-200g），替代其他脂肪/酱料。", scene:"涂面包替代黄油；沙拉替代奶酱；早餐替代部分动物脂肪。", caution:"乳胶过敏者注意 latex-fruit 综合征；减重期注意热量。"},
+    evChips:["2025 GRADE meta（10 RCT）","LDL↓3.75mg/dL","油酸（MUFA）~52%","替代≠加餐"],
+    links:[{label:"PMC：牛油果与血脂 GRADE meta（2025）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC12221997/"},{label:"PMC：牛油果与心血管 meta（2015）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC4330060/"}],
+    secondary:null
+  },
+  {
+    name:"石榴", tier:"amber",
+    verdict:"前列腺/BPH RCT 结果参差不齐——别把它当药；真正要小心的是它会延长华法林作用，增加出血风险。",
+    targets:["抗炎","心血管"], risks:["抗凝/手术","药物相互作用"],
+    good:"punicalagin 等多酚体外抗氧化能力很高；少量 RCT 提示对运动恢复、内皮功能有温和改善。是不错的多酚来源水果。",
+    warn:"BPH/PSA 上升的 RCT 多为小样本、结果不一致；通过抑制 CYP3A4/CYP2C9 可能延长华法林、西地那非药效，已有观察性病例报告。",
+    hype:'"石榴抗癌/抗衰老/防前列腺癌"——证据弱且不一致，不要当药；多酚的健康效应远比商业宣传温和。',
+    use:{freq:"当普通水果偶尔吃即可，没有「治疗剂量」。", scene:"鲜果、沙拉、果汁（注意含糖量）。", caution:"服华法林等抗凝药、西地那非者控量并告知医生；近期手术者注意。"},
+    evChips:["BPH RCT 结果不一致","CYP3A4/2C9 抑制","华法林相互作用","多酚体外抗氧化强"],
+    links:[{label:"MSKCC：石榴整合医学评估", url:"https://www.mskcc.org/cancer-care/integrative-medicine/herbs/pomegranate"},{label:"PMC：石榴临床证据综述（2023）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10003857/"}],
+    secondary:null
+  },
+  {
+    name:"葡萄", tier:"amber",
+    verdict:"一杯红酒只有 0.2-2mg 白藜芦醇，要达到动物实验有效剂量得喝数百杯——白藜芦醇神话和葡萄无关。",
+    targets:["营养密度"], risks:[],
+    good:"提供维生素 C、钾、纤维和多酚（白藜芦醇、原花青素等）。作为水果是不错的选择。",
+    warn:"白藜芦醇生物利用度极低（约 2%），口服后代谢极快为非活性硫酸化形式，达不到任何动物实验的有效剂量。葡萄长期位列 EWG「Dirty Dozen」农药残留榜前列。",
+    hype:'"喝葡萄汁/葡萄籽精华抗衰老/护心"——白藜芦醇内容物太少；葡萄籽精华的人体证据也很弱。',
+    use:{freq:"当普通水果适量吃，注意含糖量；建议买有机或彻底清洗。", scene:"鲜果、沙拉、零食。", caution:"糖尿病人注意含糖；农药敏感者选有机。"},
+    evChips:["红酒白藜芦醇 0.2-2mg/杯","动物有效剂量为数百毫克","生物利用度 ~2%","EWG Dirty Dozen 前列"],
+    links:[{label:"Linus Pauling Institute：白藜芦醇综述", url:"https://lpi.oregonstate.edu/mic/dietary-factors/phytochemicals/resveratrol"}],
+    secondary:null
+  },
+  {
+    name:"草莓", tier:"amber",
+    verdict:"花青素对认知有 12 周 RCT 证据——但它常年位列 EWG「Dirty Dozen」第一名，阿司匹林敏感者也要注意它是高水杨酸水果。",
+    targets:["营养密度","抗炎"], risks:["药物相互作用"],
+    good:"12 周 RCT：中年胰岛素抵抗+SCD 人群每日草莓粉减轻记忆干扰与抑郁症状。流行病学：花青素摄入与较低 AD 痴呆风险相关。维生素 C 含量也不错。",
+    warn:"草莓位列 EWG Dirty Dozen 第 1 名（多种农药残留），建议优选有机或彻底清洗。属于公认高水杨酸水果，对阿司匹林敏感者可能引发反应（罕见但存在）。",
+    hype:'"草莓抗癌/逆龄"——RCT 效应温和（12 周改善记忆指标），不是神药。',
+    use:{freq:"每天 1-1.5 杯（约 150-200g）。", scene:"零食、酸奶、沙拉、思慕雪。", caution:"水杨酸敏感者/阿司匹林敏感者控量；过敏者禁；优选有机或彻底清洗。"},
+    evChips:["12 周 RCT：记忆干扰↓","花青素与 AD 风险负相关（队列）","EWG Dirty Dozen 第 1","高水杨酸水果"],
+    links:[{label:"PMC：草莓与认知 RCT（2023）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10610192/"},{label:"PMC：花青素与认知队列", url:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6950087/"}],
+    secondary:null
+  },
+  {
+    name:"特级初榨橄榄油", tier:"green",
+    verdict:"PREDIMED（7216 人 RCT）：每天多 10g 特级初榨橄榄油，心血管事件↓约 10%——而且烟点低不等于不能炒菜，氧化稳定性反而比许多「高烟点油」强。",
+    targets:["心血管","抗炎"], risks:[],
+    good:"PREDIMED：7216 人地中海饮食 RCT，每多 10g/天 EVOO 主要心血管事件↓10%、死亡率↓7%；干预组主要事件率显著低于低脂对照组。富含油酸（MUFA）和多酚（橄榄酸刺激素等）。",
+    warn:'"烟点低 = 不能炒菜"是误解——EVOO 含丰富抗氧化物（多酚和维生素 E），氧化稳定性反而高；常规中式炒菜温度（170-190°C）以下都安全。但精炼橄榄油多酚已损失，不必为风味花高价。',
+    hype:'"橄榄油美容/治百病"——心血管证据扎实，但拿它当神药用就过了。',
+    use:{freq:"每天 2-3 汤匙（约 30-45ml）替代饱和脂肪。", scene:"凉拌、低中温炒菜、烤面包蘸食；地中海饮食核心。", caution:"热量密度高，按总热量计入；选择特级初榨（EVOO），不是精炼橄榄油。"},
+    evChips:["PREDIMED n=7216 RCT","每多 10g/天 CVD↓10%","死亡率↓7%","氧化稳定性优于多数油"],
+    links:[{label:"NEJM：PREDIMED 主结果", url:"https://www.nejm.org/doi/abs/10.1056/NEJMoa1200303"},{label:"Harvard：PREDIMED 撤回-再发表说明", url:"https://nutritionsource.hsph.harvard.edu/2018/06/22/predimed-retraction-republication/"}],
+    secondary:null
+  },
+  {
+    name:"柠檬", tier:"green",
+    verdict:"柠檬不是水果维 C 之王（猕猴桃更高）——它真正的价值是柠檬酸：小样本 RCT 显示鲜柠檬汁能提高尿柠檬酸（约 2.5 倍，略低于处方枸橼酸钾的 3.5 倍），对低柠檬酸尿的草酸钙结石者可作辅助。",
+    targets:["营养密度"], risks:["肾结石"],
+    good:"柠檬柠檬酸浓度约为橙子的 5 倍。一项 30 人随机研究：鲜柠檬汁使尿柠檬酸升高约 2.5 倍（处方枸橼酸钾约 3.5 倍），对反复草酸钙结石的低柠檬酸尿患者可作辅助预防——但样本小，需更大研究确认。",
+    warn:'"碱性水抗结石"则没有证据——UC Irvine 2024 年研究检测多款碱性水，碱含量不足以改变尿 pH。柠檬汁直接喝会蚀牙釉质，要稀释、用吸管。',
+    hype:'"柠檬水排毒/碱化体质/抗癌"——伪科学；维 C 含量也不是水果之最（猕猴桃约高出 2 倍）；也别外推成"喝柠檬水就能溶石"。',
+    use:{freq:"反复肾结石者：每天约半杯纯柠檬汁稀释饮用（分次）。", scene:"柠檬水替代饮料；菜肴提鲜；结石辅助预防。", caution:"胃食管反流、胃溃疡者控量；牙釉质敏感者用吸管喝、之后漱口。"},
+    evChips:["柠檬酸浓度~橙子 5 倍","30 人 RCT：尿柠檬酸↑2.5×（处方 3.5×）","样本小·需更大研究","「碱性水抗结石」无证据"],
+    links:[{label:"PubMed：柠檬汁 vs 枸橼酸钾 随机研究（n=30，2008）", url:"https://pubmed.ncbi.nlm.nih.gov/18946667/"},{label:"UC Irvine Health：碱性水与肾结石（2024）", url:"https://www.ucihealth.org/about-us/news/2024/01/alkaline-water-kidney-stones"}],
+    secondary:null
+  }
+  ,
+  // ── 第四批：净化系智商税 / 精油拆用途 / 发酵+主食冷门差异 ──
+  {
+    name:"膨润土（口服）", tier:"red",
+    verdict:"FDA 已两次召回市售膨润土产品（高铅）——你想用来「排毒」，反而被慢性铅中毒。",
+    targets:[], risks:["孕妇","婴儿","药物相互作用"],
+    good:"外用做面膜风险较低；口服没有可靠人体证据支持「排毒/通便/净化」。身体的解毒系统是肝肾，不是黏土。",
+    warn:"FDA 警告 Best Bentonite Cleanse 和 Bentonite Me Baby（铅暴露）；天然黏土普遍可富集铅、砷等重金属；吸附非选择，把你需要的钾、铁、维生素和口服药一并带走。",
+    hype:"「吸出体内毒素」「重金属排毒」「净化肠道」——零人体证据。",
+    use:{freq:"不建议常规口服；外用面膜偶尔可。", scene:"如要用，外用而非内服；任何「净化方案」直接跳过。", caution:"孕妇、婴幼儿、服药人群绝对避免口服。"},
+    evChips:["FDA 召回（铅）","无人体排毒证据","非选择性吸附","儿童慢性铅中毒报告"],
+    links:[{label:"FDA：Best Bentonite Clay 警告（2016）", url:"https://cacmap.fda.gov/drugs/drug-safety-and-availability/fda-warns-consumers-not-use-best-bentonite-clay"},{label:"FDA：Bentonite Me Baby 警告（2016）", url:"https://www.fda.gov/drugs/drug-safety-and-availability/fda-warns-consumers-about-health-risks-alikay-naturals-bentonite-me-baby-bentonite-clay"}],
+    secondary:null
+  },
+  {
+    name:"活性炭（保健用途）", tier:"red",
+    verdict:"急救室 1 小时内救服毒患者是真本事——但「排毒果汁/牙膏/胶囊」基本无证据，还顺手把你的避孕药一起吸走。",
+    targets:[], risks:["药物相互作用","孕妇","糖尿病用药","抗凝/手术"],
+    good:"急性中毒/药物过量后 1 小时内由医护使用确实能阻止吸收（NIH StatPearls 有记载）——这是医院场景，不是日常。",
+    warn:"非选择性吸附——同时带走维生素、矿物质、口服避孕药、华法林、左甲状腺素、抗抑郁、降压、抗癫痫、降糖药等近 80 种常见药；长期使用引发便秘、营养不良。",
+    hype:"「清除毒素」「美白牙齿（实际磨损牙釉质）」「缓解宿醉」「净化肠道」——零证据。",
+    use:{freq:"日常不建议；若使用务必与所有口服药/维生素间隔 ≥3 小时。", scene:"急性中毒应直接去急诊，不要自行服用。", caution:"服口服避孕药、抗凝、降压、抗抑郁、抗癫痫、降糖药者；孕妇/儿童避免日常使用。"},
+    evChips:["仅急救有效（1h 内）","近 80 种药物相互作用","便秘风险","美白磨损釉质"],
+    links:[{label:"NCBI StatPearls：活性炭", url:"https://www.ncbi.nlm.nih.gov/books/NBK482294/"}],
+    secondary:null
+  },
+  {
+    name:"硅藻土（食品级，人用）", tier:"red",
+    verdict:"它对昆虫确实能割破外骨骼——但人肠里的蛔虫/绦虫根本没有外骨骼，那套「寄生虫清除」是物种张冠李戴。",
+    targets:[], risks:["孕妇","婴儿","药物相互作用"],
+    good:"食品级（非晶硅）FDA 列为 GRAS 间接食品添加剂，少量摄入未见严重毒性；养殖业用作防结块剂。",
+    warn:"无证据治疗人类内寄生虫；吸入粉尘有矽肺/肺癌风险（特别是不慎用到泳池级，结晶硅含量高达 60%）；长期口服可能影响营养吸收。",
+    hype:"「寄生虫清除」「肠道排毒」「重金属排除」「补硅美容养颜」——人体研究几乎空白。",
+    use:{freq:"如真要尝试，仅食品级、小剂量、短期；最好别碰。", scene:"无明确「必须用」的场景；寄生虫优先寻医，不是自疗。", caution:"孕妇、儿童、肺病患者；操作时务必戴口罩防吸入。"},
+    evChips:["FDA GRAS（食品级）","无人体寄生虫证据","吸入有矽肺风险","物种类比谬误"],
+    links:[{label:"Healthline：硅藻土综述", url:"https://www.healthline.com/nutrition/what-is-diatomaceous-earth"}],
+    secondary:null
+  },
+  {
+    name:"小苏打（内服）", tier:"amber",
+    verdict:"高强度运动前 0.2-0.3g/kg 是真有 RCT 证据的——但喝下去先要扛过腹泻和呕吐，「碱化抗癌」则是伪科学。",
+    targets:["运动表现"], risks:["高血压","孕妇","药物相互作用"],
+    good:"国际运动营养学会（ISSN）立场声明：0.2-0.3 g/kg 体重，运动前 60-90 分钟服用，能改善 30 秒-12 分钟的高强度运动（冲刺、举重、间歇跑、划船）表现。短期偶尔缓解胃酸反流。",
+    warn:"肠胃副作用普遍（胀气、腹泻、恶心、呕吐）；每克含约 273mg 钠；长期或大剂量可能引发代谢性碱中毒、低钾、高血压、心衰恶化。",
+    hype:"「碱性体质抗癌」「排毒/净化血液」「治愈一切慢病」——主流肿瘤学不支持，属伪科学（Mark Sircus 那一套）。",
+    use:{freq:"运动前偶尔（赛前），不日常服用。", scene:"高强度间歇/短时竞技项目。", caution:"高血压、心衰、肾病、孕妇、胃溃疡，以及钠摄入受限 / 易低钾者；服用前问医生（小苏打是降钾、不是升钾）。"},
+    evChips:["ISSN 立场声明（运动表现）","30s-12min 项目有效","每克含 273mg 钠","抗癌是伪科学"],
+    links:[{label:"ISSN 立场声明（2021）", url:"https://www.tandfonline.com/doi/full/10.1186/s12970-021-00458-w"},{label:"PMC：碳酸氢钠运动表现 meta（2021）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8076585/"}],
+    secondary:null
+  },
+  {
+    name:"木糖醇", tier:"amber",
+    verdict:"防龋有 Cochrane 低质量证据——但 2024 年欧洲心脏杂志研究提示血浆木糖醇高的人 3 年内心梗/卒中风险升高，对狗还是剧毒。",
+    targets:["口腔"], risks:["心血管","药物相互作用"],
+    good:"Cochrane 2015：含氟+10% 木糖醇牙膏比单纯含氟在儿童中或可降 13% 龋齿（低质量证据）；口香糖/漱口减少链球菌、刺激唾液。",
+    warn:"剂量 >20-30g/天常致腹胀腹泻；2024 欧洲心脏杂志（Hazen 团队）研究：循环木糖醇水平高与 3 年心血管事件风险升高相关（关联非因果），并显示血小板易聚集。对狗 0.15g/kg 即可致低血糖、肝衰竭、死亡。",
+    hype:"「天然安全甜味剂」「随便吃不胖不蛀牙」「完美替糖」——心血管信号需要更多研究，但已经不能这样宣传了。",
+    use:{freq:"口香糖/含片每日数颗即可获得口腔益处。", scene:"防龋（口腔接触）优于大量摄入；糖尿病人偶尔替糖。", caution:"心血管病史者降低长期摄入；养狗家庭绝对隔离；肠胃敏感者从低剂量开始。"},
+    evChips:["Cochrane 防龋（低质量）","2024 EHJ 心血管信号","狗剧毒 0.15g/kg",">20-30g/天致腹泻"],
+    links:[{label:"Cochrane：木糖醇与龋齿（2015）", url:"https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD010743.pub2/full"},{label:"NIH：木糖醇可能影响心血管健康（2024）", url:"https://www.nih.gov/news-events/nih-research-matters/xylitol-may-affect-cardiovascular-health"}],
+    secondary:null
+  },
+  {
+    name:"阿斯巴甜", tier:"amber",
+    verdict:"WHO/IARC 2023 列 2B「可能致癌」，但同周 JECFA 维持每日 40mg/kg 安全摄入量——70kg 成人要喝 9-14 罐健怡可乐才到上限。",
+    targets:["血糖"], risks:["苯丙酮尿症"],
+    good:"零热量替代糖，用于减糖/控糖/控重，已批准使用 40+ 年。",
+    warn:"IARC 基于有限的人体证据（肝细胞癌）列为 Group 2B；PKU（苯丙酮尿症）患者禁用——会蓄积苯丙氨酸致脑损伤、智力受损；FDA 要求所有含阿斯巴甜产品标注「苯丙酮尿症患者注意：含苯丙氨酸」。",
+    hype:"极端两派都不全对：「喝一罐就致癌」与「完全无害」都过头——大量长期摄入存在不确定信号，正常量基本安全。",
+    use:{freq:"作为偶尔替糖，不建议当作日常饮品基础。", scene:"控糖控重短期替代。", caution:"PKU 患者绝对禁用；孕妇尽量减少；偏头痛/敏感人群留意自身反应。"},
+    evChips:["IARC 2B（2023）","JECFA ADI 40mg/kg","PKU 禁用","人体证据有限"],
+    links:[{label:"WHO：阿斯巴甜风险评估结果（2023）", url:"https://www.who.int/news/item/14-07-2023-aspartame-hazard-and-risk-assessment-results-released"},{label:"IARC：阿斯巴甜评估", url:"https://www.iarc.who.int/news-events/aspartame-hazard-and-risk-assessment-results-released/"}],
+    secondary:null
+  },
+  {
+    name:"薰衣草精油（吸入用）", tier:"amber",
+    verdict:"吸入薰衣草降焦虑只有温和证据；被当卖点的强 RCT（Silexan）其实来自口服标准化胶囊——是另一个产品、另一条路径，别和「闻精油」混为一谈。",
+    targets:["睡眠"], risks:["孕妇","婴儿"],
+    good:"吸入：系统综述（多项 RCT）提示可降低焦虑评分，效应温和、研究质量参差。口服 Silexan 80mg/日在广泛性焦虑（GAD）上有更强 RCT（HAM-A 下降、与帕罗西汀/劳拉西泮非劣效）——但那是口服胶囊，不是吸入。",
+    warn:"超市精油 ≠ Silexan 处方级标准化制剂，二者证据不能互相借用；接触皮肤未稀释可致敏；男孩长期外用与青春期前乳腺发育有个案关联（停用可逆）。",
+    hype:"MLM 暗示「治百病」——吸入只对焦虑/睡眠有温和证据，不治疗抑郁、ADHD、痴呆、癌症；也别拿口服 Silexan 的数据给「闻精油」背书。",
+    use:{freq:"睡前 30 分钟扩香 15-30 分钟，或枕边 1-2 滴。", scene:"高焦虑日、入睡困难、术前紧张。", caution:"孕妇、婴幼儿房间慎用；不要直接皮肤涂抹未稀释精油。"},
+    evChips:["吸入：系统综述（温和）","口服 Silexan：GAD 非劣效（另一路径）","二者证据不互通","用法仅限嗅吸/扩香"],
+    links:[{label:"PMC：薰衣草吸入焦虑系统综述", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10671255/"},{label:"PubMed：Silexan vs 劳拉西泮 GAD RCT", url:"https://pubmed.ncbi.nlm.nih.gov/19962288/"}],
+    secondary:null
+  },
+  {
+    name:"茶树精油（外用）", tier:"amber",
+    verdict:"5% 茶树油 vs 5% 过氧化苯甲酰治痤疮：两者都有效，茶树油起效慢但副作用少（44% vs 79%）——前提是稀释 + 外用。",
+    targets:["皮肤"], risks:["孕妇","婴儿"],
+    good:"5% 凝胶 12 周可显著减少炎性和非炎性痤疮，副作用率约为过氧化苯甲酰的一半；对 MRSA 体外有杀菌活性（临床证据为 C 级）。",
+    warn:"约 5% 使用者出现过敏性接触性皮炎；氧化后的旧瓶子致敏性显著上升；男孩长期外用与青春期前男性乳腺发育有个案关联；绝不可口服（神经毒性）。",
+    hype:"「纯天然抗菌剂」——对深部感染和系统性 MRSA 完全无证据；不能替代抗生素。",
+    use:{freq:"稀释至 5% 局部点涂，1-2 次/日。", scene:"轻中度痤疮、足癣辅助。", caution:"首次使用先做手肘内侧皮肤测试 24h；开封后 6 个月内用完；不要内服。"},
+    evChips:["RCT：5% TTO vs 5% BPO","副作用 44% vs 79%","MRSA 体外活性（C 级）","禁内服（神经毒性）"],
+    links:[{label:"PubMed：5% 茶树油凝胶痤疮 RCT", url:"https://pubmed.ncbi.nlm.nih.gov/17314442/"}],
+    secondary:null
+  },
+  {
+    name:"薄荷油肠溶胶囊（IBS）", tier:"green",
+    verdict:"12 RCT/835 患者 meta：肠溶薄荷油 vs 安慰剂改善 IBS 整体症状 RR=2.39——肠溶包衣是关键，非肠溶剂型反而引发烧心反流。",
+    targets:["肠胃"], risks:["药物相互作用","孕妇"],
+    good:"肠溶薄荷油在 2-12 周内显著改善 IBS 整体症状（RR≈2.4）和腹痛。AGA 指南条件性推荐用于 IBS 痉挛和腹痛。是少数被主流肠胃科指南正面提及的草本疗法。",
+    warn:"非肠溶薄荷油/糖果在胃内释放，会松弛食管下括约肌，加重 GERD/烧心；常见副作用还是烧心。",
+    hype:"「万能助消化油」——仅对 IBS 型腹痛和痉挛有证据，不治疗 SIBO、克罗恩、溃疡性结肠炎。",
+    use:{freq:"饭前 30-60 分钟服用 1 粒（约 180-200mg），每日 3 次，疗程 2-4 周。", scene:"IBS 腹痛、胀气、痉挛。", caution:"必须肠溶包衣；GERD/食管裂孔疝者慎用；不要打开胶囊；与 PPI 同服可能破坏肠溶包衣（隔开服）。"},
+    evChips:["12 RCT meta RR=2.39","AGA 指南条件性推荐","必须肠溶剂型","非肠溶加重烧心"],
+    links:[{label:"BMC：薄荷油 IBS meta 分析", url:"https://link.springer.com/article/10.1186/s12906-018-2409-0"}],
+    secondary:null
+  },
+  {
+    name:"内服精油 / MLM 品牌", tier:"red",
+    verdict:"FDA 给 doTERRA/Young Living 发过警告函；美国毒控中心 2019 年记录 25,500+ 起精油中毒，2/3 是 15 岁以下儿童——内服精油是真实有伤害的高风险行为。",
+    targets:[], risks:["孕妇","婴儿","肝功能","药物相互作用"],
+    good:"对内服模式没有可信的健康获益证据；除德国 Silexan 这类处方级标准化制剂外，所有「食品级」营销标签都没有监管意义。",
+    warn:"肝毒性（丁香、鼠尾草）、神经毒性/惊厥（樟脑、桉树、薄荷）、CYP450 抑制致药物中毒、儿童误服致命、误吸性化学性肺炎。鼠尾草、樟脑、桉树油、丁香油误服 5ml 就能致儿童危及生命。",
+    hype:"「天然=安全」「食品级=可内服」「one drop a day 提升免疫力/治百病/治埃博拉/治癌」——FDA 明确将此类宣称定性为非法药品宣传。",
+    use:{freq:"不要内服。", scene:"无安全使用场景。", caution:"瓶子放儿童触不到处；不要加入饮用水/胶囊；不要听 MLM 上线指导口服。"},
+    evChips:["FDA 警告函（2014 & 2022）","AAPCC 2019：25,500+ 例中毒","2/3 是 15 岁以下儿童","多种器官毒性"],
+    links:[{label:"FDA：Young Living 警告函（2022）", url:"https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/warning-letters/young-living-essential-oils-corporate-615777-06102022"},{label:"FTC：doTERRA COVID-19 警告函（2020）", url:"https://www.ftc.gov/system/files/warning-letters/covid-19-letter_to_doterra_international_llc.pdf"}],
+    secondary:null
+  },
+  {
+    name:"苦瓜", tier:"amber",
+    verdict:"meta 分析称对 T2DM 有降糖效果，但 Cochrane 等级为「低到极低」，效应小且不一致——孕妇直接避免（动物试验中蛋白有致流产作用）。",
+    targets:["血糖","营养密度"], risks:["孕妇","糖尿病用药","肝功能"],
+    good:"餐桌摄入量对血糖影响很小；提取物在部分 RCT 中可轻微降低空腹血糖和 HbA1c，但效应不稳定，证据等级低。",
+    warn:"孕妇可能致流产（α-/β-momorcharin 蛋白）；与磺脲类、胰岛素、二甲双胍同用可叠加致低血糖；G6PD 缺乏者食用种子有溶血风险；偶有肝酶升高个案。",
+    hype:"「植物胰岛素」「天然降糖王」——meta 证据等级低，效应远不如二甲双胍，不能替代用药。",
+    use:{freq:"每周 2-3 次菜肴使用（半根-1 根），不要长期高剂量提取物。", scene:"餐桌蔬菜、夏季清热。", caution:"孕妇/备孕禁用；糖尿病用药者监测血糖；G6PD 缺乏者避免吃籽。"},
+    evChips:["Cochrane 低-极低质量","动物模型 abortifacient","与磺脲类叠加致低血糖","效应小且不一致"],
+    links:[{label:"Nature：苦瓜 T2DM meta 分析", url:"https://www.nature.com/articles/nutd201442"},{label:"PubMed：Momordica charantia 孕期蛋白", url:"https://pubmed.ncbi.nlm.nih.gov/3497134/"}],
+    secondary:null
+  },
+  {
+    name:"黑蒜", tier:"amber",
+    verdict:"S-allyl cysteine 是鲜蒜 6 倍，但 allicin 大幅下降——每克黑蒜的临床降压效应实际上小于鲜蒜，主要卖点是口感和耐受性。",
+    targets:["血压","心血管","抗炎"], risks:["抗凝/手术","药物相互作用"],
+    good:"陈年黑蒜提取物作为高血压辅助，可小幅降低血压（DBP 约 1.5-5.85 mmHg）、提升 NO 和抗氧化能力；SAC 生物利用度优于鲜蒜，口感更易接受。",
+    warn:"抗凝/抗血小板药（华法林、阿司匹林、氯吡格雷）同用增加出血风险；手术前 7-10 天停用；与 HIV 蛋白酶抑制剂相互作用；过量可致胃肠不适。",
+    hype:"「比鲜蒜降压强 10 倍」——每克黑蒜临床降压效应实际上小于鲜蒜，营销夸大。",
+    use:{freq:"食物：1-3 瓣/日；标准化提取物：250-650 mg/日。", scene:"心血管整体保养、不耐受生蒜口感者。", caution:"术前 1-2 周停用；服抗凝药者咨询医生。"},
+    evChips:["RCT：ABG10+ 1 级高血压","SAC 6× vs 鲜蒜","DBP ↓1.5-5.85 mmHg","每克活性弱于鲜蒜"],
+    links:[{label:"PMC：陈年黑蒜提取物 1 级高血压 RCT", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10490347/"}],
+    secondary:null
+  },
+  {
+    name:"酸奶（含活菌）", tier:"green",
+    verdict:"AAD（抗生素相关腹泻）meta：益生菌组 8% vs 对照 17.7%——但起作用的是 LGG 和布拉氏酵母这类特定菌株，不是货架上随便一瓶「益生菌酸奶」；巴氏杀菌的「酸奶饮料」里没有活菌。",
+    targets:["肠胃","免疫"], risks:[],
+    good:"特定菌株（Lactobacillus rhamnosus GG / Saccharomyces boulardii）对 AAD 预防、IBS 症状改善、急性腹泻病程缩短有 meta 证据。含活菌酸奶对乳糖不耐受人群消化乳糖更友好。",
+    warn:"商业酸奶 CFU 常远低于研究剂量；巴氏杀菌后的「酸奶饮料」/「乳酸菌饮料」无活菌，标签留意「含活菌」「未经热处理」。免疫抑制者/早产儿慎用活菌产品。",
+    hype:"「益生菌酸奶治百病」「增强免疫」「每天一瓶不感冒」——菌株不对、数量不够，效果与白水无异。",
+    use:{freq:"每天 1 杯（约 150-200g）含活菌、低糖酸奶。", scene:"抗生素疗程中、乳糖不耐受人群、肠胃敏感期。", caution:"重度免疫抑制（化疗、HIV 晚期）者慎用活菌；糖尿病人选无糖款。"},
+    evChips:["AAD：8% vs 17.7%（meta）","菌株特异性（LGG / S. boulardii）","商业 CFU 常不足","巴氏杀菌品无活菌"],
+    links:[{label:"PMC：益生菌与 AAD 综述", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10335840/"}],
+    secondary:null
+  },
+  {
+    name:"韩国泡菜", tier:"amber",
+    verdict:"韩国胃癌发病率全球第一——泡菜里硝酸盐和 N-亚硝基化合物（明确致癌物）含量高；减盐版可吃，传统高盐版别当健康食品天天吃。",
+    targets:["肠胃"], risks:["高血压"],
+    good:"小型研究显示对肠道菌群有改善（菌种多样性、双歧杆菌增加）；含活性乳酸菌、维生素 K2、辣椒素和大蒜活性成分。",
+    warn:"韩国西南部研究检出 N-亚硝基化合物中位数 1173µg/kg、硝酸盐中位数 1550mg/kg；钠含量极高（每 100g 约 500-1000mg 钠）；流行病学结果不一致，部分队列显示与胃癌风险升高相关。",
+    hype:"「超级发酵食品」「减肥」「排毒」——肠道证据规模小且不一致，天天吃高盐版反而可能伤胃。",
+    use:{freq:"每周 2-3 次，每次小份（约 50-80g）。", scene:"配米饭/烤肉提鲜，作为发酵蔬菜来源。", caution:"高血压、慢性胃炎、胃癌家族史者控量；孕妇注意亚硝酸盐；自制注意发酵卫生。"},
+    evChips:["韩国胃癌全球第一","硝酸盐中位数 1550mg/kg","N-亚硝基化合物 1173µg/kg","菌群证据规模小"],
+    links:[{label:"PMC：韩国泡菜与胃癌综述", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC12813881/"}],
+    secondary:null
+  },
+  {
+    name:"椰子糖", tier:"red", targetVerb:"宣称",
+    verdict:"「低 GI 健康糖」是营销——菲律宾原始研究只测了 10 个人就给出 GI=35，后续多源数据显示椰子糖 GI 平均 50-54，白糖约 58-65，差距没那么大。",
+    targets:[], risks:["糖尿病用药"],
+    good:"含微量矿物质（铁、锌、钾），略多于白糖——但含量微乎其微，按食用量贡献可忽略。",
+    warn:"本质仍是添加糖，热量和白糖几乎一样（约 16 kcal/茶匙）；糖尿病人不能视为「安全替代」；GI 差距小于营销宣传。",
+    hype:"「低 GI 健康糖」「椰花糖排毒燃脂」「天然不升血糖」——证据不支持，价格却是白糖 5-10 倍。",
+    use:{freq:"如要用，按白糖份量算，不是「想吃多少都行」。", scene:"想要椰子风味的烘焙；偶尔替代白糖。", caution:"糖尿病、肥胖、脂肪肝者不能视为安全替代品。"},
+    evChips:["GI 50-54（多源）vs 白糖 58-65","原始研究 n=10","热量 ≈ 白糖","矿物质贡献可忽略"],
+    links:[{label:"Healthline：椰子糖与糖尿病 GI", url:"https://www.healthline.com/health/diabetes/coconut-sugar-glycemic-index"},{label:"Cleveland Clinic：椰子糖是否健康", url:"https://health.clevelandclinic.org/is-coconut-sugar-good-for-you"}],
+    secondary:null
+  },
+  {
+    name:"甜菊糖", tier:"green",
+    verdict:"FDA / EFSA / JECFA 都认定高纯度甜菊糖提取物安全；RCT 显示对血糖和胰岛素无显著影响——是目前证据最干净的零热量替糖之一。",
+    targets:["血糖"], risks:["糖尿病用药"],
+    good:"T2D 患者 RCT 显示对血糖、血脂无负面影响；安全数据库非常大；零热量；不引发龋齿。",
+    warn:"长期高质量 RCT 仍不足；部分人有苦后味或胃肠不适报告；个体微生物组反应有差异；纯度低的产品可能掺其他甜味剂。",
+    hype:"「治糖尿病」「减肥神药」——它是更好的替糖，不是治疗药；选高纯度甜菊糖苷或瑞鲍迪苷 A 标注的产品。",
+    use:{freq:"按个人甜度需要替糖，JECFA ADI 4mg/kg 甜菊糖苷。", scene:"控糖控重时替代糖；冲泡饮品、烘焙。", caution:"留意苦后味个体差异；糖尿病人配合监测；孕妇按食品级常规摄入安全。"},
+    evChips:["FDA / EFSA / JECFA 安全","T2D RCT 血糖无负面影响","JECFA ADI 4mg/kg","零热量·不致龋"],
+    links:[{label:"PMC：甜菊糖与 T2D RCT", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC7103435/"}],
+    secondary:null
+  },
+  {
+    name:"加工肉 vs 未加工红肉", tier:"red", targetVerb:"宣称",
+    verdict:"IARC 2015 把加工肉定为 1 类致癌物（与烟草、石棉同级，但「同级」≠「同样危险」）——每天 50g 加工肉，结直肠癌风险升 18%。",
+    targets:[], risks:[],
+    good:"未加工红肉提供高质量蛋白、血红素铁、B12、锌——这些营养是真实的；问题在「加工」（腌、熏、烤焦、亚硝酸盐保存）。",
+    warn:"加工肉（培根/火腿/香肠/午餐肉）：IARC 1 类，每 50g/日 结直肠癌风险↑18%。未加工红肉：IARC 2A 类（可能致癌），证据等级弱于加工肉。烤焦/高温煎产生的杂环胺、PAH 类物质增加风险。",
+    hype:"「红肉=毒药」和「加工肉无害」都是极端——分清「加工」与「未加工」，是这条食物分类里最重要的一条认知。",
+    use:{freq:"加工肉：每周尽量少，最好 ≤1 次；未加工红肉：每周 ≤2-3 次约 100-150g/次。", scene:"未加工红肉作为铁/B12 来源；加工肉作为偶尔风味食品。", caution:"结直肠癌家族史、心血管病、慢性炎症者收紧加工肉摄入。"},
+    evChips:["IARC 1 类（加工肉）","IARC 2A（红肉）","每 50g/日加工肉 CRC↑18%","WHO 22 国专家评估"],
+    links:[{label:"IARC：加工肉与红肉致癌性新闻稿", url:"https://www.iarc.who.int/wp-content/uploads/2018/07/pr240_E.pdf"},{label:"WHO：加工肉/红肉致癌性 Q&A", url:"https://www.who.int/news-room/questions-and-answers/item/cancer-carcinogenicity-of-the-consumption-of-red-meat-and-processed-meat"}],
+    secondary:null
+  },
+  {
+    name:"鸡胸肉 vs 鸡腿肉", tier:"green",
+    verdict:"「瘦肉永远更健康」是谬误——鸡腿铁含量是鸡胸 2 倍多、锌 2 倍多，还是吸收率高的血红素铁；女性、跑者、缺铁人群吃鸡腿更划算。",
+    targets:["营养密度","运动表现"], risks:[],
+    good:"鸡胸 100g：蛋白 23g、铁 0.37mg、锌 0.68mg、饱和脂肪 1.1g。鸡腿 100g：蛋白 19g、铁 0.81mg（2 倍多）、锌 1.58mg（2 倍多）、饱和脂肪约 2.4g。血红素铁吸收率约 15-35%，远高于植物非血红素铁。",
+    warn:"鸡腿饱和脂肪略高（差异约 1-2g/100g），对总膳食影响有限；带皮鸡胸/鸡腿饱和脂肪都明显上升。",
+    hype:"「健身只能吃鸡胸」「鸡腿不健康/长胖」——蛋白差异约 4g/100g，但铁锌差异更显著，对部分人群鸡腿反而更优。",
+    use:{freq:"每周 2-4 次禽肉作为主要蛋白来源。", scene:"健身/减脂选鸡胸（蛋白密度高）；女性、跑者、补铁需求者选鸡腿。", caution:"高尿酸/痛风者控量；带皮版饱和脂肪高，可去皮。"},
+    evChips:["鸡腿铁 = 鸡胸 ×2","鸡腿锌 = 鸡胸 ×2","血红素铁吸收 15-35%","饱和脂肪差异约 1-2g/100g"],
+    links:[{label:"FoodStruct：鸡胸 vs 鸡腿对比", url:"https://foodstruct.com/compare/chicken-breast-vs-chicken-thigh"}],
+    secondary:null
+  }
+];
+
+// 深度层：剂量·见效 + 相互作用，按名字合并进 FOODS（加食物时这里可留空）
+const DEPTH = {
+  "红菜根":{dose:"研究多用约 250–500 ml 甜菜根汁（硝酸盐 ~5–8 mmol）；单次约 2–3 小时起血压效应，规律喝维持。", interactions:"与降压药叠加可能血压偏低；服硝酸酯类/治勃起障碍药者慎（同走一氧化氮通路）。"},
+  "西兰花芽苗":{dose:"当菜吃无公认治疗量；研究用高浓度萝卜硫素提取物。芽苗保留更多但生食有卫生风险。", interactions:"无明确药物冲突；大量生十字花科理论上影响甲状腺药者需留意。"},
+  "纳豆":{dose:"骨骼研究用 MK-7 约 180–375 µg/日；一盒纳豆(~50g)即远超此量。", interactions:"⚠️ 华法林：维生素 K 极高会显著削弱药效——吃华法林者基本应避免，或严格不改变摄入量。"},
+  "亚麻籽":{dose:"降压研究多用约 30 g/日磨碎亚麻籽，持续约 12 周以上见效；整粒无效，要磨碎。", interactions:"高纤维延缓口服药吸收（隔开 1–2 小时）；与抗凝/抗血小板药叠加理论上增出血。"},
+  "牛肝":{dose:"不是『起效量』而是『上限』：成人单次 100g 已超每日维 A 上限，频率控制在偶尔小份。", interactions:"⚠️ 与维 A 补剂/异维 A 酸（治痘药）叠加 → 维 A 中毒；孕期叠加维 A 尤其危险。"},
+  "巴西坚果":{dose:"每天 1–2 颗即满足硒需求；>4 颗/日易超上限。", interactions:"与含硒复合维生素叠加易硒过量；甲状腺治疗中需告知医生（硒影响甲状腺）。"},
+  "肉桂":{dose:"血糖研究剂量不一(约 1–6 g/日)、效果小且混合；当调味用即可，选锡兰肉桂避香豆素。", interactions:"与降糖药叠加可能低血糖；大量桂皮(cassia)+ 其他伤肝药/酒精叠加肝负担。"},
+  "海带 / 紫菜":{dose:"成人每日碘需 ~150 µg；偶尔吃即可满足，别天天大量或吃浓缩补剂。", interactions:"⚠️ 与甲状腺药（左甲状腺素/抗甲状腺药）冲突——碘波动扰乱药效，需告知医生。"},
+  "姜黄 / 姜黄素":{dose:"OA 研究多用标准化姜黄素约 500–1500 mg/日(常配胡椒碱)，数周见效；做菜量是调味非治疗量。", interactions:"⚠️ 与抗凝/抗血小板药叠加增出血；高剂量+胡椒碱影响多种药代谢(CYP)并增肝负担；胆道阻塞者慎。"},
+  "螺旋藻":{dose:"研究用约 3–6 g/日(分次)，数周见血压/血脂小幅改善；认准第三方检测产品。", interactions:"与降压/降糖药叠加注意；免疫刺激——自身免疫病/服免疫抑制剂者慎；苯丙酮尿症禁。"},
+  "牛骨汤":{dose:"无『功效剂量』——当普通汤喝即可，别期待剂量-效应。", interactions:"无明确药物冲突。"},
+  "苹果醋":{dose:"研究多用约 1–2 汤匙(15–30 ml)随餐；控糖信号存在但不是药物替代，务必稀释。", interactions:"与降糖药/胰岛素叠加可能低血糖；与利尿剂/地高辛长期大量理论上影响血钾。"},
+  "椰子油":{dose:"没有『有益剂量』——它升 LDL，越少越好，别为『功效』特意吃。", interactions:"无特定药物冲突，但叠加高饱和脂肪饮食加重血脂。"},
+  "枸杞":{dose:"当水果/泡水正常吃即可，无证实的治疗量。", interactions:"⚠️ 华法林：多例升 INR/出血报告，抗凝者避免大量。"},
+  "胶原蛋白肽":{dose:"皮肤/关节研究多用约 2.5–10 g/日水解胶原肽，连吃 8–12 周以上才可能见温和效果。", interactions:"无明确药物冲突；效果受产品与资助偏倚影响。"},
+  "燕麦 β-葡聚糖":{dose:"需 ≥3 g/日 β-葡聚糖(约一大碗整燕麦)，规律吃数周降 LDL；即食/加糖产品往往不够量。", interactions:"高黏纤维可延缓同服药物吸收，隔开服用更稳。"},
+  "鱼油 / 深海鱼 omega-3":{dose:"降甘油三酯常用 2–4 g/日 EPA+DHA(处方级)；普通保健剂量偏低。", interactions:"⚠️ 与抗凝/抗血小板药叠加增出血；高剂量升房颤风险，房颤史者用前问医生。"},
+  "洋车前子壳":{dose:"约 ≥10 g/日(分次)配大量水，数周见调脂/控糖；便秘可即时用。", interactions:"⚠️ 会延缓/减少同服口服药吸收——务必与药物间隔 1–2 小时；与降糖药叠加注意低血糖。"},
+  "大蒜":{dose:"降压研究多用陈蒜提取物约 600–1200 mg/日(含蒜素)，数周见效；膳食蒜量效应较弱。", interactions:"⚠️ 与华法林/DOAC/阿司匹林/氯吡格雷叠加增出血，术前约 2 周停；可能降低某些抗病毒药血药浓度。"},
+  "黑巧克力 / 可可":{dose:"研究用可可黄烷醇约 ≥900 mg/日；普通黑巧含量差异大、且带糖和热量。", interactions:"无明确药物冲突；含咖啡因，敏感者/与兴奋剂叠加注意。"},
+  "蓝莓":{dose:"正面血脂数据多来自提纯花青素大剂量；日常一把(80–150g)是营养补充非『剂量』。", interactions:"无明确药物冲突。"},
+  "红曲米":{dose:"降脂靠 monacolin K(约 3–10 mg/日=低剂量他汀)，但产品含量极不稳定，无法靠标签确定。", interactions:"⚠️ 当他汀看：与其他他汀/贝特类叠加增肌病；与西柚(CYP3A4)、环孢素、某些抗生素叠加增毒性。"},
+  "甘草 / 甘草根":{dose:"风险是累积的：每日甘草甜素 >~100 mg(相当于不少甘草糖/茶)持续数周即可升压降钾；短期小量为宜。", interactions:"⚠️ 与利尿剂/降压药/地高辛冲突(低血钾→地高辛中毒、血压紊乱)；与皮质激素叠加。"},
+  "绿茶（及绿茶提取物）":{dose:"喝茶日常即可；提取物补剂单日 EGCG 应 <800 mg 且勿空腹。", interactions:"茶多酚降低铁及某些药(如部分降压/抗凝药、左旋甲状腺素)吸收，隔开服；高剂量提取物+其他伤肝物叠加。"},
+  "羽衣甘蓝":{dose:"当蔬菜常量吃即可，无『治疗量』。", interactions:"⚠️ 华法林：高维生素 K，需保持摄入量稳定(不是禁吃)以免 INR 波动。"},
+  "接骨木莓":{dose:"症状初起按产品说明服标准糖浆(常一日数次)，可能缩短病程 1–2 天；只用煮熟制品。", interactions:"理论上刺激免疫——自身免疫病/服免疫抑制剂者慎；与利尿剂同用注意。"},
+  "生姜":{dose:"止吐约 1 g/日(分次)；OA 止痛研究剂量类似，数周见效。", interactions:"高剂量与抗凝/抗血小板药叠加理论增出血，术前慎；可能轻微影响降糖/降压药。"},
+  "椰子水":{dose:"当解渴饮料即可，无『补水优势剂量』；一天 1 杯内。", interactions:"⚠️ 高钾：与 ACEI/ARB/保钾利尿剂叠加 → 高钾血症，肾病者尤其危险。"},
+  "康普茶":{dose:"当低糖发酵饮料偶尔喝(每天 1 小瓶内)，无证实『功效剂量』。", interactions:"含微量酒精/咖啡因；自身免疫/服免疫抑制剂者慎商业未杀菌品。"},
+  "巴西莓":{dose:"当普通水果吃即可；补剂/果粉无证实有效剂量。", interactions:"无明确药物冲突(大剂量抗氧化与化疗的相互作用证据不足)。"},
+  "防弹咖啡 / MCT 油":{dose:"MCT 若用从 5–10 g 起逐增(防腹泻)；防弹咖啡本身无『功效剂量』。", interactions:"含咖啡因(与兴奋剂/某些药叠加)；高饱和脂肪加重血脂。"},
+  "奇亚籽":{dose:"约 20–25 g/日、持续 >10 周见小幅降压/降 LDL；务必先泡开。", interactions:"高纤维延缓同服药吸收(隔开)；与抗凝药叠加(ALA)理论增出血。"},
+  "藜麦":{dose:"当主食替代精制谷物，每餐半碗到一碗(熟)；血脂改善是长期饮食效应。", interactions:"无明确药物冲突；高纤维大量时与药物隔开更稳。"},
+  "葡萄柚（西柚）":{dose:"即使 200ml 果汁（一小杯）即可引发临床显著 CYP3A4 抑制；效果持续约 72 小时。", interactions:"⚠️ 严重：他汀类（辛伐他汀/洛伐他汀/阿托伐他汀）、钙通道阻滞剂（非洛地平等）、免疫抑制剂（环孢素/他克莫司）、苯二氮卓类、抗心律失常药（胺碘酮）、HIV 蛋白酶抑制剂——均可能血药浓度升至毒性水平；即使错开服药时间也无法完全回避。"},
+  "鸡蛋":{dose:"健康成人每天 1 个为安全区；2 个需考虑整体饮食的饱和脂肪总量。", interactions:"本身无明确药物冲突；高饱和脂肪烹饪方式（煎蛋+培根）的叠加风险大于鸡蛋本身。"},
+  "黑咖啡":{dose:"护肝和帕金森保护：每天 2 杯以上即显著；合理上限约 5 杯/天（约 500mg 咖啡因）。", interactions:"⚠️ 咖啡醇（法压/未过滤）：每天 5–6 杯可使 LDL 升 9–14%，换纸质滤纸可消除；咖啡因影响茶碱、氯氮平等药代谢；空腹大量刺激胃酸（胃溃疡患者慎）。"},
+  "菠菜":{dose:"当蔬菜日常吃；搭配维生素 C 食物可将铁吸收率提升最多 4 倍；水煮比生食降低草酸约 50%。", interactions:"⚠️ 华法林：高维生素 K1，保持摄入量稳定（不是禁吃，是稳定）以免 INR 波动；大量草酸与钙结合降低钙吸收。"},
+  "豆腐 / 大豆":{dose:"每日 1–2 份（约 100–150g 豆腐）为合理范围，相当于约 25–50mg 异黄酮。", interactions:"⚠️ 左甲状腺素：大豆可能减少药物吸收，需间隔 ≥2 小时服用。"},
+  "香蕉":{dose:"每日 1 根；青绿香蕉低 GI（约 30），全熟高 GI（约 65+），成熟度决定血糖响应。", interactions:"高钾（422mg/根）：ACEI/ARB/保钾利尿剂使用者注意累加；大量过熟香蕉与 MAOI 类抗抑郁药同服可能诱发高血压危象（酪胺效应，罕见）。"},
+  "蜂蜜":{dose:"成人每日 ≤1–2 汤匙（约 20–40g）；1 岁以下婴儿：零容忍，任何剂量。", interactions:"成人无已知显著药物相互作用；婴儿禁忌来自肉毒杆菌孢子在婴儿肠道萌发风险，与成人不同。"},
+  "全脂牛奶":{dose:"每天 200–300ml 为合理范围。", interactions:"高剂量铁剂补充时避免同服（钙抑制非血红素铁吸收）；左甲状腺素：牛奶可能减少吸收，需间隔服用。"},
+  "红酒":{dose:"无健康剂量推荐，WHO 2023：无论多少都有风险。", interactions:"⚠️ 华法林：酒精干扰代谢，增强抗凝，出血风险上升；甲硝唑/替硝唑：双硫仑样严重反应；苯二氮卓类/阿片类：协同抑制中枢；胰岛素/磺脲类：低血糖风险。"},
+  "西红柿":{dose:"每日 150–200g 熟食为优选；追求番茄红素：烹饪 + 加橄榄油；生食维生素 C 更高。", interactions:"无已知显著药物相互作用。"},
+  "核桃":{dose:"每天 28–30g（约 7 颗），提供 2.5g ALA，覆盖全天 ALA 需求（成人推荐 1.1–1.6g/天）。", interactions:"与华法林：大量摄入可能轻微影响维生素 K 平衡（监测 INR）；与铁剂：多酚可能轻微抑制铁吸收（隔开服用）。"},
+  "醋（陈醋/米醋）":{dose:"约 1.5g 乙酸（约 15-20ml 醋）随高碳水餐摄入；醋片胶囊无效。", interactions:"与胰岛素/磺脲类降糖药叠加可能低血糖；胃食管反流者注意刺激。"},
+  "黑胡椒（胡椒碱）":{dose:"做菜量无忧；补剂场景注意：每天 20mg 胡椒碱即可显著影响药代。", interactions:"⚠️ 他汀（辛伐他汀 AUC↑59%）、环孢素、咪达唑仑/三唑仑、硝苯地平、利托那韦、阿芬太尼等 CYP3A4 底物药。"},
+  "盐（钠）":{dose:"一般人群目标 <5-6g 盐/天（约 2g 钠）；高血压更严格。", interactions:"利尿剂、ACEI/ARB、锂剂——需医生指导。"},
+  "添加糖":{dose:"AHA：女 ≤25g/天、男 ≤36g/天（含糖饮料一罐就接近上限）。", interactions:"高糖摄入与某些降糖药（如 SGLT2）叠加可能影响血糖管理。"},
+  "酱油":{dose:"1 茶匙（约 5ml）≈ 250-350mg 钠；按天总钠量算进去。", interactions:"⚠️ MAOI（异烟肼、利奈唑胺、莫氯贝胺）+ 富酪胺食物可致高血压危象（酪胺反应）。"},
+  "味精（MSG）":{dose:"1 餐 0.3-0.5g 即足够提鲜；常规摄入安全。", interactions:"无明确药物冲突。"},
+  "杏仁":{dose:"健康成人每天 20-23 颗（约 28g）；同时保证钙摄入降低草酸吸收。", interactions:"草酸与钙在肠道结合可降低吸收；与某些抗生素（四环素类）大量同服可能影响吸收。"},
+  "腰果":{dose:"每天 1 盎司（约 28g，16-18 颗）。", interactions:"无明确药物冲突；漆树/芒果接触性皮炎史者偶尔交叉反应。"},
+  "开心果":{dose:"每天 1-2 盎司（约 28-56g）；糖尿病人群餐后血糖辅助。", interactions:"无明确药物冲突；黄曲霉素与酒精/肝病叠加损肝。"},
+  "夏威夷果":{dose:"每天 10-12 颗（约 28g）；高热量密度需注意总量。", interactions:"⚠️ 对狗剧毒（机制不明，2.4g/kg LD），养狗家庭务必锁好。"},
+  "葵花籽（瓜子）":{dose:"每天 1 盎司（约 28g）以内；优选产地透明的品牌。", interactions:"长期大量摄入未检测镉的瓜子可能累积肾毒性（与肾药联用尤其需注意）。"},
+  "南瓜籽":{dose:"BPH 辅助：每天 10g（约 1 汤匙）全粒；日常营养：每天 1 盎司（28g）。", interactions:"无明确药物冲突；不能替代 BPH 正规治疗（α-阻断剂等）。"},
+  "牛油果":{dose:"每天约半个到 1 个（约 100-200g），替代其他脂肪/酱料而不是加餐。", interactions:"无明确药物冲突；高维生素 K 大量摄入时华法林需监测 INR。"},
+  "石榴":{dose:"当普通水果偶尔吃即可，没有「治疗剂量」。", interactions:"⚠️ 抑制 CYP3A4/2C9：可能延长华法林、西地那非、他汀类作用——已有出血病例报告。"},
+  "葡萄":{dose:"当普通水果适量吃；建议买有机或彻底清洗。", interactions:"无明确药物冲突；与西柚不同，葡萄不抑制 CYP3A4。"},
+  "草莓":{dose:"每天 1-1.5 杯（约 150-200g）。", interactions:"高水杨酸——对阿司匹林敏感者罕见过敏；与抗凝药叠加无显著证据。"},
+  "特级初榨橄榄油":{dose:"每天 2-3 汤匙（约 30-45ml）替代饱和脂肪。", interactions:"无明确药物冲突；高热量密度需按总能量计入。"},
+  "柠檬":{dose:"反复肾结石者：每天约半杯纯柠檬汁稀释饮用（分次）。", interactions:"无明确药物冲突；与西柚不同，柠檬不抑制 CYP3A4。"}
+,
+  "膨润土（口服）":{dose:"无推荐口服剂量；外用面膜偶尔可。", interactions:"⚠️ 会吸附几乎所有口服药、矿物质、维生素——与任何药物同服都可能降低疗效。"},
+  "活性炭（保健用途）":{dose:"急救场景由医护按体重给药；日常无推荐剂量。", interactions:"⚠️ 已记录与近 80 种药物相互作用：口服避孕药、华法林、左甲状腺素、抗抑郁、降压、降糖、抗癫痫药——同服全部失效。"},
+  "硅藻土（食品级，人用）":{dose:"无权威推荐口服剂量。", interactions:"可能影响口服药吸收，与药物间隔；吸入有矽肺/肺癌风险。"},
+  "小苏打（内服）":{dose:"运动表现：0.2-0.3 g/kg 体重，运动前 60-90 分钟（约 14-21g/70kg 成人）。", interactions:"⚠️ 影响四环素、铁剂、氟喹诺酮吸收；与排钾利尿剂、皮质类固醇合用风险增加；与锂剂相互作用。"},
+  "木糖醇":{dose:"防龋：5-10g/日分次口腔接触；>20-30g/日易致腹泻。", interactions:"⚠️ 对狗 0.15g/kg 即可致命（剧毒）——养狗家庭必须严防。"},
+  "阿斯巴甜":{dose:"JECFA ADI 0-40 mg/kg 体重/日（70kg 人约 2800mg，相当于 9-14 罐健怡可乐）。", interactions:"无重大药物相互作用；PKU 患者须全面避免。"},
+  "薰衣草精油（吸入用）":{dose:"嗅吸：扩香 15-30 分钟；Silexan 口服胶囊：80-160 mg/日（仅德国处方级标准化制剂）。", interactions:"口服 Silexan 与镇静剂可能叠加；普通超市精油不要口服。"},
+  "茶树精油（外用）":{dose:"外用 5% 浓度凝胶/稀释液；开封后 6 个月内用完。", interactions:"无明确药物相互作用（外用）；与其他刺激性祛痘成分叠加易致皮炎；绝禁内服（神经毒性）。"},
+  "薄荷油肠溶胶囊（IBS）":{dose:"180-200 mg 肠溶胶囊，3 次/日，餐前 30-60 分钟，疗程 2-4 周。", interactions:"⚠️ 可能与环孢素、铁剂、降压药相互作用；与 PPI 同服可能破坏肠溶包衣（隔开服）。"},
+  "内服精油 / MLM 品牌":{dose:"不要内服。", interactions:"⚠️ 多种精油强抑制 CYP3A4/CYP2D6——与他汀、抗凝、镇静、抗癫痫、避孕药代谢冲突。儿童 5ml 即可危及生命。"},
+  "苦瓜":{dose:"蔬菜量即可；提取物缺乏标准化剂量。", interactions:"⚠️ 与磺脲类、胰岛素、二甲双胍叠加致低血糖；孕妇绝对避免（蛋白致流产）。"},
+  "黑蒜":{dose:"食物：1-3 瓣/日；标准化提取物：250-650 mg/日。", interactions:"⚠️ 华法林、阿司匹林、氯吡格雷出血风险叠加；HIV 蛋白酶抑制剂血药浓度下降；术前 7-10 天停用。"},
+  "酸奶（含活菌）":{dose:"每天 1 杯（约 150-200g）含活菌、低糖酸奶。", interactions:"无明确药物冲突；重度免疫抑制者慎用活菌。"},
+  "韩国泡菜":{dose:"每周 2-3 次，每次小份（约 50-80g）。", interactions:"无明确药物冲突；与降压药/低钠饮食叠加注意钠摄入。"},
+  "椰子糖":{dose:"按白糖份量计入总糖摄入。", interactions:"无明确药物冲突；与降糖药同管理。"},
+  "甜菊糖":{dose:"JECFA ADI 4 mg/kg 甜菊糖苷（按糖苷当量算）。", interactions:"无明确药物冲突；与降糖药联用通常无叠加风险（不升血糖）。"},
+  "加工肉 vs 未加工红肉":{dose:"加工肉：每周 ≤1 次；未加工红肉：每周 ≤2-3 次约 100-150g/次。", interactions:"无急性药物冲突；与抗凝/痛风用药叠加时注意嘌呤负荷。"},
+  "鸡胸肉 vs 鸡腿肉":{dose:"作为主要蛋白来源每周 2-4 次；按目标选部位。", interactions:"无明确药物冲突；带皮版饱和脂肪高。"}
+};
+Object.entries(DEPTH).forEach(([n,d])=>{ const f=FOODS.find(x=>x.name===n); if(f) Object.assign(f,d); else console.warn("DEPTH 无匹配食物（检查改名/错字）：", n); });
+
+// 冷门点层：每张卡顶部的反直觉钩子，按名字合并进 FOODS
+const HOOKS = {
+  "红菜根":"运动员用它合法提速——硝酸盐→一氧化氮→血管舒张，提升耐力有 RCT 证实，不是玄学。",
+  "西兰花芽苗":"萝卜硫素浓度比成熟西兰花高数十倍，但效果还取决于你的肠道菌群能不能把它转化成活性形式。",
+  "纳豆":"地球上 MK-7 型维生素 K2 含量最高的食物，50g 就超过大多数临床研究的每日用量——但吃华法林的人突然开始吃会让血液凝固能力骤变。",
+  "亚麻籽":"整粒吃基本无效——必须磨碎，omega-3 才能释出；磨碎后降压幅度在高血压人群能达 8.6 mmHg（meta 数据）。",
+  "牛肝":"100g 牛肝的维生素 A 已超成人全天安全上限——营养密度天花板，也是最容易脂溶维生素中毒的途径。",
+  "巴西坚果":"每天 1–2 颗就够补硒；超过约 4 颗开始逼近中毒上限——地球上最容易过量的「健康坚果」。",
+  "肉桂":"超市里的桂皮（cassia）和锡兰肉桂是不同的东西：前者含香豆素，长期大量吃有肝毒性；后者几乎不含。",
+  "海带 / 紫菜":"干海带碘约 1500µg/g，而成人每日需求只有 150µg——一小撮就轻松超标十倍。",
+  "姜黄 / 姜黄素":"加胡椒碱能把吸收率提高 20 倍，但同时也放大了肝毒性风险——不是越好吸收越健康。",
+  "螺旋藻":"血压血脂信号是真的，但真正的变量是来源：劣质品可能含微囊藻毒素（一种肝毒素）。",
+  "牛骨汤":"你喝下去的胶原全部被消化成氨基酸——但其中的甘氨酸有改善睡眠的小型 RCT 证据，这才是它冷门的用途。",
+  "苹果醋":"随餐喝能轻微压低餐后血糖峰（有 meta 证据），但直接喝会蚀牙釉质；「碱化体质」则是伪科学。",
+  "椰子油":"食用时 AHA 明确不推荐（升 LDL），但用来漱口（oil pulling）是另一回事——用途决定评级，不能一刀切。",
+  "枸杞":"真正有点证据的是护视网膜（玉米黄质），而非「抗衰老/增强免疫」——但大量喝枸杞茶可能升高华法林作用，有出血病例报告。",
+  "胶原蛋白肽":"和骨汤不同，水解胶原肽的皮肤/关节 RCT 是存在的——但剔除药企资助试验后，效果明显打折。",
+  "燕麦 β-葡聚糖":"FDA 认可的少数几个能标注「降胆固醇」的天然成分之一——但需要 ≥3g/日 β-葡聚糖，速溶燕麦片往往不够量。",
+  "鱼油 / 深海鱼 omega-3":"高剂量鱼油胶囊会升高房颤风险；但吃鱼本身没这个关联——同样的成分，载体不同，风险不同。",
+  "洋车前子壳":"价格极低却被 FDA 认可能降胆固醇，但干吞不加水会在食管膨胀——有需要内镜处理的梗阻真实病例。",
+  "大蒜":"大蒜真正有 meta 证据的是降血压（不是「杀菌/增强免疫」），高血压人群收缩压能降约 8.7 mmHg——但术前两周要停用。",
+  "黑巧克力 / 可可":"起效的是可可黄烷醇，但大多数市售黑巧加工已破坏大量黄烷醇——可可含量高 ≠ 黄烷醇含量高。",
+  "蓝莓":"多酚/抗氧化能力实验室测定很高，但对血压和 CRP 的 meta 汇总效应并不显著——「抗氧化=健康」是被过度简化的逻辑。",
+  "红曲米":"它本质是一颗没有说明书的低剂量他汀——monacolin K 与洛伐他汀是同一分子，副作用和处方他汀完全相同。",
+  "甘草 / 甘草根":"每天喝甘草茶会让血压偷偷升高、血钾悄悄降低——这是甘草甜素抑制肾脏酶的真实药理作用，有致命心律失常病例报告。",
+  "绿茶（及绿茶提取物）":"喝茶随便喝，但高浓度 EGCG 减肥胶囊在 EU 已被强制加肝损伤警告——提取物 ≠ 茶，剂量跨越了安全线。",
+  "羽衣甘蓝":"吃华法林的人不是「不能吃」，而是要保持摄入量稳定——突然多吃或少吃都会让血液凝固能力骤变。",
+  "接骨木莓":"生的含氰苷，生吃会中毒——必须煮熟才无毒，这是这个食物唯一的硬安全禁忌，没有例外。",
+  "生姜":"止孕吐的证据是天然食物里最硬的之一——ACOG（美国妇产科学会）明确认可其安全性和有效性。",
+  "椰子水":"每杯约含 600mg 钾，补点钾没问题——但健康成人大量喝后出现高钾血症、心律失常甚至晕厥的病例是真实的。",
+  "康普茶":"发酵产生的益生菌会随杀菌步骤消失；自制 pH 不够低时可能滋生有害菌——「益生菌饮料」的名称可能货不对板。",
+  "巴西莓":"实验室抗氧化 ORAC 值极高，但几乎没有支持「减肥/排毒/超级食物」的人体证据——高价格为营销买单，不为研究。",
+  "防弹咖啡 / MCT 油":"MCT 减重信号极弱；防弹咖啡的「抗饿」在双盲对照中未被验证——生酮减重靠的是热量限制，不是这杯咖啡。",
+  "奇亚籽":"干吞一勺奇亚籽后喝水，它会膨胀至自身重量约 27 倍——有导致食管完全梗阻需要内镜处理的真实病例。",
+  "藜麦":"植物界少有的完全蛋白（含全部 9 种必需氨基酸）在谷物里非常少见——但表皮皂苷不洗掉会发苦且刺激肠胃。",
+  // 新食物
+  "葡萄柚（西柚）":"一杯西柚汁的效果可持续 72 小时——吃完 3 天后再服某些药，血药浓度仍可翻几倍，而你可能完全不知情。",
+  "鸡蛋":"让全美减少吃蛋几十年的胆固醇建议，2016 年被美国膳食指南悄悄撤掉——大多数健康成人每天 1 个不升血脂。",
+  "黑咖啡":"喝咖啡能护肝——每天 2 杯以上，患肝硬化风险降低约 47%，证据质量在食物研究里属于顶级；但法压壶不过滤会让 LDL 反弹。",
+  "菠菜":"菠菜铁含量看起来和牛肉相当，但实际吸收率只有约 2%——你需要吃 5 杯以上生菠菜才能抵上一块小牛排提供的可吸收铁。",
+  "豆腐 / 大豆":"大豆让男人女性化——这是流传最广的营养学谣言之一，多项 RCT 和 meta 显示正常膳食摄入量对男性睾酮无显著影响。",
+  "香蕉":"同一根香蕉，青绿时升糖指数约 30，变成满布黑斑时可飙到 65+——成熟度让它从血糖友好食物变成高糖零食。",
+  "蜂蜜":"对成人普通甜味剂；但 1 岁以下婴儿绝对禁止——包括麦卢卡，任何品牌、任何剂量，零容忍，因为肉毒杆菌孢子。",
+  "全脂牛奶":"脱脂才安全？最新伞状综述显示 63% 的研究认为全脂乳制品对心血管无显著不良影响——「低脂越健康」可能是 40 年的营养学过度简化。",
+  "红酒":"一瓶红酒中的白藜芦醇，你需要喝 500–1000 瓶才能达到动物实验的有效剂量——「喝红酒护心」几乎是史上最成功的酒精营销神话。",
+  "西红柿":"生吃西红柿是在浪费番茄红素——烹饪后生物利用度提升约 35%，加橄榄油再翻倍，意大利人天天吃番茄酱比吃沙拉更营养。",
+  "核桃":"坚果界 ALA omega-3 冠军，但摄入的 ALA 只有 5–10% 能转化为大脑真正需要的 DHA——「吃核桃补脑」和实际发生的不是同一件事。",
+  "醋（陈醋/米醋）":"餐前喝 1-2 勺醋，能压餐后血糖峰约 1 mmol/L——但醋片胶囊在 RCT 里没出现同样效果，关键在液态接触小肠的过程。",
+  "黑胡椒（胡椒碱）":"它让姜黄素生物利用度提高约 20 倍——同样的机制会让他汀、环孢素、咪达唑仑在体内浓度异常升高。",
+  "盐（钠）":"「低钠也增加死亡」的 J 型曲线多来自单次尿钠+反向因果（病人本身病重才吃得淡）——多次测量后曲线消失。",
+  "添加糖":"果糖几乎只在肝脏代谢、更易转脂肪——但 Lustig 那套「糖独家有毒」在等热量替换实验里基本没站住。",
+  "酱油":"中国市售酱油组胺最高约 478mg/L、老抽组胺约是生抽的 3.7 倍——对偏头痛和吃 MAOI 的人是真正的隐性触发器。",
+  "味精（MSG）":"「中餐馆综合征」源自 1968 年 NEJM 一封带种族色彩的读者来信——从未被严谨双盲复现，FDA 列为 GRAS 公认安全。",
+  "杏仁":"meta 显示每天 42.5g 杏仁能降 LDL 约 0.13mmol/L——但 22 颗就含约 122mg 草酸，反复肾结石者要控量。",
+  "腰果":"市售「生」腰果其实都蒸过或烤过——真正生腰果壳含漆酚（毒葛同款致敏物），直接吃会起水泡。",
+  "开心果":"是 PDCAAS 认证的「完全蛋白」坚果（9 种必需氨基酸齐全）——但也是黄曲霉污染高风险品类，买正规渠道很重要。",
+  "夏威夷果":"所有坚果中单不饱和脂肪比例最高（75-82%）——但对狗剧毒（机制至今未明），养狗家庭务必锁好。",
+  "葵花籽（瓜子）":"维生素 E 密度顶级（1 盎司 ~7.4mg）——但向日葵是已知的镉超富集植物，产地不明的瓜子可能镉超标。",
+  "南瓜籽":"锌含量在植物中名列前茅；真正有大 RCT 的是前列腺（BPH）不是睡眠——1431 人一年研究里全粒有效、提取物无效，作者还说需确证。",
+  "牛油果":"用牛油果替代饱和脂肪能降 LDL（meta 约 -3.75mg/dL），但前提是「替代」不是「加餐」——多吃只是多 240kcal。",
+  "石榴":"前列腺/BPH RCT 结果参差不齐——别把它当药；真正要小心的是它会延长华法林作用，增加出血风险。",
+  "葡萄":"一杯红酒只有 0.2-2mg 白藜芦醇，动物有效剂量是数百毫克——吃葡萄、喝酒都达不到「抗衰老」剂量。",
+  "草莓":"花青素对认知有 12 周 RCT 证据——但它常年位列 EWG「Dirty Dozen」第一名，水杨酸敏感者也要当心。",
+  "特级初榨橄榄油":"PREDIMED 7216 人 RCT：每天多 10g EVOO，心血管事件↓约 10%——「烟点低不能炒菜」也是误解，氧化稳定性反而强。",
+  "柠檬":"柠檬不是水果维 C 之王（猕猴桃更高）——它真正的价值是柠檬酸：小样本 RCT 显示柠檬汁能提高尿柠檬酸（约 2.5 倍，略低于处方枸橼酸钾），对防草酸钙结石有辅助。"
+,
+  "膨润土（口服）":"FDA 已两次召回市售膨润土产品（高铅）——你想用来「排毒」，反而被慢性铅中毒。",
+  "活性炭（保健用途）":"急救室 1 小时内救服毒患者是真本事——但「排毒果汁/牙膏/胶囊」基本无证据，还顺手把你的避孕药一起吸走。",
+  "硅藻土（食品级，人用）":"它对昆虫确实能割破外骨骼——但人肠里的蛔虫/绦虫根本没有外骨骼，那套「寄生虫清除」是物种张冠李戴。",
+  "小苏打（内服）":"高强度运动前 0.2-0.3g/kg 是真有 RCT 证据的——但喝下去先要扛过腹泻和呕吐，「碱化抗癌」则是伪科学。",
+  "木糖醇":"防龋有 Cochrane 低质量证据——但 2024 年研究提示血浆木糖醇高与 3 年内心梗/卒中风险升高相关（关联、非因果定论），对狗还是剧毒。",
+  "阿斯巴甜":"WHO/IARC 2023 列 2B「可能致癌」，但 70kg 成人要喝 9-14 罐健怡可乐才到 JECFA 每日上限。",
+  "薰衣草精油（吸入用）":"吸入薰衣草降焦虑只有温和证据；被当卖点的强 RCT 其实来自口服标准化制剂 Silexan——是另一个产品、另一条路径，别混。",
+  "茶树精油（外用）":"5% 茶树油 vs 5% 过氧化苯甲酰治痤疮：两者都有效，副作用率前者反而是后者的一半（44% vs 79%）。",
+  "薄荷油肠溶胶囊（IBS）":"12 RCT/835 患者 meta：肠溶薄荷油 vs 安慰剂 IBS 整体症状 RR=2.39——肠溶包衣是关键，非肠溶剂型反而引发烧心反流。",
+  "内服精油 / MLM 品牌":"美国毒控中心 2019 年记录 25,500+ 起精油中毒，2/3 是 15 岁以下儿童——内服精油是真实有伤害的高风险行为。",
+  "苦瓜":"meta 称对 T2DM 有降糖，但 Cochrane 评为「低-极低」证据——孕妇直接避免，动物试验中蛋白有致流产作用。",
+  "黑蒜":"S-allyl cysteine 是鲜蒜 6 倍——但每克黑蒜临床降压效应实际上小于鲜蒜，主要卖点是口感不是药效。",
+  "酸奶（含活菌）":"AAD 益生菌组 8% vs 对照 17.7%——但起作用的是 LGG 和布拉氏酵母等特定菌株，巴氏杀菌的「酸奶饮料」里根本没有活菌。",
+  "韩国泡菜":"韩国胃癌高发与整体高盐腌制饮食相关（多因素、非泡菜单一因果）——传统高盐版硝酸盐/N-亚硝基化合物偏高，别当「超级发酵食品」天天大量吃。",
+  "椰子糖":"「低 GI 健康糖」的原始研究只测了 10 个人——后续多源数据显示 GI 50-54，离白糖 58-65 没有营销说的那么远。",
+  "甜菊糖":"FDA / EFSA / JECFA 都认定安全；T2D RCT 显示对血糖胰岛素无负面影响——是目前证据最干净的零热量替糖之一。",
+  "加工肉 vs 未加工红肉":"IARC 把加工肉定为 1 类致癌物（与烟草、石棉同级，但「同级」≠「同样危险」）——每天 50g 加工肉，结直肠癌风险升 18%。",
+  "鸡胸肉 vs 鸡腿肉":"「瘦肉永远更健康」是谬误——鸡腿铁是鸡胸 2 倍多、锌 2 倍多，还是吸收率高的血红素铁。"
+};
+Object.entries(HOOKS).forEach(([n,h])=>{ const f=FOODS.find(x=>x.name===n); if(f) f.hook=h; else console.warn("HOOKS 无匹配食物：", n); });
+
+const TIER_LABEL = {green:"🟢 证据比较扎实", amber:"🟡 有营养但有坑", red:"🔴 大头是营销"};
+const ACTION_BY_TIER = {
+  green:{label:"值得优先看", cls:"a-green"},
+  amber:{label:"特定场景再试", cls:"a-amber"},
+  red:{label:"不为功效花钱", cls:"a-red"}
+};
+const CLAIM_LABEL = {green:"可支持", amber:"可尝试", red:"营销多"};
+const TARGET_ORDER = ["血压","血糖","心血管","关节骨骼","营养密度","抗炎","肠胃","皮肤","睡眠","口腔","护肝","运动表现","补碘","免疫"];
+const RISK_ORDER = ["孕妇","婴儿","苯丙酮尿症","甲状腺","抗凝/手术","糖尿病用药","高血压","心血管","肾结石","肾病/高钾","肝功能","药物相互作用"];
+
+function esc(s){return String(s).replace(/&(?![a-z#0-9]+;)/gi,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function attr(s){return esc(s).replace(/"/g,"&quot;");}
+// 默认转义所有纯文本字段；只有显式 hypeHtml 字段允许少量内联 HTML。
+// 出处可读性（信任信号，不改变链接指向）：按域名判断点开能不能免费读到原文。
+function srcAccess(url){
+  const u=String(url||"");
+  if(u.includes("examine.com")) return {cls:"sec", label:"二级参考"};
+  if(["pmc.ncbi.nlm.nih.gov","ncbi.nlm.nih.gov/pmc","ncbi.nlm.nih.gov/books","ods.od.nih.gov","nccih.nih.gov","frontiersin.org","nutritionsource.hsph.harvard.edu","drugs.com"].some(d=>u.includes(d))) return {cls:"free", label:"免费可读"};
+  if(u.includes("pubmed.ncbi.nlm.nih.gov")||u.includes("cochranelibrary.com")) return {cls:"abs", label:"摘要免费"};
+  return {cls:"pay", label:"摘要·全文多付费"};
+}
+function linkHost(u){ try{return new URL(u).host;}catch(e){return "";} }
+// 出处分级：一级=一手文献/权威机构；二级=科普/百科/诊所博客/Examine（可读但不算强证据）
+const SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","cacmap.fda.gov","hhs.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu"];
+const SRC_TIER2=["examine.com","healthline.com","medicalnewstoday.com","drugs.com","goodrx.com","clevelandclinic.org","mskcc.org","arthritis.org","breastcancer.org","wikipedia.org","foodstruct.com","omegaquant.com","glycemicsnap.com","merckvetmanual.com","ucihealth.org","associatesinnephrologypc.com","drkarafitzgerald.com","westonaprice.org","chriskresser.com","aafp.org"];
+const TRUSTED_HOSTS=[...SRC_TIER1,...SRC_TIER2];
+function srcRank(u){ const h=linkHost(u); if(SRC_TIER1.some(d=>h===d||h.endsWith("."+d))) return 1; if(SRC_TIER2.some(d=>h===d||h.endsWith("."+d))) return 2; return 0; }
+function trustedUrl(u){ const h=linkHost(u); return /^https:\/\//.test(u||"") && !!h && TRUSTED_HOSTS.some(d=>h===d||h.endsWith("."+d)); }
+function actionFor(f){return ACTION_BY_TIER[f.tier] || {label:"先读证据", cls:""};}
+function claimHTML(claims){
+  if(!claims || !claims.length) return "";
+  return `<div class="claims">${claims.map(c=>`<div class="claim">
+    <div class="ctop"><span class="claim-badge ${c.tier}">${CLAIM_LABEL[c.tier] || c.tier}</span><b>${esc(c.title)}</b></div>
+    <p>${esc(c.text)}</p>
+  </div>`).join("")}</div>`;
+}
+
+function cardHTML(f){
+  const tv = f.targetVerb || "针对";
+  const action = actionFor(f);
+  const tags = [
+    `<span class="tag action ${action.cls}">${esc(action.label)}</span>`,
+    ...f.targets.map(t=>`<span class="tag">${tv} ${esc(t)}</span>`),
+    ...f.risks.map(r=>`<span class="tag risk">谨慎 ${esc(r)}</span>`)
+  ].join("");
+  const chips = (f.evChips||[]).map(c=>`<span class="evchip">${esc(c)}</span>`).join("");
+  const accChip = u=>{const a=srcAccess(u); return `<span class="acc ${a.cls}">${a.label}</span>`;};
+  const links = f.links.map(l=>`<div class="srcline"><a href="${attr(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)}</a>${accChip(l.url)}</div>`).join("");
+  const sec = f.secondary ? `<div class="srcline secondary">${esc(f.secondary.text)}<a href="${attr(f.secondary.url)}" target="_blank" rel="noopener noreferrer">${esc(f.secondary.label)}</a>${esc(f.secondary.tail||"")}${accChip(f.secondary.url)}</div>` : "";
+  const hype = f.hypeHtml || esc(f.hype || "");
+  return `<article class="card t-${f.tier}" data-name="${attr(f.name)}">
+    <div class="top"><h2>${esc(f.name)}</h2><div class="head"><span class="badge">${TIER_LABEL[f.tier]}</span><button type="button" class="compare-toggle" data-compare="${attr(f.name)}" aria-pressed="false">对比</button></div></div>
+    <p class="verdict">${esc(f.verdict)}</p>
+    ${f.hook ? `<p class="hook">💡 ${esc(f.hook)}</p>` : ""}
+    <div class="tags">${tags}</div>
+    ${claimHTML(f.claims)}
+    <div class="row good"><span class="lab">✅ 真实好处</span><p>${esc(f.good)}</p></div>
+    <div class="row warn"><span class="lab">⚠️ 坑与风险</span><p>${esc(f.warn)}</p></div>
+    <div class="row hype"><span class="lab">🚫 被过度营销的说法</span><p>${hype}</p></div>
+    <div class="use"><span class="lab">🍽 怎么用</span><dl>
+      <dt>频率/份量</dt><dd>${esc(f.use.freq)}</dd>
+      ${f.dose?`<dt>剂量·见效</dt><dd>${esc(f.dose)}</dd>`:""}
+      <dt>适合场景</dt><dd>${esc(f.use.scene)}</dd>
+      <dt>谨慎人群</dt><dd>${esc(f.use.caution)}</dd>
+    </dl></div>
+    ${f.interactions?`<div class="inter"><span class="lab">⚡ 和药/食物的冲突</span><p>${esc(f.interactions)}</p></div>`:""}
+    <div class="ev"><span class="lab">📚 证据出处 · 点开读原文</span><span class="srcq ${(f.links||[]).some(l=>srcRank(l.url)===1)?"q1":"q2"}">${(f.links||[]).some(l=>srcRank(l.url)===1)?"有一手证据":"待补一手源"}</span>
+      <div class="evchips">${chips}</div>
+      ${links}
+      ${sec}
+    </div>
+  </article>`;
+}
+
+function orderedLabels(kind, order){
+  const set = new Set();
+  FOODS.forEach(f => (kind==="target"?f.targets:f.risks).forEach(v=>set.add(v)));
+  return order.filter(x=>set.has(x)).concat([...set].filter(x=>!order.includes(x)));
+}
+
+function buildFilterButtons(g, order){
+  const ordered = orderedLabels(g, order);
+  const container = document.querySelector(`.fgroup[data-group="${g}"]`);
+  ordered.forEach(v=>{
+    const b = document.createElement("button");
+    b.dataset.g = g; b.dataset.v = v;
+    b.dataset.label = v;
+    b.setAttribute("aria-pressed","false");
+    b.textContent = v;
+    container.appendChild(b);
+  });
+}
+
+function buildProfileButtons(){
+  const targetBox = document.querySelector(".profile-target");
+  orderedLabels("target", TARGET_ORDER).forEach(v=>{
+    const b = document.createElement("button");
+    b.type = "button";
+    b.dataset.profileTarget = v;
+    b.setAttribute("aria-pressed", "false");
+    b.textContent = v;
+    targetBox.appendChild(b);
+  });
+  const riskBox = document.querySelector(".profile-risks");
+  orderedLabels("risk", RISK_ORDER).forEach(v=>{
+    const b = document.createElement("button");
+    b.type = "button";
+    b.dataset.profileRisk = v;
+    b.setAttribute("aria-pressed", "false");
+    b.textContent = v;
+    riskBox.appendChild(b);
+  });
+}
+
+function rememberButtonLabels(){
+  document.querySelectorAll(".fgroup button").forEach(b=>{
+    b.dataset.label = b.dataset.label || b.textContent.trim();
+  });
+}
+
+function validateData(){
+  const validTiers = new Set(Object.keys(TIER_LABEL));
+  const seen = new Set();
+  FOODS.forEach((f,i)=>{
+    const label = `FOODS[${i}] ${f.name || "(未命名)"}`;
+    if(!f.name) console.warn(label, "缺 name");
+    if(seen.has(f.name)) console.warn("重复食物名：", f.name);
+    seen.add(f.name);
+    if(!validTiers.has(f.tier)) console.warn(label, "tier 无效：", f.tier);
+    if(!Array.isArray(f.targets)) console.warn(label, "targets 应为数组");
+    if(!Array.isArray(f.risks)) console.warn(label, "risks 应为数组");
+    if(!f.good || !f.warn || !(f.hype || f.hypeHtml) || !f.verdict) console.warn(label, "缺少核心文案字段");
+    if(!f.use || !f.use.freq || !f.use.scene || !f.use.caution) console.warn(label, "use 字段不完整");
+    (f.claims || []).forEach(c=>{
+      if(!c.title || !c.text || !validTiers.has(c.tier)) console.warn(label, "claims 字段不完整：", c);
+    });
+    if(!Array.isArray(f.links) || f.links.length===0) console.warn(label, "缺 links");
+    (f.links || []).forEach(l=>{
+      if(!l.label) console.warn(label, "出处缺 label：", l);
+      else if(!trustedUrl(l.url)) console.warn(label, "出处链接非 https 或域名不在可信名单：", l.url);
+    });
+    const ranks = (f.links || []).map(l=>srcRank(l.url));
+    if(ranks.length && !ranks.includes(1)) console.warn(label, "⚠ 主张仅靠二级/科普来源支撑，建议补一手文献：", (f.links||[]).map(l=>l.url).join(" "));
+    if(f.secondary && !trustedUrl(f.secondary.url)) console.warn(label, "二级参考链接非 https 或域名不可信：", f.secondary.url);
+  });
+}
+
+// render
+validateData();
+const grid = document.getElementById("grid");
+grid.innerHTML = FOODS.map(cardHTML).join("");
+buildFilterButtons("target", TARGET_ORDER);
+buildFilterButtons("risk", RISK_ORDER);
+buildProfileButtons();
+rememberButtonLabels();
+document.getElementById("total").textContent = FOODS.length;
+
+// 过滤/搜索基于数据而非渲染出的 DOM 文本：每个食物预计算一次小写 search 串，
+// 只含食物数据（名称/结论/好处/风险/标签/剂量/相互作用/证据标签），
+// 不含 ✅真实好处、📚证据 这类每张卡都重复的 UI 文案。卡片与 FOODS 同序，按下标配对。
+const cardEls = Array.from(grid.querySelectorAll(".card"));
+const model = FOODS.map((f,i)=>({
+  el: cardEls[i],
+  food: f,
+  tier: f.tier,
+  targets: f.targets,
+  risks: f.risks,
+  search: [f.name, f.verdict, f.good, f.warn, (f.hypeHtml || f.hype || "").replace(/<[^>]+>/g," "),
+           f.dose||"", f.interactions||"", f.targets.join(" "), f.risks.join(" "),
+           (f.use?[f.use.freq,f.use.scene,f.use.caution].join(" "):""),
+           (f.evChips||[]).join(" "), (f.claims||[]).map(c=>`${c.title} ${c.text}`).join(" ")].join(" ").toLowerCase()
+}));
+
+const foodByName = new Map(FOODS.map(f=>[f.name, f]));
+const state = {tier:"all", target:"all", risk:"all", q:"", mode:"full", profileTarget:"all", profileRisks:[], compare:[]};
+const noResults = document.getElementById("noresults");
+const countEl = document.getElementById("count");
+const summaryEl = document.getElementById("summary");
+const profileResults = document.getElementById("profile-results");
+const comparePanel = document.getElementById("compare-panel");
+const compareTable = document.getElementById("compare-table");
+const compareCount = document.getElementById("compare-count");
+const qInput = document.getElementById("q");
+const clearBtn = document.getElementById("clear");
+const clearEmptyBtn = document.getElementById("clear-empty");
+const copyBtn = document.getElementById("copylink");
+const clearCompareBtn = document.getElementById("clear-compare");
+const viewButtons = Array.from(document.querySelectorAll(".viewtoggle button"));
+const compareButtons = Array.from(document.querySelectorAll(".compare-toggle"));
+
+function matches(m, overrides={}){
+  const tier = overrides.tier ?? state.tier;
+  const target = overrides.target ?? state.target;
+  const risk = overrides.risk ?? state.risk;
+  const q = String(overrides.q ?? state.q).trim().toLowerCase();
+  return (tier==="all" || m.tier===tier)
+    && (target==="all" || m.targets.includes(target))
+    && (risk==="all" || m.risks.includes(risk))
+    && (q==="" || m.search.includes(q));
+}
+
+function setGroup(g, value){
+  const group = document.querySelector(`.fgroup[data-group="${g}"]`);
+  if(!group) return;
+  const buttons = Array.from(group.querySelectorAll("button"));
+  const next = buttons.some(b=>b.dataset.v===value) ? value : "all";
+  state[g] = next;
+  buttons.forEach(b=>{
+    const on = b.dataset.v===next;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function setMode(mode){
+  state.mode = mode==="compact" ? "compact" : "full";
+  document.body.classList.toggle("compact", state.mode==="compact");
+  viewButtons.forEach(b=>{
+    const on = b.dataset.mode===state.mode;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function setProfileTarget(value){
+  const buttons = Array.from(document.querySelectorAll("[data-profile-target]"));
+  const next = buttons.some(b=>b.dataset.profileTarget===value) ? value : "all";
+  state.profileTarget = next;
+  buttons.forEach(b=>{
+    const on = b.dataset.profileTarget===next;
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function toggleProfileRisk(value){
+  state.profileRisks = state.profileRisks.includes(value)
+    ? state.profileRisks.filter(x=>x!==value)
+    : state.profileRisks.concat(value);
+  document.querySelectorAll("[data-profile-risk]").forEach(b=>{
+    const on = state.profileRisks.includes(b.dataset.profileRisk);
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function updateFilterCounts(){
+  document.querySelectorAll(".fgroup button[data-g]").forEach(btn=>{
+    const g = btn.dataset.g;
+    const value = btn.dataset.v;
+    const n = model.reduce((sum,m)=>sum + (matches(m, {[g]: value}) ? 1 : 0), 0);
+    btn.textContent = `${btn.dataset.label} ${n}`;
+    btn.setAttribute("aria-label", `${btn.dataset.label}，${n} 种食物`);
+  });
+}
+
+function updateSummary(){
+  const parts = [];
+  if(state.tier!=="all") parts.push(TIER_LABEL[state.tier]);
+  if(state.target!=="all") parts.push(`目标：${state.target}`);
+  if(state.risk!=="all") parts.push(`谨慎：${state.risk}`);
+  if(state.q.trim()) parts.push(`搜索：${state.q.trim()}`);
+  summaryEl.innerHTML = parts.map(p=>`<span>${esc(p)}</span>`).join("");
+}
+
+function tierValue(t){return t==="green" ? 0 : t==="amber" ? 1 : 2;}
+function terse(s, n=58){return s.length>n ? `${s.slice(0,n)}…` : s;}
+function screenItem(f, note){
+  return `<div class="screen-item"><b>${esc(f.name)}</b><span>${esc(note)}</span></div>`;
+}
+
+// 按所选目标的「有效证据档」：若该食物有匹配此目标的 claim（如椰子油漱口→口腔、牛骨汤助眠→睡眠），
+// 用 claim 的档而不是食物总档，避免「红档食物的某个真实窄用途」被一刀切到「不为功效买」。
+function effTier(f, goal){
+  if(goal && goal!=="all" && Array.isArray(f.claims)){
+    const c = f.claims.find(c=>c.goal===goal);
+    if(c) return c.tier;
+  }
+  return f.tier;
+}
+function actionForGoal(f, goal){ return ACTION_BY_TIER[effTier(f, goal)] || {label:"先读证据", cls:""}; }
+function renderProfile(){
+  const active = state.profileTarget!=="all" || state.profileRisks.length>0;
+  profileResults.classList.toggle("show", active);
+  if(!active){
+    profileResults.innerHTML = "";
+    return;
+  }
+  const target = state.profileTarget;
+  const risks = state.profileRisks;
+  const targetHit = f => target==="all" || f.targets.includes(target);
+  const riskHits = f => risks.filter(r=>f.risks.includes(r));
+  const et = f => effTier(f, target);
+  const priority = FOODS
+    .filter(f => targetHit(f) && riskHits(f).length===0 && et(f)!=="red")
+    .sort((a,b)=>tierValue(et(a))-tierValue(et(b)) || a.name.localeCompare(b.name, "zh-Hans-CN"))
+    .slice(0,5);
+  const cautious = FOODS
+    .map(f=>({f, hits:riskHits(f)}))
+    .filter(x => x.hits.length && (target==="all" || x.f.targets.includes(target) || et(x.f)!=="red"))
+    .sort((a,b)=>tierValue(et(b.f))-tierValue(et(a.f)) || a.f.name.localeCompare(b.f.name, "zh-Hans-CN"))
+    .slice(0,5);
+  const lowValue = FOODS
+    .filter(f => targetHit(f) && riskHits(f).length===0 && et(f)==="red")
+    .sort((a,b)=>a.name.localeCompare(b.name, "zh-Hans-CN"))
+    .slice(0,5);
+  const empty = `<div class="screen-item"><span>暂无匹配</span></div>`;
+  profileResults.innerHTML = `
+    <section class="screen-col"><h3>优先看</h3><div class="screen-list">${priority.map(f=>screenItem(f, `${actionForGoal(f, target).label} · ${terse(f.verdict)}`)).join("") || empty}</div></section>
+    <section class="screen-col"><h3>谨慎/先问</h3><div class="screen-list">${cautious.map(x=>screenItem(x.f, `命中：${x.hits.join("、")} · ${terse(x.f.use.caution)}`)).join("") || empty}</div></section>
+    <section class="screen-col"><h3>不为功效买</h3><div class="screen-list">${lowValue.map(f=>screenItem(f, terse(f.verdict))).join("") || empty}</div></section>
+  `;
+}
+
+function updateCompareButtons(){
+  compareButtons.forEach(btn=>{
+    const on = state.compare.includes(btn.dataset.compare);
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    btn.textContent = on ? "已选" : "对比";
+  });
+}
+
+function compareCell(f, key){
+  if(key==="action") return actionFor(f).label;
+  if(key==="claims") return (f.claims || []).map(c=>`${c.title}：${CLAIM_LABEL[c.tier] || c.tier}`).join(" / ") || "未分用途";
+  if(key==="tier") return TIER_LABEL[f.tier];
+  if(key==="targets") return f.targets.join("、") || "无";
+  if(key==="risks") return f.risks.join("、") || "无";
+  if(key==="dose") return f.dose || f.use.freq;
+  if(key==="interactions") return f.interactions || "无明确冲突";
+  if(key==="evidence") return (f.evChips||[]).join(" / ");
+  return f[key] || "";
+}
+
+function renderCompare(){
+  const foods = state.compare.map(n=>foodByName.get(n)).filter(Boolean);
+  comparePanel.classList.toggle("show", foods.length>0);
+  compareCount.textContent = foods.length ? `${foods.length} / 4` : "";
+  updateCompareButtons();
+  if(!foods.length){
+    compareTable.innerHTML = "";
+    return;
+  }
+  const rows = [
+    ["行动", "action"],
+    ["用途", "claims"],
+    ["证据", "tier"],
+    ["结论", "verdict"],
+    ["目标", "targets"],
+    ["谨慎", "risks"],
+    ["剂量", "dose"],
+    ["冲突", "interactions"],
+    ["证据点", "evidence"]
+  ];
+  compareTable.innerHTML = `<table class="compare-table">
+    <thead><tr><th></th>${foods.map(f=>`<th>${esc(f.name)}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(([label,key])=>`<tr><th>${esc(label)}</th>${foods.map(f=>`<td>${esc(compareCell(f,key))}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table>`;
+}
+
+function toggleCompare(name){
+  if(state.compare.includes(name)){
+    state.compare = state.compare.filter(x=>x!==name);
+  }else{
+    state.compare = state.compare.concat(name);
+    if(state.compare.length>4) state.compare = state.compare.slice(state.compare.length-4);
+  }
+  renderCompare();
+  syncUrl();
+}
+
+function syncUrl(){
+  const params = new URLSearchParams();
+  if(state.q.trim()) params.set("q", state.q.trim());
+  if(state.tier!=="all") params.set("tier", state.tier);
+  if(state.target!=="all") params.set("target", state.target);
+  if(state.risk!=="all") params.set("risk", state.risk);
+  if(state.mode==="compact") params.set("view", "compact");
+  if(state.profileTarget!=="all") params.set("mine", state.profileTarget);
+  if(state.profileRisks.length) params.set("risks", state.profileRisks.join("|"));
+  if(state.compare.length) params.set("compare", state.compare.join("|"));
+  const query = params.toString();
+  history.replaceState(null, "", `${location.pathname}${query ? `?${query}` : ""}`);
+}
+
+function apply({sync=true}={}){
+  let shown = 0;
+  model.forEach(m=>{
+    const show = matches(m);
+    m.el.classList.toggle("hide", !show);
+    if(show) shown++;
+  });
+  noResults.style.display = shown===0 ? "block" : "none";
+  countEl.textContent = (shown===model.length) ? `共 ${model.length} 种食物` : `显示 ${shown} / ${model.length} 种`;
+  updateFilterCounts();
+  updateSummary();
+  renderProfile();
+  renderCompare();
+  if(sync) syncUrl();
+}
+
+function clearFilters(){
+  state.q = "";
+  qInput.value = "";
+  setGroup("tier", "all");
+  setGroup("target", "all");
+  setGroup("risk", "all");
+  setProfileTarget("all");
+  state.profileRisks = [];
+  document.querySelectorAll("[data-profile-risk]").forEach(b=>{
+    b.classList.remove("active");
+    b.setAttribute("aria-pressed", "false");
+  });
+  apply();
+}
+
+function restoreFromUrl(){
+  const params = new URLSearchParams(location.search);
+  state.q = params.get("q") || "";
+  qInput.value = state.q;
+  setGroup("tier", params.get("tier") || "all");
+  setGroup("target", params.get("target") || "all");
+  setGroup("risk", params.get("risk") || "all");
+  setMode(params.get("view")==="compact" ? "compact" : "full");
+  setProfileTarget(params.get("mine") || "all");
+  const urlRisks = (params.get("risks") || "").split("|").filter(Boolean);
+  const validRisks = new Set(Array.from(document.querySelectorAll("[data-profile-risk]")).map(b=>b.dataset.profileRisk));
+  state.profileRisks = urlRisks.filter(r=>validRisks.has(r));
+  document.querySelectorAll("[data-profile-risk]").forEach(b=>{
+    const on = state.profileRisks.includes(b.dataset.profileRisk);
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  state.compare = (params.get("compare") || "").split("|").filter(n=>foodByName.has(n)).slice(0,4);
+}
+
+document.querySelectorAll(".fgroup").forEach(group=>{
+  group.addEventListener("click", e=>{
+    const btn = e.target.closest("button[data-g]");
+    if(!btn) return;
+    setGroup(btn.dataset.g, btn.dataset.v);
+    apply();
+  });
+});
+
+qInput.addEventListener("input", e=>{ state.q = e.target.value; apply(); });
+clearBtn.addEventListener("click", clearFilters);
+clearEmptyBtn.addEventListener("click", clearFilters);
+viewButtons.forEach(btn=>btn.addEventListener("click", ()=>{
+  setMode(btn.dataset.mode);
+  apply();
+}));
+document.querySelector(".profile-target").addEventListener("click", e=>{
+  const btn = e.target.closest("[data-profile-target]");
+  if(!btn) return;
+  setProfileTarget(btn.dataset.profileTarget);
+  apply();
+});
+document.querySelector(".profile-risks").addEventListener("click", e=>{
+  const btn = e.target.closest("[data-profile-risk]");
+  if(!btn) return;
+  toggleProfileRisk(btn.dataset.profileRisk);
+  apply();
+});
+grid.addEventListener("click", e=>{
+  const btn = e.target.closest("[data-compare]");
+  if(!btn) return;
+  toggleCompare(btn.dataset.compare);
+});
+clearCompareBtn.addEventListener("click", ()=>{
+  state.compare = [];
+  renderCompare();
+  syncUrl();
+});
+copyBtn.addEventListener("click", async ()=>{
+  syncUrl();
+  const old = copyBtn.textContent;
+  try{
+    if(!navigator.clipboard) throw new Error("Clipboard API unavailable");
+    await navigator.clipboard.writeText(location.href);
+    copyBtn.textContent = "已复制";
+  }catch(e){
+    copyBtn.textContent = "地址已更新";
+  }
+  window.setTimeout(()=>{ copyBtn.textContent = old; }, 1400);
+});
+
+restoreFromUrl();
+apply();
+
+// 渐进式展开：默认折叠「更多筛选」和「按我的情况看」，保持默认视图干净
+(function(){
+  const moreFilters = document.getElementById("more-filters");
+  const profilePanel = document.getElementById("profile-panel");
+  const tFilters = document.getElementById("toggle-filters");
+  const tProfile = document.getElementById("toggle-profile");
+  const badge = document.getElementById("filter-count");
+  function setOpen(panel, btn, open){
+    panel.classList.toggle("open", open);
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+    btn.classList.toggle("active", open);
+  }
+  tFilters.addEventListener("click", ()=> setOpen(moreFilters, tFilters, !moreFilters.classList.contains("open")));
+  tProfile.addEventListener("click", ()=> setOpen(profilePanel, tProfile, !profilePanel.classList.contains("open")));
+  const ACTIVE_FILTER_SEL = '.fgroup[data-group="target"] button.active:not([data-v="all"]), .fgroup[data-group="risk"] button.active:not([data-v="all"])';
+  function updateBadge(){
+    const n = document.querySelectorAll(ACTIVE_FILTER_SEL).length;
+    badge.textContent = n ? " " + n : "";
+    tFilters.classList.toggle("has-active", n>0);
+  }
+  document.querySelector(".controls").addEventListener("click", updateBadge);
+  const q = document.getElementById("q");
+  if(q) q.addEventListener("input", updateBadge);
+  // 初始：若 URL 已恢复出激活的筛选/筛查，自动展开对应面板（不偷偷藏起来）
+  updateBadge();
+  if(document.querySelector(ACTIVE_FILTER_SEL)) setOpen(moreFilters, tFilters, true);
+  if(document.querySelector('[data-profile-target].active:not([data-profile-target="all"]), [data-profile-risk].active')) setOpen(profilePanel, tProfile, true);
+})();
+</script>
+</body>
+</html>
