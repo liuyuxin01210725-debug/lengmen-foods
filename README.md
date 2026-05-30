@@ -8,10 +8,14 @@
 
 ## 用法
 
-- 在线版：见仓库 **Settings → Pages** 给出的地址（部署后此处补链接）。
+- 在线版：<https://liuyuxin01210725-debug.github.io/lengmen-foods/>
 - 本地：直接用浏览器打开 `index.html` 即可，无后端、无依赖、无构建。
 
 ## 内容原则
 
 - 出处优先 meta 分析 / 系统综述 / 权威机构（NIH、NCCIH、Cochrane、AHA、PubMed、WHO/IARC、FDA）；科普 / 百科作二级参考。
 - 全量条目的证据审查记录见 [`EVIDENCE_AUDIT.md`](./EVIDENCE_AUDIT.md)。
+
+## 版权
+
+All rights reserved. 未经授权请不要复制、改作或商业使用本项目内容。
