@@ -4,6 +4,16 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>冷门食物 · 证据分级</title>
+<meta name="description" content="把 93 种网红/冷门/日常食物按证据强度分级，列出真实好处、风险、剂量、相互作用和可点开的证据出处。">
+<link rel="canonical" href="https://liuyuxin01210725-debug.github.io/lengmen-foods/">
+<meta property="og:title" content="冷门食物 · 证据分级">
+<meta property="og:description" content="93 种食物的证据档案：误区、真相、行动建议、证据强度和真实出处。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://liuyuxin01210725-debug.github.io/lengmen-foods/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="冷门食物 · 证据分级">
+<meta name="twitter:description" content="93 种食物的证据档案：误区、真相、行动建议、证据强度和真实出处。">
+<meta name="theme-color" content="#F4F0E7">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -693,7 +703,7 @@ function toEvidence(f){var links=(f.links||[]).slice();
 if(f.secondary&&f.secondary.url)links.push({label:f.secondary.label,url:f.secondary.url,_sec:true});
 var n=evN(f),eff=evEffect(f);
 return links.map(function(l,idx){var rank=srcRank(l.url);
-return {year:evYear(l.label),type:l._sec?"二级参考":evType(l.label,f),n:idx===0?n:"",effect:idx===0?eff:"",title:l.label,access:l._sec?"secondary":srcAccess(l.url),primary:(rank===1&&!l._sec)};});}
+return {year:evYear(l.label),type:l._sec?"二级参考":evType(l.label,f),n:idx===0?n:"",effect:idx===0?eff:"",title:l.label,url:l.url,access:l._sec?"secondary":srcAccess(l.url),primary:(rank===1&&!l._sec)};});}
 
 const FOODS = [
   {
@@ -2367,7 +2377,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
   function evidenceBlock(f, hasPrimary) {
     var rows = (f.evidence || []).map(function (e) {
       return '<div class="evrow"><div class="top">' + evChip(e) + '</div>' +
-        '<a href="#" onclick="return false;" title="（演示）点开查看出处"><span class="access" data-x="' + e.access + '">' + (ACCESS[e.access] || "") + '</span>' +
+        '<a href="' + e.url + '" target="_blank" rel="noopener noreferrer"><span class="access" data-x="' + e.access + '">' + (ACCESS[e.access] || "") + '</span>' +
         '<span class="ti">' + e.title + '</span></a></div>';
     }).join("");
     return '<div class="evidence"><div class="evhead"><span class="t">📚 证据出处</span>' +
