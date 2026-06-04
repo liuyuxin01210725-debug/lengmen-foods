@@ -1,244 +1,700 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>冷门食物 · 证据分级</title>
-<meta name="description" content="把网红/冷门食物按证据强度分级，列出真实好处、风险、剂量、相互作用和可点开的证据出处。">
-<link rel="canonical" href="https://liuyuxin01210725-debug.github.io/lengmen-foods/">
-<meta property="og:title" content="冷门食物 · 证据分级">
-<meta property="og:description" content="80 种网红/冷门食物的证据分级工具：真实好处、坑与风险、剂量、相互作用和出处。">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://liuyuxin01210725-debug.github.io/lengmen-foods/">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="冷门食物 · 证据分级">
-<meta name="twitter:description" content="80 种网红/冷门食物的证据分级工具：真实好处、风险、剂量、相互作用和出处。">
-<meta name="theme-color" content="#fafaf7">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
-  :root{
-    --bg:#fafaf7; --card:#fff; --ink:#1f1f1d; --muted:#6b6b66; --line:#e7e6e0;
-    --green:#2e7d32; --green-bg:#eef6ee;
-    --amber:#b26a00; --amber-bg:#fbf3e6;
-    --red:#c0392b;   --red-bg:#fbeceb;
-    --focus:#1a73c2;
-  }
-  *{box-sizing:border-box}
-  body{margin:0; background:var(--bg); color:var(--ink); line-height:1.6;
-    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-    -webkit-font-smoothing:antialiased;}
-  .wrap{max-width:960px; margin:0 auto; padding:28px 18px 60px}
-  header h1{font-size:1.55rem; margin:0 0 6px; letter-spacing:.5px}
-  header .sub{color:var(--muted); margin:0; font-size:.95rem}
-  .disclaimer{color:var(--muted); font-size:.8rem; margin:14px 0 0; border-left:3px solid var(--line); padding:4px 0 4px 10px}
-  .vh{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0}
+/* ============================================================
+   冷门食物 · 证据分级 — 设计系统
+   气质：严肃循证 × 亲切科普。暖纸底 + 植物绿/赭黄/砖红三档。
+   ============================================================ */
+:root{
+  /* 暖纸中性 */
+  --paper:#F4F0E7;
+  --paper-grain:#EFEADD;
+  --card:#FFFFFF;
+  --ink:#211F1A;
+  --ink-2:#56524A;
+  --ink-3:#8B8678;
+  --ink-4:#B4AF9F;
+  --line:#E6E0D2;
+  --line-2:#D8D1C0;
+  --line-strong:#C7BFA9;
 
-  .controls{margin:22px 0 18px; display:flex; flex-direction:column; gap:10px}
-  .search input{width:100%; font:inherit; font-size:.95rem; padding:10px 14px; border:1px solid var(--line); border-radius:10px; background:#fff}
-  .fgroup{display:flex; flex-wrap:wrap; align-items:center; gap:8px}
-  .glab{font-size:.78rem; color:var(--muted); min-width:64px; font-weight:600}
-  .fgroup button{font:inherit; font-size:.84rem; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink); padding:6px 12px; border-radius:999px; transition:.15s}
-  .fgroup button:hover{border-color:#cfcfc8}
-  .fgroup button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
-  .utility{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:2px}
-  .viewtoggle{display:flex; flex-wrap:wrap; align-items:center; gap:8px}
-  .utility button{font:inherit; font-size:.84rem; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink); padding:6px 12px; border-radius:8px; transition:.15s}
-  .utility button:hover{border-color:#cfcfc8}
-  .utility button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
-  .utility .ghost{color:var(--muted)}
-  .profile{margin:2px 0 0; padding:12px; border:1px solid var(--line); border-radius:10px; background:#fff}
-  .profile .fgroup + .fgroup{margin-top:8px}
-  .profile button{font:inherit; font-size:.84rem; cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink); padding:6px 12px; border-radius:999px; transition:.15s}
-  .profile button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
-  .profile-results{display:none; grid-template-columns:1fr; gap:10px; margin-top:12px}
-  .profile-results.show{display:grid}
-  .utility .toggle.has-active{border-color:var(--ink); font-weight:600}
-  .utility .push-right{margin-left:auto}
-  .cnt{font-variant-numeric:tabular-nums}
-  .collapsible{display:none}
-  #more-filters.open{display:flex; flex-direction:column; gap:10px; margin-top:2px}
-  #profile-panel.open{display:block}
-  .profile-intro{margin:0 0 10px; font-size:.82rem; color:var(--muted)}
-  @media(min-width:760px){.profile-results{grid-template-columns:1fr 1fr 1fr}}
-  .screen-col{border-top:1px dashed var(--line); padding-top:10px}
-  .screen-col h3{font-size:.84rem; margin:0 0 6px; color:var(--muted)}
-  .screen-list{display:flex; flex-direction:column; gap:6px}
-  .screen-item{padding:8px 9px; background:#fafaf7; border-radius:8px; font-size:.82rem}
-  .screen-item b{display:block; font-size:.9rem; color:var(--ink)}
-  .screen-item span{display:block; color:var(--muted); line-height:1.45}
-  :focus-visible{outline:3px solid var(--focus); outline-offset:2px; border-radius:6px}
+  /* 三档色 —— 植物绿 / 赭黄 / 砖红（去红绿灯廉价感） */
+  --g:#2F6B49;      --g-deep:#1F4C33;  --g-bg:#E8F0E7;  --g-soft:#D7E6D6;  --g-tint:#F1F6EF;
+  --a:#B07514;      --a-deep:#7C5210;  --a-bg:#F6ECD6;  --a-soft:#EEDDB7;  --a-tint:#FAF3E2;
+  --r:#B33A26;      --r-deep:#7F2A1B;  --r-bg:#F6E2DB;  --r-soft:#EECBBF;  --r-tint:#FAEAE3;
 
-  .count{font-size:.8rem; color:var(--muted); margin:0 0 12px}
-  .summary{display:flex; flex-wrap:wrap; gap:6px; margin:-4px 0 12px}
-  .summary:empty{display:none}
-  .summary span{font-size:.74rem; padding:3px 8px; border:1px solid var(--line); border-radius:6px; background:#fff; color:#555}
-  .grid{display:grid; grid-template-columns:1fr; gap:16px}
-  @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
-  .card{background:var(--card); border:1px solid var(--line); border-left-width:5px; border-radius:12px; padding:18px}
-  .card.t-green{border-left-color:var(--green)} .card.t-amber{border-left-color:var(--amber)} .card.t-red{border-left-color:var(--red)}
-  .card.hide{display:none}
-  .top{display:flex; align-items:baseline; justify-content:space-between; gap:10px}
-  .head{display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-  .card h2{font-size:1.18rem; margin:0}
-  .badge{font-size:.72rem; padding:3px 9px; border-radius:999px; white-space:nowrap; font-weight:600}
-  .t-green .badge{background:var(--green-bg); color:var(--green)} .t-amber .badge{background:var(--amber-bg); color:var(--amber)} .t-red .badge{background:var(--red-bg); color:var(--red)}
-  .compare-toggle{font:inherit; font-size:.76rem; cursor:pointer; border:1px solid var(--line); border-radius:7px; padding:3px 8px; background:#fff; color:var(--muted)}
-  .compare-toggle.active{background:var(--ink); color:#fff; border-color:var(--ink)}
-  .verdict{margin:10px 0 4px; font-size:1.02rem}
-  .hook{margin:4px 0 12px; font-size:.86rem; padding:7px 10px 7px 13px; border-left:3px solid #f0c040; background:#fefce8; border-radius:0 8px 8px 0; color:#6b5500; line-height:1.5}
-  body.compact .hook{display:none}
+  /* 排版 */
+  --serif:"Noto Serif SC", Georgia, "Songti SC", serif;
+  --sans:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  .tags{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 14px}
-  .tag{font-size:.72rem; padding:2px 8px; border-radius:6px; background:#eef0ef; color:#444}
-  .tag.risk{background:#fbeceb; color:var(--red)}
-  .tag.action{font-weight:700}
-  .tag.action.a-green{background:var(--green-bg); color:var(--green)}
-  .tag.action.a-amber{background:var(--amber-bg); color:var(--amber)}
-  .tag.action.a-red{background:var(--red-bg); color:var(--red)}
-  .claims{margin:12px 0; display:flex; flex-direction:column; gap:8px}
-  .claim{border:1px solid var(--line); border-radius:10px; padding:9px 10px; background:#fff; font-size:.86rem}
-  .claim .ctop{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:4px}
-  .claim b{font-size:.88rem}
-  .claim p{margin:0; color:#37372f}
-  .claim-badge{font-size:.68rem; font-weight:700; border-radius:999px; padding:2px 7px}
-  .claim-badge.green{background:var(--green-bg); color:var(--green)}
-  .claim-badge.amber{background:var(--amber-bg); color:var(--amber)}
-  .claim-badge.red{background:var(--red-bg); color:var(--red)}
+  /* 间距 */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:40px; --s9:56px;
+  --rad:14px; --rad-lg:18px; --rad-sm:9px;
+  --shadow:0 1px 2px rgba(40,36,24,.05), 0 6px 22px -12px rgba(40,36,24,.18);
+  --shadow-lift:0 2px 6px rgba(40,36,24,.07), 0 18px 44px -18px rgba(40,36,24,.30);
+  --maxw:660px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  background-image:radial-gradient(transparent 0,transparent),linear-gradient(180deg,#F6F2E9,var(--paper));
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  line-height:1.55;
+  font-size:16px;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input{font-family:inherit;}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px;}
+::selection{background:#211f1a;color:#f4f0e7;}
 
-  .row{margin:9px 0; font-size:.92rem}
-  .row .lab{display:block; font-weight:600; font-size:.82rem; margin-bottom:2px}
-  .row.good .lab{color:var(--green)} .row.warn .lab{color:var(--amber)} .row.hype .lab{color:var(--red)}
-  .row p{margin:0; color:#37372f}
+/* ---------- 顶部品牌 + 工具栏 ---------- */
+.shell{max-width:var(--maxw);margin:0 auto;padding:0 18px 80px;}
+.topbar{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,var(--paper) 72%,rgba(244,240,231,0));padding-top:14px;}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.brand h1{
+  font-family:var(--display,var(--serif));font-weight:700;font-size:25px;letter-spacing:-.01em;margin:0;
+  color:var(--ink);
+}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--g);box-shadow:0 0 0 3px var(--g-soft);align-self:center;}
+.brand .tag{font-size:12.5px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.02em;}
+.disclaimer{
+  margin-top:9px;font-size:12px;line-height:1.5;color:var(--ink-3);
+  display:flex;gap:7px;align-items:flex-start;
+  border-left:2px solid var(--line-strong);padding-left:10px;
+}
+.disclaimer b{color:var(--ink-2);font-weight:500;}
+.lede{margin:11px 0 0;font-size:15px;line-height:1.55;color:var(--ink-2);max-width:46ch;text-wrap:pretty;}
+.lede b{color:var(--ink);font-weight:700;}
+.strength .adj{color:var(--a-deep);font-weight:600;}
 
-  .use{margin:14px 0 0; padding:12px 12px 8px; background:#f6f6f2; border-radius:10px; font-size:.88rem}
-  .use .lab{font-weight:700; font-size:.82rem; display:block; margin-bottom:6px}
-  .use dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:4px 10px}
-  .use dt{color:var(--muted); white-space:nowrap; font-size:.82rem}
-  .use dd{margin:0; color:#37372f}
-  .inter{margin:10px 0 0; padding:10px 12px; background:#fff7f3; border:1px solid #f3ddd2; border-radius:10px; font-size:.86rem}
-  .inter .lab{font-weight:700; font-size:.82rem; display:block; margin-bottom:4px; color:#b2480d}
-  .inter p{margin:0; color:#37372f}
+/* 搜索 */
+.search{position:relative;margin-top:14px;}
+.search input{
+  width:100%;padding:13px 14px 13px 42px;border-radius:var(--rad);
+  border:1.5px solid var(--line-2);background:var(--card);font-size:15.5px;color:var(--ink);
+  box-shadow:var(--shadow);transition:border-color .15s,box-shadow .15s;
+}
+.search input::placeholder{color:var(--ink-4);}
+.search input:focus{border-color:var(--ink);outline:none;box-shadow:var(--shadow-lift);}
+.search .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:16px;pointer-events:none;}
+.search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:8px;color:var(--ink-3);font-size:15px;display:none;align-items:center;justify-content:center;}
+.search .clr:hover{background:var(--paper-grain);color:var(--ink);}
+.search.has-val .clr{display:flex;}
 
-  .ev{margin-top:14px; padding-top:12px; border-top:1px dashed var(--line); font-size:.83rem}
-  .ev .lab{font-weight:600; color:var(--muted); display:block; margin-bottom:6px}
-  .evchips{display:flex; flex-wrap:wrap; gap:5px; margin-bottom:7px}
-  .evchip{font-size:.7rem; font-variant-numeric:tabular-nums; padding:2px 7px; border:1px solid var(--line); border-radius:5px; background:#fff; color:#555}
-  .ev a{color:#0a6; text-decoration:none; border-bottom:1px solid #bde6d3}
-  .ev a:hover{background:#eafaf2}
-  .ev .secondary{color:var(--muted); font-size:.78rem; margin-top:5px}
-  .ev .srcline{margin:4px 0; line-height:1.6}
-  .acc{display:inline-block; font-size:.66rem; padding:1px 6px; border-radius:5px; margin-left:6px; white-space:nowrap; vertical-align:1px}
-  .acc.free{background:#eef6ee; color:#2e7d32}
-  .acc.abs{background:#eef0f6; color:#41557a}
-  .acc.pay{background:#f7efe9; color:#9a5b3b}
-  .acc.sec{background:#f0f0ec; color:#666}
-  .srcq{font-size:.68rem; padding:1px 7px; border-radius:999px; margin-left:8px; font-weight:600; white-space:nowrap}
-  .srcq.q1{background:#eef6ee; color:#2e7d32}
-  .srcq.q2{background:#fbf3e6; color:#b26a00}
-  .muted{color:var(--muted)}
+/* 三档分段控件 */
+.tierbar{display:flex;gap:7px;margin-top:11px;}
+.tierbtn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:9px 4px 8px;border-radius:var(--rad-sm);background:var(--card);
+  border:1.5px solid var(--line-2);transition:.15s;position:relative;
+}
+.tierbtn .lab{font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:5px;}
+.tierbtn .cnt{font-family:var(--mono);font-size:11px;color:var(--ink-3);}
+.tierbtn .seed{width:9px;height:9px;border-radius:50%;}
+.tierbtn[data-t="all"] .seed{background:linear-gradient(135deg,var(--g),var(--a) 50%,var(--r));}
+.tierbtn[data-t="green"] .seed{background:var(--g);}
+.tierbtn[data-t="amber"] .seed{background:var(--a);}
+.tierbtn[data-t="red"] .seed{background:var(--r);}
+.tierbtn:hover{border-color:var(--line-strong);}
+.tierbtn[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);}
+.tierbtn[aria-pressed="true"] .lab,.tierbtn[aria-pressed="true"] .cnt{color:var(--paper);}
+.tierbtn[aria-pressed="true"][data-t="green"]{background:var(--g);border-color:var(--g-deep);}
+.tierbtn[aria-pressed="true"][data-t="amber"]{background:var(--a);border-color:var(--a-deep);}
+.tierbtn[aria-pressed="true"][data-t="red"]{background:var(--r);border-color:var(--r-deep);}
+.tierbtn[aria-pressed="true"][data-t="green"] .lab,.tierbtn[aria-pressed="true"][data-t="amber"] .lab,.tierbtn[aria-pressed="true"][data-t="red"] .lab,
+.tierbtn[aria-pressed="true"][data-t="green"] .cnt,.tierbtn[aria-pressed="true"][data-t="amber"] .cnt,.tierbtn[aria-pressed="true"][data-t="red"] .cnt{color:#fff;}
+.tierbtn[aria-pressed="true"] .seed{box-shadow:0 0 0 2px rgba(255,255,255,.55);}
 
-  .compare-panel{display:none; margin:0 0 16px; padding:12px; border:1px solid var(--line); border-radius:10px; background:#fff}
-  .compare-panel.show{display:block}
-  .panel-head{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px}
-  .panel-head strong{font-size:.92rem}
-  .panel-head span{font-size:.8rem; color:var(--muted)}
-  .panel-head button{font:inherit; font-size:.82rem; border:1px solid var(--line); background:#fff; color:var(--muted); padding:5px 10px; border-radius:8px; cursor:pointer}
-  .compare-scroll{overflow-x:auto}
-  .compare-table{width:100%; min-width:680px; border-collapse:collapse; font-size:.82rem}
-  .compare-table th,.compare-table td{border-top:1px solid var(--line); padding:8px; vertical-align:top; text-align:left}
-  .compare-table th:first-child{width:92px; color:var(--muted); font-weight:600}
-  .compare-table thead th{border-top:0; color:var(--ink)}
+/* 入口行 */
+.entries{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.entry{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;
+  border:1.5px solid var(--line-2);background:var(--card);font-size:13px;font-weight:500;color:var(--ink-2);transition:.15s;
+}
+.entry:hover{border-color:var(--line-strong);color:var(--ink);}
+.entry[aria-expanded="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.entry .ic{font-size:14px;}
+.spacer{flex:1;}
+.viewtog{display:inline-flex;border:1.5px solid var(--line-2);border-radius:999px;overflow:hidden;background:var(--card);}
+.viewtog button{padding:8px 13px;font-size:12.5px;font-weight:600;color:var(--ink-3);}
+.viewtog button[aria-pressed="true"]{background:var(--ink);color:var(--paper);}
 
-  body.compact .card{padding:14px}
-  body.compact .row, body.compact .use, body.compact .inter{display:none}
-  body.compact .tags{margin-bottom:10px}
-  body.compact .ev{margin-top:10px; padding-top:10px}
-  body.compact .ev .lab, body.compact .ev .srcline{display:none}
-  body.compact .evchips{margin-bottom:0}
+/* 折叠面板 */
+.panel{
+  margin-top:10px;background:var(--card);border:1.5px solid var(--line-2);border-radius:var(--rad);
+  box-shadow:var(--shadow);overflow:hidden;
+  display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s cubic-bezier(.4,0,.2,1);
+}
+.panel.open{grid-template-rows:1fr;}
+.panel .inner{overflow:hidden;min-height:0;}
+.panel .pad{padding:16px 16px 18px;}
+.panel h3{font-size:12px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:0 0 9px;font-weight:600;}
+.panel .grp + .grp{margin-top:16px;border-top:1px dashed var(--line);padding-top:15px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.fchip{
+  padding:6px 12px;border-radius:999px;border:1.4px solid var(--line-2);background:var(--paper-grain);
+  font-size:12.5px;color:var(--ink-2);transition:.13s;
+}
+.fchip:hover{border-color:var(--line-strong);color:var(--ink);}
+.fchip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
 
-  #noresults{display:none; text-align:center; color:var(--muted); padding:40px 0}
-  #noresults button{font:inherit; margin-left:8px; border:1px solid var(--line); background:#fff; color:var(--ink); padding:5px 10px; border-radius:8px; cursor:pointer}
-  footer{margin-top:34px; color:var(--muted); font-size:.8rem; text-align:center}
-  code{background:#f0f0ec; padding:1px 5px; border-radius:4px; font-size:.85em}
-  @media(max-width:520px){
-    .top{align-items:flex-start; flex-direction:column; gap:6px}
-    .head{justify-content:flex-start}
-    .badge{white-space:normal}
-    .glab{width:100%; min-width:0}
-    .utility{align-items:stretch}
-  }
+/* 计数 / 排序行 */
+.resultbar{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 4px;gap:12px;}
+.resultbar .n{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);letter-spacing:.02em;}
+.resultbar .n b{color:var(--ink);font-weight:600;}
+.resultbar .reset{font-size:12.5px;color:var(--ink-3);text-decoration:underline;text-underline-offset:3px;}
+.resultbar .reset:hover{color:var(--r);}
+.resultbar .rbspace{flex:1;}
+.legendtog{font-size:12px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.02em;padding:4px 9px;border-radius:7px;border:1px solid var(--line-2);}
+.legendtog:hover{color:var(--ink);border-color:var(--line-strong);}
+.legendtog[aria-expanded="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.legend{margin-top:11px;display:grid;grid-template-columns:1fr;gap:11px;background:var(--card);border:1.5px solid var(--line-2);border-radius:var(--rad);padding:15px 16px;box-shadow:var(--shadow);}
+.legend .lg{display:flex;gap:11px;align-items:center;font-size:12.5px;color:var(--ink-2);line-height:1.45;}
+.legend .lg b{display:block;color:var(--ink);font-weight:700;font-size:12.5px;}
+.legend .lg > span{flex:0 0 auto;}
+.lgstamp{width:30px;height:30px;border-radius:50%;border:2px solid var(--g);color:var(--g);font-family:var(--mono);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;transform:rotate(-8deg);box-shadow:inset 0 0 0 2px var(--card),inset 0 0 0 3px var(--g);}
+.lgseg{display:flex;gap:3px;}
+.lgseg i{width:13px;height:6px;border-radius:2px;background:var(--line-2);}
+.lgseg i.on{background:var(--ink-2);}
+.lgact{width:24px;height:24px;border-radius:50%;background:var(--g);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+.lgmyth{width:26px;height:26px;border-radius:4px;border:1px solid var(--line-2);color:var(--ink-3);font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center;}
+@media(min-width:560px){.legend{grid-template-columns:1fr 1fr;gap:13px 22px;}}
+
+/* ---------- 卡片 ---------- */
+.cards{display:flex;flex-direction:column;gap:16px;margin-top:14px;}
+.card{
+  background:var(--card);border:1.5px solid var(--line);border-radius:var(--rad-lg);
+  box-shadow:var(--shadow);overflow:hidden;position:relative;
+  transition:box-shadow .18s,border-color .18s,transform .18s;
+}
+.card:hover{box-shadow:var(--shadow-lift);}
+.card[data-tier="green"]{border-top:4px solid var(--g);}
+.card[data-tier="amber"]{border-top:4px solid var(--a);}
+.card[data-tier="red"]{border-top:4px solid var(--r);}
+.card.selected{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink), var(--shadow-lift);}
+.card .body{padding:18px 18px 4px;}
+
+/* tier 眉标 + 名称行 */
+.eyebrow{display:flex;align-items:center;gap:9px;}
+.tierpill{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 11px 4px 9px;border-radius:999px;
+  font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.01em;
+}
+.tierpill .gl{width:8px;height:8px;border-radius:50%;}
+.card[data-tier="green"] .tierpill{background:var(--g-bg);color:var(--g-deep);}
+.card[data-tier="green"] .tierpill .gl{background:var(--g);}
+.card[data-tier="amber"] .tierpill{background:var(--a-bg);color:var(--a-deep);}
+.card[data-tier="amber"] .tierpill .gl{background:var(--a);}
+.card[data-tier="red"] .tierpill{background:var(--r-bg);color:var(--r-deep);}
+.card[data-tier="red"] .tierpill .gl{background:var(--r);}
+.eyebrow .en{font-family:var(--mono);font-size:11px;color:var(--ink-4);letter-spacing:.04em;text-transform:uppercase;}
+.eyebrow .grow{flex:1;}
+.primarybadge{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;font-family:var(--mono);
+  padding:3px 9px;border-radius:999px;border:1.3px solid var(--g-soft);color:var(--g-deep);background:var(--g-tint);
+}
+.primarybadge.pending{border-color:var(--a-soft);color:var(--a-deep);background:var(--a-tint);}
+
+/* HERO：冷门点 */
+.hook{
+  font-family:var(--display,var(--serif));font-weight:600;font-size:var(--hook-size,21px);line-height:1.42;letter-spacing:-.005em;
+  color:var(--ink);margin:13px 0 0;text-wrap:pretty;position:relative;padding-left:16px;
+}
+.hook::before{content:"";position:absolute;left:0;top:5px;bottom:5px;width:4px;border-radius:3px;}
+.card[data-tier="green"] .hook::before{background:var(--g);}
+.card[data-tier="amber"] .hook::before{background:var(--a);}
+.card[data-tier="red"] .hook::before{background:var(--r);}
+.hook .bulb{font-style:normal;}
+.name-row{display:flex;align-items:baseline;gap:9px;margin-top:13px;}
+.name-row .name{font-family:var(--display,var(--serif));font-weight:700;font-size:18px;color:var(--ink);}
+.name-row .verdict{font-size:13.5px;color:var(--ink-2);line-height:1.5;}
+
+/* 标签行：针对 / 谨慎 / 行动 */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;align-items:center;}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;padding:4px 10px;border-radius:7px;line-height:1.2;}
+.tag.target{background:var(--paper-grain);color:var(--ink-2);border:1px solid var(--line-2);}
+.tag.risk{background:#fff;color:var(--r-deep);border:1px solid var(--r-soft);}
+.tag.risk .ic{color:var(--r);}
+.tag.action{font-weight:600;font-family:var(--mono);font-size:11px;letter-spacing:.01em;border:1.3px solid;}
+.tag.action[data-a="值得优先看"]{background:var(--g-tint);color:var(--g-deep);border-color:var(--g-soft);}
+.tag.action[data-a="特定场景再试"]{background:var(--a-tint);color:var(--a-deep);border-color:var(--a-soft);}
+.tag.action[data-a="不为功效花钱"]{background:var(--r-tint);color:var(--r-deep);border-color:var(--r-soft);}
+
+/* 行动判断 + 证据强度 */
+.verdictbar{display:flex;align-items:center;gap:11px;margin-top:13px;flex-wrap:wrap;}
+.vact{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;padding:6px 13px 6px 8px;border-radius:9px;border:1.5px solid;line-height:1.1;}
+.vact .vic{font-size:12px;width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex:0 0 auto;}
+.vact[data-k="go"]{background:var(--g-tint);color:var(--g-deep);border-color:var(--g-soft);} .vact[data-k="go"] .vic{background:var(--g);}
+.vact[data-k="maybe"]{background:var(--a-tint);color:var(--a-deep);border-color:var(--a-soft);} .vact[data-k="maybe"] .vic{background:var(--a);}
+.vact[data-k="no"]{background:var(--r-tint);color:var(--r-deep);border-color:var(--r-soft);} .vact[data-k="no"] .vic{background:var(--r);}
+.strength{display:inline-flex;align-items:center;gap:8px;margin-left:auto;}
+.strength .segs{display:flex;gap:3px;}
+.strength .sg2{width:17px;height:6px;border-radius:2px;background:var(--line-2);transition:background .2s;}
+.strength .sg2.on{background:var(--ink-2);}
+.strength .slab{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.02em;white-space:nowrap;}
+
+/* 误区 → 真相 */
+.mythtruth{margin-top:14px;}
+.myth{margin:0 0 9px;font-size:13.5px;color:var(--ink-3);display:flex;gap:9px;align-items:baseline;line-height:1.45;}
+.myth .ml{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);border:1px solid var(--line-2);border-radius:3px;padding:2px 6px;flex:0 0 auto;align-self:flex-start;margin-top:2px;}
+.myth .mtx{text-decoration:line-through;text-decoration-color:var(--line-strong);text-decoration-thickness:1.5px;text-wrap:pretty;}
+.mythtruth .hook{margin-top:0;}
+
+/* 用途分层 claims */
+.claims{display:flex;flex-direction:column;gap:7px;margin-top:14px;padding:12px 13px;border-radius:var(--rad-sm);background:var(--paper-grain);border:1px dashed var(--line-strong);}
+.claims .ttl{font-size:11px;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1px;}
+.claim{display:flex;align-items:center;gap:9px;font-size:13px;}
+.claim .ct{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap;}
+.claim .ct .gl{width:7px;height:7px;border-radius:50%;}
+.claim .ct[data-t="green"]{background:var(--g-bg);color:var(--g-deep);} .claim .ct[data-t="green"] .gl{background:var(--g);}
+.claim .ct[data-t="amber"]{background:var(--a-bg);color:var(--a-deep);} .claim .ct[data-t="amber"] .gl{background:var(--a);}
+.claim .ct[data-t="red"]{background:var(--r-bg);color:var(--r-deep);} .claim .ct[data-t="red"] .gl{background:var(--r);}
+.claim .cu{font-weight:600;color:var(--ink);}
+.claim .cn{color:var(--ink-3);font-size:12px;}
+
+/* ---------- 完整视图详情 ---------- */
+.detail{margin-top:4px;}
+.threecol{display:grid;grid-template-columns:1fr;gap:1px;margin-top:16px;border-radius:var(--rad-sm);overflow:hidden;border:1px solid var(--line);background:var(--line);}
+.block{background:var(--card);padding:13px 14px;}
+.block .bh{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;margin-bottom:8px;letter-spacing:.01em;}
+.block ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;}
+.block li{font-size:13px;line-height:1.5;color:var(--ink-2);padding-left:15px;position:relative;text-wrap:pretty;}
+.block li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;}
+.block.good .bh{color:var(--g-deep);} .block.good li::before{background:var(--g);}
+.block.bad .bh{color:var(--a-deep);} .block.bad li::before{background:var(--a);}
+.block.hype .bh{color:var(--r-deep);} .block.hype li::before{background:var(--r);}
+.block.good{background:var(--g-tint);} .block.bad{background:var(--a-tint);} .block.hype{background:var(--r-tint);}
+
+/* 怎么用 / 剂量 / 冲突 */
+.howto{margin-top:14px;display:grid;grid-template-columns:1fr;gap:10px;}
+.howrow{display:flex;gap:11px;align-items:flex-start;font-size:13px;line-height:1.5;}
+.howrow .k{flex:0 0 78px;font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.02em;padding-top:1px;text-transform:uppercase;}
+.howrow .v{color:var(--ink-2);flex:1;}
+.howrow .v b{color:var(--ink);font-weight:600;}
+.interactions{margin-top:12px;display:flex;gap:9px;align-items:flex-start;padding:11px 13px;border-radius:var(--rad-sm);background:var(--r-tint);border:1px solid var(--r-soft);font-size:12.5px;line-height:1.5;color:var(--r-deep);}
+.interactions .ic{flex:0 0 auto;margin-top:1px;}
+
+/* 证据出处 */
+.evidence{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;}
+.evhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px;}
+.evhead .t{font-size:12px;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);font-weight:600;display:flex;align-items:center;gap:7px;}
+.evlist{display:flex;flex-direction:column;gap:9px;}
+.evrow{display:flex;flex-direction:column;gap:6px;padding:10px 11px;border-radius:var(--rad-sm);background:var(--paper-grain);border:1px solid var(--line);}
+.evrow .top{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.evchip{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10.5px;font-weight:500;padding:3px 8px;border-radius:6px;background:var(--card);border:1px solid var(--line-2);color:var(--ink-2);}
+.evchip.eff{color:var(--ink);font-weight:600;background:#fff;}
+.evchip.eff.up{color:var(--r-deep);border-color:var(--r-soft);}
+.evchip.eff.down{color:var(--g-deep);border-color:var(--g-soft);}
+.evchip.kind[data-p="1"]{border-color:var(--g-soft);color:var(--g-deep);background:var(--g-tint);}
+.evrow a{font-size:12.5px;color:var(--ink);text-decoration:none;font-weight:500;display:inline-flex;align-items:center;gap:6px;line-height:1.45;}
+.evrow a .ti{text-decoration:underline;text-underline-offset:2.5px;text-decoration-color:var(--line-strong);text-wrap:pretty;}
+.evrow a:hover .ti{text-decoration-color:var(--ink);}
+.access{font-family:var(--mono);font-size:9.5px;font-weight:600;padding:2px 6px;border-radius:5px;letter-spacing:.02em;white-space:nowrap;flex:0 0 auto;}
+.access[data-x="free"]{background:var(--g-bg);color:var(--g-deep);}
+.access[data-x="abstract-free"]{background:var(--a-tint);color:var(--a-deep);}
+.access[data-x="abstract-paid"]{background:var(--r-tint);color:var(--r-deep);}
+.access[data-x="secondary"]{background:var(--paper-grain);color:var(--ink-3);border:1px solid var(--line-2);}
+
+/* 卡片底部操作 */
+.cardfoot{display:flex;align-items:center;gap:9px;padding:12px 18px 16px;border-top:1px solid var(--line);margin-top:14px;}
+.expand{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink-2);padding:7px 13px;border-radius:999px;border:1.4px solid var(--line-2);transition:.13s;}
+.expand:hover{border-color:var(--line-strong);color:var(--ink);}
+.expand .ar{transition:transform .2s;font-size:10px;}
+.cmp{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink-3);padding:7px 13px;border-radius:999px;border:1.4px solid var(--line-2);transition:.13s;}
+.cmp:hover{border-color:var(--ink);color:var(--ink);}
+.cmp[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.sharebtn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink-3);padding:7px 13px;border-radius:999px;border:1.4px solid var(--line-2);transition:.13s;}
+.sharebtn:hover{border-color:var(--ink);color:var(--ink);}
+
+/* 紧凑视图 */
+.app[data-view="compact"] .detail,
+.app[data-view="compact"] .claims{display:none;}
+.app[data-view="compact"] .mythtruth{margin-top:11px;}
+.app[data-view="compact"] .hook{font-size:16px;line-height:1.4;}
+.app[data-view="compact"] .card .body{padding-bottom:14px;}
+.app[data-view="compact"] .compact-ev{display:flex;}
+.compact-ev{display:none;flex-wrap:wrap;gap:6px;margin-top:11px;}
+.app[data-view="full"] .compact-ev{display:none;}
+.app[data-view="compact"] .name-row{margin-top:11px;}
+
+/* ---------- 个人筛查三栏 ---------- */
+.screen-setup{display:grid;gap:16px;}
+.selectgrid{display:flex;flex-wrap:wrap;gap:7px;}
+.runbtn{margin-top:4px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:var(--rad);background:var(--ink);color:var(--paper);font-weight:600;font-size:14px;transition:.15s;}
+.runbtn:hover{background:#000;}
+.runbtn:disabled{opacity:.4;cursor:not-allowed;}
+.screen-results{margin-top:16px;}
+.scol{margin-bottom:14px;border-radius:var(--rad);border:1.5px solid var(--line);overflow:hidden;background:var(--card);box-shadow:var(--shadow);}
+.scol .sh{display:flex;align-items:center;gap:9px;padding:13px 15px;font-weight:700;font-size:14px;}
+.scol .sh .num{font-family:var(--mono);font-size:11px;font-weight:600;margin-left:auto;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.6);}
+.scol[data-k="prioritize"] .sh{background:var(--g-bg);color:var(--g-deep);}
+.scol[data-k="caution"] .sh{background:var(--a-bg);color:var(--a-deep);}
+.scol[data-k="skip"] .sh{background:var(--r-bg);color:var(--r-deep);}
+.scol .items{padding:8px;display:flex;flex-direction:column;gap:7px;}
+.sitem{display:flex;align-items:flex-start;gap:11px;padding:11px 12px;border-radius:var(--rad-sm);background:var(--paper-grain);border:1px solid var(--line);}
+.sitem .sgl{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:0 0 auto;}
+.sitem[data-t="green"] .sgl{background:var(--g);} .sitem[data-t="amber"] .sgl{background:var(--a);} .sitem[data-t="red"] .sgl{background:var(--r);}
+.sitem .snm{font-family:var(--serif);font-weight:700;font-size:14.5px;}
+.sitem .why{font-size:12px;color:var(--ink-2);line-height:1.45;margin-top:2px;}
+.sitem .why .u{font-weight:600;color:var(--ink);}
+.scol .empty-s{padding:14px 15px;font-size:12.5px;color:var(--ink-4);font-style:italic;}
+
+/* ---------- 对比抽屉 ---------- */
+.comparebar{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;transform:translateY(120%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  background:var(--ink);color:var(--paper);padding:13px 18px calc(13px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:12px;box-shadow:0 -10px 40px -12px rgba(0,0,0,.4);
+}
+.comparebar.show{transform:translateY(0);}
+.comparebar .cl{font-size:13px;display:flex;align-items:center;gap:9px;flex:1;min-width:0;}
+.comparebar .seeds{display:flex;gap:-4px;}
+.comparebar .sd{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink);margin-left:-6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--mono);}
+.comparebar .open{background:var(--paper);color:var(--ink);font-weight:700;font-size:13px;padding:9px 16px;border-radius:999px;}
+.comparebar .open:disabled{opacity:.4;}
+.comparebar .clearc{font-size:12px;color:rgba(244,240,231,.6);text-decoration:underline;text-underline-offset:3px;}
+
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:flex-end;justify-content:center;}
+.modal.show{display:flex;}
+.modal .scrim{position:absolute;inset:0;background:rgba(33,31,26,.5);backdrop-filter:blur(2px);}
+.modal .sheet{position:relative;width:100%;max-width:920px;max-height:90vh;background:var(--paper);border-radius:18px 18px 0 0;overflow:auto;box-shadow:var(--shadow-lift);animation:sheetup .3s cubic-bezier(.4,0,.2,1);}
+@keyframes sheetup{from{transform:translateY(30px);opacity:.6;}to{transform:translateY(0);opacity:1;}}
+.sheet .sheethead{position:sticky;top:0;background:var(--paper);padding:16px 18px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);z-index:2;}
+.sheet .sheethead h2{font-family:var(--serif);font-size:18px;margin:0;}
+.sheet .x{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink-2);background:var(--card);border:1px solid var(--line-2);}
+.cmptable{width:100%;border-collapse:collapse;font-size:12.5px;}
+.cmptable th,.cmptable td{padding:11px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);}
+.cmptable thead th{position:sticky;top:62px;background:var(--paper);font-family:var(--serif);font-size:15px;}
+.cmptable tbody th{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3);font-weight:600;white-space:nowrap;background:var(--paper-grain);}
+.cmptable td{color:var(--ink-2);line-height:1.45;}
+
+/* 分享卡弹层 */
+.sharemodal{align-items:center;}
+.sharewrap{position:relative;width:100%;max-width:380px;margin:auto;padding:0 16px;display:flex;flex-direction:column;gap:14px;animation:sheetup .3s cubic-bezier(.4,0,.2,1);}
+.sharetop{display:flex;align-items:center;justify-content:space-between;color:var(--paper);font-size:13px;font-family:var(--mono);letter-spacing:.04em;}
+.sharetop .x{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--paper);background:rgba(255,255,255,.14);}
+.poster{position:relative;background:var(--card);border-radius:16px;padding:26px 24px 22px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.6);border:1px solid var(--line-2);}
+.poster[data-tier="green"]{border-top:6px solid var(--g);} .poster[data-tier="amber"]{border-top:6px solid var(--a);} .poster[data-tier="red"]{border-top:6px solid var(--r);}
+.poster .ph{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+.poster .pbrand{font-family:var(--serif);font-weight:700;font-size:17px;display:inline-flex;align-items:center;gap:7px;}
+.poster .pdot{width:8px;height:8px;border-radius:2px;background:var(--g);}
+.poster .ptag{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.03em;}
+.poster .pstamp{position:absolute;top:54px;right:22px;width:60px;height:60px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);transform:rotate(-8deg);background:var(--card);border:2px solid currentColor;box-shadow:inset 0 0 0 3px var(--card),inset 0 0 0 4.5px currentColor;}
+.poster .pstamp[data-tier="green"]{color:var(--g);} .poster .pstamp[data-tier="amber"]{color:var(--a);} .poster .pstamp[data-tier="red"]{color:var(--r);}
+.poster .psg2{font-size:16px;font-weight:700;line-height:1;} .poster .pss{font-size:7px;letter-spacing:.22em;margin-top:3px;opacity:.85;}
+.poster .pname{font-family:var(--serif);font-weight:700;font-size:26px;margin-top:20px;display:flex;align-items:baseline;gap:9px;}
+.poster .pname .pen{font-family:var(--mono);font-size:11px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.04em;font-weight:400;}
+.poster .pmyth{margin:16px 0 0;font-size:13.5px;color:var(--ink-3);display:flex;gap:8px;align-items:flex-start;line-height:1.45;}
+.poster .pml{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);border:1px solid var(--line-2);border-radius:3px;padding:2px 6px;flex:0 0 auto;margin-top:2px;}
+.poster .pmtx{text-decoration:line-through;text-decoration-color:var(--line-strong);text-decoration-thickness:1.5px;text-wrap:pretty;}
+.poster .phook{font-family:var(--serif);font-weight:600;font-size:19px;line-height:1.45;margin:11px 0 0;text-wrap:pretty;}
+.poster .pk{display:inline-block;margin-right:8px;font-family:var(--mono);font-weight:600;font-size:9px;letter-spacing:.2em;padding:3px 8px;border-radius:3px;vertical-align:middle;text-transform:uppercase;}
+.poster[data-tier="green"] .pk{background:var(--g-bg);color:var(--g-deep);} .poster[data-tier="amber"] .pk{background:var(--a-bg);color:var(--a-deep);} .poster[data-tier="red"] .pk{background:var(--r-bg);color:var(--r-deep);}
+.poster .pverdict{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.poster .pvact{font-weight:700;font-size:13.5px;padding:6px 13px;border-radius:9px;border:1.5px solid;}
+.poster .pvact[data-k="go"]{background:var(--g-tint);color:var(--g-deep);border-color:var(--g-soft);}
+.poster .pvact[data-k="maybe"]{background:var(--a-tint);color:var(--a-deep);border-color:var(--a-soft);}
+.poster .pvact[data-k="no"]{background:var(--r-tint);color:var(--r-deep);border-color:var(--r-soft);}
+.poster .pstrength{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--ink-3);}
+.poster .psegs{display:flex;gap:3px;} .poster .psg{width:15px;height:6px;border-radius:2px;background:var(--line-2);} .poster .psg.on{background:var(--ink-2);}
+.poster .pev{margin-top:16px;padding-top:13px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink-2);letter-spacing:.01em;}
+.poster .pfoot{margin-top:13px;font-size:10.5px;color:var(--ink-4);font-family:var(--mono);letter-spacing:.02em;}
+.sharebtns{display:flex;gap:10px;}
+.sharebtns button{flex:1;padding:13px;border-radius:12px;background:var(--paper);color:var(--ink);font-weight:700;font-size:13.5px;transition:.13s;}
+.sharebtns button:hover{background:#fff;}
+
+/* 空状态 */
+.empty{text-align:center;padding:54px 20px;color:var(--ink-3);}
+.empty .big{font-family:var(--serif);font-size:22px;color:var(--ink-2);margin-bottom:8px;}
+.empty .sm{font-size:13.5px;line-height:1.6;}
+.empty button{margin-top:14px;font-size:13px;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+
+/* 页脚 */
+.foot{margin-top:34px;text-align:center;font-size:12px;color:var(--ink-4);line-height:1.7;border-top:1px dashed var(--line-strong);padding-top:20px;}
+.foot a{color:var(--ink-3);}
+
+@media(min-width:640px){
+  .threecol{grid-template-columns:1fr 1fr 1fr;}
+  .howto{grid-template-columns:1fr 1fr;}
+  .howrow:first-child{grid-column:1/-1;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+/* 密度 / 背景 tweaks */
+.app[data-density="compact"] .card .body{padding:13px 15px 2px;}
+.app[data-density="compact"] .cards{gap:11px;}
+.app[data-density="compact"] .hook{margin-top:10px;}
+body[data-bg="white"]{background:#fff;background-image:none;}
+body[data-bg="white"] .topbar{background:linear-gradient(180deg,#fff 72%,rgba(255,255,255,0));}
+
+/* 新增结构元素：默认隐藏（编辑皮肤不显示） */
+.stamp{display:none;}
+.casefile{display:none;}
+.hook .kicker{display:none;}
+
+/* ============================================================
+   档案皮肤 (dossier) — 冷门食物专属脸：冷调实验纸 + 方角 + 评级印章
+   与「一锅出」的暖纸·圆角·编辑风拉开距离；保留家族血统（衬线 hook、三档色、诚实语气）
+   ============================================================ */
+body[data-theme="dossier"]{
+  --paper:#E8EBE5; --paper-grain:#DFE3DC; --card:#FCFDFB;
+  --line:#D2D7CD; --line-2:#C1C7BA; --line-strong:#A9B0A2;
+  --ink:#1B201B; --ink-2:#4D524B; --ink-3:#828A7D; --ink-4:#A9B0A3;
+  --rad:5px; --rad-lg:6px; --rad-sm:4px;
+  --shadow:0 1px 0 rgba(27,32,27,.04);
+  --shadow-lift:0 2px 0 rgba(27,32,27,.05), 0 16px 30px -22px rgba(27,32,27,.5);
+  background-color:#E8EBE5;
+  background-image:
+    linear-gradient(rgba(40,52,40,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(40,52,40,.045) 1px, transparent 1px);
+  background-size:25px 25px;
+}
+body[data-theme="dossier"] .topbar{background:linear-gradient(180deg,#E8EBE5 70%,rgba(232,235,229,0));}
+body[data-theme="dossier"][data-bg="white"]{background-color:#fff;background-image:none;}
+body[data-theme="dossier"][data-bg="white"] .topbar{background:linear-gradient(180deg,#fff 70%,rgba(255,255,255,0));}
+
+/* 品牌点 → 方形档案夹标记 */
+body[data-theme="dossier"] .brand .dot{border-radius:2px;box-shadow:0 0 0 3px var(--g-soft);}
+body[data-theme="dossier"] .brand .tag{padding:2px 7px;border:1px solid var(--line-2);border-radius:3px;}
+
+/* 卡片：方角 + tier 左书脊 + 案卷头 */
+body[data-theme="dossier"] .card{border:1.5px solid var(--line-2);border-radius:6px;position:relative;}
+body[data-theme="dossier"] .card[data-tier="green"]{border-top:1.5px solid var(--line-2);border-left:5px solid var(--g);}
+body[data-theme="dossier"] .card[data-tier="amber"]{border-top:1.5px solid var(--line-2);border-left:5px solid var(--a);}
+body[data-theme="dossier"] .card[data-tier="red"]{border-top:1.5px solid var(--line-2);border-left:5px solid var(--r);}
+body[data-theme="dossier"] .card:hover{box-shadow:var(--shadow-lift);}
+body[data-theme="dossier"] .card .body{padding-top:15px;}
+
+body[data-theme="dossier"] .casefile{
+  display:flex;align-items:center;gap:8px;padding:0 66px 10px 0;margin-bottom:12px;
+  border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--ink-3);
+}
+body[data-theme="dossier"] .casefile .no{color:var(--ink);font-weight:600;}
+body[data-theme="dossier"] .casefile .sep{opacity:.5;}
+body[data-theme="dossier"] .casefile .grow{flex:1;}
+body[data-theme="dossier"] .casefile .cfp{padding:2px 7px;border:1px solid var(--line-2);border-radius:3px;color:var(--ink-2);white-space:nowrap;}
+body[data-theme="dossier"] .casefile .cfp.pending{color:var(--a-deep);border-color:var(--a-soft);background:var(--a-tint);}
+
+/* 评级印章 */
+body[data-theme="dossier"] .stamp{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  position:absolute;top:13px;right:13px;z-index:4;width:58px;height:58px;border-radius:50%;
+  font-family:var(--mono);transform:rotate(-8deg);background:var(--card);
+  border:2px solid currentColor;box-shadow:inset 0 0 0 3px var(--card), inset 0 0 0 4.5px currentColor;
+}
+body[data-theme="dossier"] .stamp[data-tier="green"]{color:var(--g);}
+body[data-theme="dossier"] .stamp[data-tier="amber"]{color:var(--a);}
+body[data-theme="dossier"] .stamp[data-tier="red"]{color:var(--r);}
+body[data-theme="dossier"] .stamp .sg{font-size:16px;font-weight:700;letter-spacing:.01em;line-height:1;}
+body[data-theme="dossier"] .stamp .ss{font-size:7px;letter-spacing:.22em;margin-top:3px;opacity:.85;}
+
+/* 眉标：印章已表达档位，隐藏 pill / 重复徽章 */
+body[data-theme="dossier"] .eyebrow .tierpill{display:none;}
+body[data-theme="dossier"] .eyebrow .primarybadge{display:none;}
+body[data-theme="dossier"] .eyebrow{margin-top:-2px;}
+
+/* HOOK：去竖条，加 mono 标签 tab，serif 真相成主角 */
+body[data-theme="dossier"] .hook{padding-left:0;}
+body[data-theme="dossier"] .hook::before{display:none;}
+body[data-theme="dossier"] .hook .bulb{display:none;}
+body[data-theme="dossier"] .hook .kicker{
+  display:inline-block;margin-bottom:9px;font-family:var(--mono);font-weight:600;
+  font-size:9.5px;letter-spacing:.2em;padding:3px 9px;border-radius:3px;text-transform:uppercase;vertical-align:middle;
+}
+body[data-theme="dossier"] .card[data-tier="green"] .hook .kicker{background:var(--g-bg);color:var(--g-deep);}
+body[data-theme="dossier"] .card[data-tier="amber"] .hook .kicker{background:var(--a-bg);color:var(--a-deep);}
+body[data-theme="dossier"] .card[data-tier="red"] .hook .kicker{background:var(--r-bg);color:var(--r-deep);}
+
+/* 紧凑视图下印章缩小 */
+.app[data-view="compact"] body[data-theme="dossier"] .stamp,
+body[data-theme="dossier"] .app[data-view="compact"] .stamp{top:11px;right:11px;width:48px;height:48px;}
+
+/* ---------- Tweaks 面板 ---------- */
+#tweaks{position:fixed;right:16px;bottom:16px;z-index:90;width:296px;max-width:calc(100vw - 32px);
+  background:var(--card);border:1.5px solid var(--line-strong);border-radius:16px;box-shadow:var(--shadow-lift);
+  display:none;overflow:hidden;}
+#tweaks.on{display:block;}
+#tweaks .th{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--line);cursor:grab;}
+#tweaks .th h4{margin:0;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);}
+#tweaks .th .x{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:15px;}
+#tweaks .th .x:hover{background:var(--paper-grain);color:var(--ink);}
+#tweaks .tb{padding:13px 15px 16px;display:flex;flex-direction:column;gap:14px;max-height:70vh;overflow:auto;}
+#tweaks .tk{display:flex;flex-direction:column;gap:7px;}
+#tweaks .tk > label{font-size:11.5px;font-weight:600;color:var(--ink-2);font-family:var(--mono);letter-spacing:.02em;}
+#tweaks .seg{display:flex;gap:5px;}
+#tweaks .seg button{flex:1;padding:7px 4px;border-radius:8px;border:1.4px solid var(--line-2);background:var(--paper-grain);font-size:11.5px;font-weight:600;color:var(--ink-2);transition:.12s;}
+#tweaks .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+#tweaks .pal{display:flex;gap:4px;align-items:center;}
+#tweaks .pal .sw{width:15px;height:15px;border-radius:50%;}
+#tweaks input[type=range]{width:100%;accent-color:var(--ink);}
+#tweaks .rng{display:flex;align-items:center;gap:10px;}
+#tweaks .rng .val{font-family:var(--mono);font-size:11px;color:var(--ink-3);min-width:34px;text-align:right;}
 </style>
 </head>
-<body>
-<div class="wrap">
-  <header>
-    <h1>冷门食物 · 证据分级</h1>
-    <p class="sub">网红/冷门食物，查完证据后哪个真有用、哪个是智商税、该怎么吃。</p>
-    <p class="disclaimer">⚠️ 做着玩的小工具。结论按公开证据的读数写，能核实的研究才标年份/类型/样本量/效应；核不到精确数字的只写结论 + 真实出处，不编。<b>不替代医生 / 营养师判断。</b></p>
+<body data-theme="dossier" data-bg="paper">
+<div class="app shell" id="app" data-view="full" data-tier="all">
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <h1>冷门食物</h1>
+      <span class="tag">查过再信 · 证据分级</span>
+    </div>
+    <p class="lede">你天天吃的、和网红吹的食物，按<b>证据强度</b>摊开：哪些<b>真有用</b>、哪些是<b>智商税</b>、到底该怎么吃。</p>
+    <p class="disclaimer">
+      <span>⚖︎</span>
+      <span><b>这不是医疗建议。</b>每条结论都挂了可点开的出处，方便你自己核。有用药 / 基础病 / 孕期，先问医生再决定。</span>
+    </p>
+    <div class="search" id="searchWrap">
+      <span class="ic">⌕</span>
+      <input id="search" type="search" placeholder="搜食物名、关键词、谨慎人群、用法…" aria-label="搜索食物" autocomplete="off" />
+      <button class="clr" id="clearSearch" aria-label="清除搜索">✕</button>
+    </div>
+    <div class="tierbar" role="group" aria-label="按证据档筛选" id="tierbar"></div>
+    <div class="entries">
+      <button class="entry" id="toggleFilters" aria-expanded="false" aria-controls="filterPanel"><span class="ic">⚙</span>更多筛选</button>
+      <button class="entry" id="toggleScreen" aria-expanded="false" aria-controls="screenPanel"><span class="ic">🎯</span>按我的情况看</button>
+      <span class="spacer"></span>
+      <div class="viewtog" role="group" aria-label="视图密度">
+        <button id="viewFull" aria-pressed="true">完整</button>
+        <button id="viewCompact" aria-pressed="false">紧凑</button>
+      </div>
+    </div>
+
+    <div class="panel" id="filterPanel"><div class="inner"><div class="pad">
+      <div class="grp">
+        <h3>按目标看 · 想解决什么</h3>
+        <div class="chips" id="targetChips"></div>
+      </div>
+      <div class="grp">
+        <h3>谨慎人群 · 把不适合我的标出来</h3>
+        <div class="chips" id="riskChips"></div>
+      </div>
+    </div></div></div>
+
+    <div class="panel" id="screenPanel"><div class="inner"><div class="pad">
+      <div class="screen-setup">
+        <div class="grp" style="border:0;padding:0;margin:0;">
+          <h3>我的目标 · 想改善的</h3>
+          <div class="selectgrid" id="goalChips"></div>
+        </div>
+        <div class="grp">
+          <h3>我的情况 · 用药 / 基础病 / 阶段</h3>
+          <div class="selectgrid" id="condChips"></div>
+        </div>
+        <button class="runbtn" id="runScreen" disabled>选好后 · 看「对我该怎么办」 →</button>
+      </div>
+      <div class="screen-results" id="screenResults" hidden></div>
+    </div></div></div>
   </header>
 
-  <div class="controls">
-    <div class="search">
-      <label for="q" class="vh">搜索食物或关键词</label>
-      <input id="q" type="search" placeholder="🔍 搜索食物或关键词（如 血糖、孕妇、华法林、胶原）…" autocomplete="off">
-    </div>
-    <div class="fgroup" data-group="tier" role="group" aria-label="按证据等级筛选">
-      <span class="glab">证据</span>
-      <button data-g="tier" data-v="all" class="active" aria-pressed="true">全部</button>
-      <button data-g="tier" data-v="green" aria-pressed="false">🟢 比较扎实</button>
-      <button data-g="tier" data-v="amber" aria-pressed="false">🟡 有营养但有坑</button>
-      <button data-g="tier" data-v="red" aria-pressed="false">🔴 大头是营销</button>
-    </div>
-    <div class="utility">
-      <button type="button" id="toggle-filters" class="toggle" aria-expanded="false" aria-controls="more-filters">⚙ 更多筛选<span id="filter-count" class="cnt"></span></button>
-      <button type="button" id="toggle-profile" class="toggle" aria-expanded="false" aria-controls="profile-panel">🎯 按我的情况看</button>
-      <div class="viewtoggle push-right" role="group" aria-label="切换卡片显示密度">
-        <button type="button" data-mode="full" class="active" aria-pressed="true">完整</button>
-        <button type="button" data-mode="compact" aria-pressed="false">紧凑</button>
-      </div>
-      <button type="button" id="clear" class="ghost">清空</button>
-      <button type="button" id="copylink" class="ghost">复制链接</button>
-    </div>
-    <div id="more-filters" class="collapsible">
-      <div class="fgroup" data-group="target" role="group" aria-label="按目标筛选">
-        <span class="glab">目标</span>
-        <button data-g="target" data-v="all" class="active" aria-pressed="true">全部</button>
-      </div>
-      <div class="fgroup" data-group="risk" role="group" aria-label="按谨慎人群筛选">
-        <span class="glab">谨慎人群</span>
-        <button data-g="risk" data-v="all" class="active" aria-pressed="true">全部</button>
-      </div>
-    </div>
-    <section class="profile collapsible" id="profile-panel" aria-label="个人筛查">
-      <p class="profile-intro">选你的目标和身体情况，自动分成「值得优先看 / 谨慎·先问医生 / 别为功效花钱」三组。</p>
-      <div class="fgroup profile-target" role="group" aria-label="我的目标">
-        <span class="glab">我的目标</span>
-        <button type="button" data-profile-target="all" class="active" aria-pressed="true">全部</button>
-      </div>
-      <div class="fgroup profile-risks" role="group" aria-label="我的情况">
-        <span class="glab">我的情况</span>
-      </div>
-      <div class="profile-results" id="profile-results" aria-live="polite"></div>
-    </section>
+  <div class="resultbar">
+    <span class="n" id="resultCount"></span>
+    <span class="rbspace"></span>
+    <button class="legendtog" id="legendTog" aria-expanded="false" aria-controls="legend">ⓘ 怎么读</button>
+    <button class="reset" id="resetAll" hidden>清空筛选</button>
   </div>
 
-  <p class="count" id="count" role="status" aria-live="polite"></p>
-  <div class="summary" id="summary" aria-live="polite"></div>
-  <section class="compare-panel" id="compare-panel" aria-label="食物对比">
-    <div class="panel-head">
-      <div><strong>对比</strong> <span id="compare-count"></span></div>
-      <button type="button" id="clear-compare">清空对比</button>
-    </div>
-    <div class="compare-scroll" id="compare-table"></div>
-  </section>
-  <main class="grid" id="grid"></main>
-  <p id="noresults">没有匹配的食物。换个筛选或清空搜索试试。<button type="button" id="clear-empty">清空</button></p>
+  <div class="legend" id="legend" hidden>
+    <div class="lg"><span class="lgstamp">扎</span><div><b>评级印章</b>证据档：扎实🟢 / 有坑🟡 / 营销🔴</div></div>
+    <div class="lg"><span class="lgseg"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><div><b>证据强度</b>有多少扎实研究撑着，和「好坏」是两回事</div></div>
+    <div class="lg"><span class="lgact">✓</span><div><b>行动判断</b>✓值得优先看 · △特定场景再试 · ✕不为功效花钱</div></div>
+    <div class="lg"><span class="lgmyth">误</span><div><b>误区 → 真相</b>划掉的是常见说法，下面那句才是证据说的</div></div>
+  </div>
 
-  <footer>
-    <span id="total"></span> 食物 · 加食物：在 <code>FOODS</code> 数组里加一条对象即可，筛选按钮会自动出现。
+  <main class="cards" id="cards" aria-live="polite"></main>
+
+  <div class="empty" id="empty" hidden>
+    <div class="big">没有匹配的食物</div>
+    <div class="sm">换个关键词，或放宽筛选条件试试。</div>
+    <button id="emptyReset">清空全部筛选</button>
+  </div>
+
+  <footer class="foot">
+    当前精选 <b id="footCount"></b> 种 · 完整库 93 种 · 数据驱动、不卖货、不编数字<br />
+    想加某种食物？欢迎提名 —— 但它得有那个「💡 冷门点」才进得来。
   </footer>
 </div>
 
-<script>
+<!-- 对比栏 -->
+<div class="comparebar" id="compareBar">
+  <span class="cl"><span class="seeds" id="cmpSeeds"></span><span id="cmpLabel">已选 0 个对比</span></span>
+  <button class="clearc" id="cmpClear">清空</button>
+  <button class="open" id="cmpOpen" disabled>横向对比 →</button>
+</div>
+
+<!-- 对比弹层 -->
+<div class="modal" id="compareModal" role="dialog" aria-modal="true" aria-label="食物横向对比">
+  <div class="scrim" id="cmpScrim"></div>
+  <div class="sheet">
+    <div class="sheethead"><h2>横向对比</h2><button class="x" id="cmpClose" aria-label="关闭">✕</button></div>
+    <div style="overflow:auto;"><table class="cmptable" id="cmpTable"></table></div>
+  </div>
+</div>
+
+<!-- 分享卡弹层 -->
+<div class="modal sharemodal" id="shareModal" role="dialog" aria-modal="true" aria-label="分享卡">
+  <div class="scrim" id="shareScrim"></div>
+  <div class="sharewrap">
+    <div class="sharetop"><span>分享这张卡</span><button class="x" id="shareClose" aria-label="关闭">✕</button></div>
+    <div class="poster" id="sharePoster"></div>
+    <div class="sharebtns">
+      <button id="shareCopyText">复制文案</button>
+      <button id="shareCopyLink">复制链接</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tweaks 面板 -->
+
+
+
+<script>(function(){var rs=document.documentElement.style;
+var P={'--g':'#2F6B49','--g-deep':'#1F4C33','--g-bg':'#E8F0E7','--g-soft':'#D7E6D6','--g-tint':'#F1F6EF','--a':'#B07514','--a-deep':'#7C5210','--a-bg':'#F6ECD6','--a-soft':'#EEDDB7','--a-tint':'#FAF3E2','--r':'#B33A26','--r-deep':'#7F2A1B','--r-bg':'#F6E2DB','--r-soft':'#EECBBF','--r-tint':'#FAEAE3','--display':'var(--serif)','--hook-size':'21px'};
+Object.keys(P).forEach(function(k){rs.setProperty(k,P[k]);});
+var app=document.getElementById('app');if(app)app.setAttribute('data-density','comfy');})();</script>
+<script>(function(){
+
+function linkHost(u){try{return new URL(u).host;}catch(e){return "";}}
+var SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","cacmap.fda.gov","hhs.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu","acc.org","cambridge.org","acs.org","plos.org","jacionline.org","clinicaltrials.gov"];
+var SRC_TIER2=["examine.com","healthline.com","medicalnewstoday.com","drugs.com","goodrx.com","clevelandclinic.org","mskcc.org","arthritis.org","breastcancer.org","wikipedia.org","foodstruct.com","omegaquant.com","glycemicsnap.com","merckvetmanual.com","ucihealth.org","associatesinnephrologypc.com","drkarafitzgerald.com","westonaprice.org","chriskresser.com","aafp.org"];
+function srcRank(u){var h=linkHost(u);if(SRC_TIER1.some(function(d){return h===d||h.endsWith("."+d);}))return 1;if(SRC_TIER2.some(function(d){return h===d||h.endsWith("."+d);}))return 2;return 0;}
+function srcAccess(u){u=String(u||"");if(u.indexOf("examine.com")>-1)return "secondary";
+var free=["pmc.ncbi.nlm.nih.gov","ncbi.nlm.nih.gov/pmc","ncbi.nlm.nih.gov/books","ods.od.nih.gov","nccih.nih.gov","frontiersin.org","nutritionsource.hsph.harvard.edu","drugs.com"];
+if(free.some(function(d){return u.indexOf(d)>-1;}))return "free";
+if(u.indexOf("pubmed.ncbi.nlm.nih.gov")>-1||u.indexOf("cochranelibrary.com")>-1)return "abstract-free";
+return "abstract-paid";}
+var ACTION_BY_TIER={green:"值得优先看",amber:"特定场景再试",red:"不为功效花钱"};
+function stripHtml(s){return String(s||"").replace(/<[^>]+>/g," ");}
+function splitItems(s){s=stripHtml(s).trim();if(!s)return [];var parts=s.split(/[。；]/).map(function(x){return x.trim();}).filter(Boolean);return parts.length?parts:[s];}
+function deriveMyth(f){var h=stripHtml(f.hypeHtml||f.hype||"").trim();if(!h)return "";var m=h.split("——")[0].split("—")[0].trim();m=m.replace(/[；。，,]+$/,"");if(m.length>56)m=m.slice(0,54)+"…";return m;}
+function evType(label,food){var t=(label||"")+" "+((food.evChips||[]).join(" "));
+if(/NIH|ODS|NCCIH|Cochrane|AHA|FDA|WHO|IARC|NEJM|EFSA|ACC|LiverTox|权威|机构|顾问声明|立场声明/i.test(t))return "权威机构";
+if(/meta|系统综述|荟萃|伞状/i.test(t))return "meta";
+if(/RCT|随机|双盲|交叉试验|对照试验/i.test(t))return "RCT";
+if(/队列|前瞻|cohort|流行病/i.test(t))return "队列";
+if(/综述|review|个案|病例|case/i.test(t))return "综述";
+if(/examine|wikipedia|healthline|medicalnewstoday|drugs\.com|foodstruct|cleveland|consumer|nephrology/i.test(label||""))return "二级参考";
+return "综述";}
+function evYear(label){var m=String(label||"").match(/(19|20)\d{2}/);return m?m[0]:"—";}
+function evN(food){var c=(food.evChips||[]).join(" ");var m=c.match(/n\s*=\s*\d[\d,]*/i);if(m)return m[0].replace(/\s/g,"");m=c.match(/\d[\d,\.]*\s*(万)?\s*(人|名|例|试验)/);return m?m[0].replace(/\s/g,""):"";}
+function evEffect(food){var c=(food.evChips||[]).join(" ");var m=c.match(/[↑↓][^·，,、；;\s]{0,7}/);return m?m[0]:"";}
+function toEvidence(f){var links=(f.links||[]).slice();
+if(f.secondary&&f.secondary.url)links.push({label:f.secondary.label,url:f.secondary.url,_sec:true});
+var n=evN(f),eff=evEffect(f);
+return links.map(function(l,idx){var rank=srcRank(l.url);
+return {year:evYear(l.label),type:l._sec?"二级参考":evType(l.label,f),n:idx===0?n:"",effect:idx===0?eff:"",title:l.label,access:l._sec?"secondary":srcAccess(l.url),primary:(rank===1&&!l._sec)};});}
+
 const FOODS = [
   {
     name:"红菜根", tier:"green",
@@ -1377,8 +1833,6 @@ const FOODS = [
     secondary:null
   }
 ];
-
-// 深度层：剂量·见效 + 相互作用，按名字合并进 FOODS（加食物时这里可留空）
 const DEPTH = {
   "红菜根":{dose:"研究多用约 250–500 ml 甜菜根汁（硝酸盐 ~5–8 mmol）；单次约 2–3 小时起血压效应，规律喝维持。", interactions:"与降压药叠加可能血压偏低；服硝酸酯类/治勃起障碍药者慎（同走一氧化氮通路）。"},
   "西兰花芽苗":{dose:"当菜吃无公认治疗量；研究用高浓度萝卜硫素提取物。芽苗保留更多但生食有卫生风险。", interactions:"无明确药物冲突；大量生十字花科理论上影响甲状腺药者需留意。"},
@@ -1476,9 +1930,6 @@ const DEPTH = {
   "胡萝卜":{dose:"常规食用即可；同餐 ≥5g 脂肪显著提升吸收；持续每天~10 根才会染色。", interactions:"食物来源 β-胡萝卜素不致维 A 过量；吸烟者大剂量 β-胡萝卜素补剂另有风险（指补剂非食物）。"},
   "蘑菇":{dose:"补 D：UV/日晒后 100g 鲜菇可达数百 IU 维 D2；嘌呤约 50-150mg/100g，痛风者适量。", interactions:"生菇 agaritine 加热降解；野生菇可能含致命肼类毒素——只吃熟的、来源明确的栽培菇。"},
 };
-Object.entries(DEPTH).forEach(([n,d])=>{ const f=FOODS.find(x=>x.name===n); if(f) Object.assign(f,d); else console.warn("DEPTH 无匹配食物（检查改名/错字）：", n); });
-
-// 冷门点层：每张卡顶部的反直觉钩子，按名字合并进 FOODS
 const HOOKS = {
   "红菜根":"运动员用它合法提速——硝酸盐→一氧化氮→血管舒张，提升耐力有 RCT 证实，不是玄学。",
   "西兰花芽苗":"萝卜硫素浓度比成熟西兰花高数十倍，但效果还取决于你的肠道菌群能不能把它转化成活性形式。",
@@ -1577,527 +2028,568 @@ const HOOKS = {
   "胡萝卜":"生啃胡萝卜≠高效补 β-胡萝卜素——煮熟加油吸收才翻几倍；吃太多还会把皮肤染橙黄（无害可逆）。",
   "蘑菇":"把蘑菇拿去晒太阳，它会自己合成大量维生素 D，量能比肩补剂——但要煮熟吃，生菇含肼类。",
 };
-Object.entries(HOOKS).forEach(([n,h])=>{ const f=FOODS.find(x=>x.name===n); if(f) f.hook=h; else console.warn("HOOKS 无匹配食物：", n); });
 
-const TIER_LABEL = {green:"🟢 证据比较扎实", amber:"🟡 有营养但有坑", red:"🔴 大头是营销"};
-const ACTION_BY_TIER = {
-  green:{label:"值得优先看", cls:"a-green"},
-  amber:{label:"特定场景再试", cls:"a-amber"},
-  red:{label:"不为功效花钱", cls:"a-red"}
-};
-const CLAIM_LABEL = {green:"可支持", amber:"可尝试", red:"营销多"};
-const TARGET_ORDER = ["血压","血糖","心血管","关节骨骼","营养密度","抗炎","肠胃","皮肤","睡眠","口腔","护肝","运动表现","补碘","免疫"];
-const RISK_ORDER = ["孕妇","婴儿","苯丙酮尿症","甲状腺","抗凝/手术","糖尿病用药","高血压","心血管","肾结石","肾病/高钾","肝功能","药物相互作用"];
+Object.entries(DEPTH).forEach(function(kv){var f=FOODS.find(function(x){return x.name===kv[0];});if(f)Object.assign(f,kv[1]);});
+Object.entries(HOOKS).forEach(function(kv){var f=FOODS.find(function(x){return x.name===kv[0];});if(f)f.hook=kv[1];});
+function slug(i){return "f"+i;}
+var META={};
+var OUT=FOODS.map(function(f,i){
+  var id=slug(i);
+  var meta={myth:deriveMyth(f)};
+  if(f.name.indexOf("姜黄")>-1){meta.over=2;meta.overWhy="meta 多用高浓度姜黄素+胡椒碱增强配方，对『日常调味量』把握弱";}
+  if(f.name.indexOf("螺旋藻")>-1){meta.over=2;meta.overWhy="meta 样本小、效应温和，且污染/来源是更大变量";}
+  META[id]=meta;
+  return {
+    id:id, name:f.name, en:f.en||"", tier:f.tier,
+    hook:f.hook||f.verdict||"", verdict:f.verdict||"",
+    targets:f.targets||[], risks:f.risks||[],
+    action:ACTION_BY_TIER[f.tier]||"特定场景再试",
+    benefits:splitItems(f.good), pitfalls:splitItems(f.warn), marketing:splitItems(f.hypeHtml||f.hype),
+    use:f.use||{freq:"",scene:"",caution:""}, dose:f.dose||"", interactions:f.interactions||"",
+    primary:(f.links||[]).some(function(l){return srcRank(l.url)===1;}),
+    claims:(f.claims||[]).map(function(c){return {use:c.title,goal:c.goal||"",tier:c.tier,note:c.text};}),
+    evidence:toEvidence(f)
+  };
+});
+window.FOODS=OUT;
+window.FOOD_META=META;
+window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证据 很弱"};
 
-function esc(s){return String(s).replace(/&(?![a-z#0-9]+;)/gi,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function attr(s){return esc(s).replace(/"/g,"&quot;");}
-// 默认转义所有纯文本字段；只有显式 hypeHtml 字段允许少量内联 HTML。
-// 出处可读性（信任信号，不改变链接指向）：按域名判断点开能不能免费读到原文。
-function srcAccess(url){
-  const u=String(url||"");
-  if(u.includes("examine.com")) return {cls:"sec", label:"二级参考"};
-  if(["pmc.ncbi.nlm.nih.gov","ncbi.nlm.nih.gov/pmc","ncbi.nlm.nih.gov/books","ods.od.nih.gov","nccih.nih.gov","frontiersin.org","nutritionsource.hsph.harvard.edu","drugs.com"].some(d=>u.includes(d))) return {cls:"free", label:"免费可读"};
-  if(u.includes("pubmed.ncbi.nlm.nih.gov")||u.includes("cochranelibrary.com")) return {cls:"abs", label:"摘要免费"};
-  return {cls:"pay", label:"摘要·全文多付费"};
-}
-function linkHost(u){ try{return new URL(u).host;}catch(e){return "";} }
-// 出处分级：一级=一手文献/权威机构；二级=科普/百科/诊所博客/Examine（可读但不算强证据）
-const SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","cacmap.fda.gov","hhs.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu","acc.org","cambridge.org","acs.org","plos.org","jacionline.org","clinicaltrials.gov"];
-const SRC_TIER2=["examine.com","healthline.com","medicalnewstoday.com","drugs.com","goodrx.com","clevelandclinic.org","mskcc.org","arthritis.org","breastcancer.org","wikipedia.org","foodstruct.com","omegaquant.com","glycemicsnap.com","merckvetmanual.com","ucihealth.org","associatesinnephrologypc.com","drkarafitzgerald.com","westonaprice.org","chriskresser.com","aafp.org"];
-const TRUSTED_HOSTS=[...SRC_TIER1,...SRC_TIER2];
-function srcRank(u){ const h=linkHost(u); if(SRC_TIER1.some(d=>h===d||h.endsWith("."+d))) return 1; if(SRC_TIER2.some(d=>h===d||h.endsWith("."+d))) return 2; return 0; }
-function trustedUrl(u){ const h=linkHost(u); return /^https:\/\//.test(u||"") && !!h && TRUSTED_HOSTS.some(d=>h===d||h.endsWith("."+d)); }
-function actionFor(f){return ACTION_BY_TIER[f.tier] || {label:"先读证据", cls:""};}
-function claimHTML(claims){
-  if(!claims || !claims.length) return "";
-  return `<div class="claims">${claims.map(c=>`<div class="claim">
-    <div class="ctop"><span class="claim-badge ${c.tier}">${CLAIM_LABEL[c.tier] || c.tier}</span><b>${esc(c.title)}</b></div>
-    <p>${esc(c.text)}</p>
-  </div>`).join("")}</div>`;
-}
+})();</script>
 
-function cardHTML(f){
-  const tv = f.targetVerb || "针对";
-  const action = actionFor(f);
-  const tags = [
-    `<span class="tag action ${action.cls}">${esc(action.label)}</span>`,
-    ...f.targets.map(t=>`<span class="tag">${tv} ${esc(t)}</span>`),
-    ...f.risks.map(r=>`<span class="tag risk">谨慎 ${esc(r)}</span>`)
-  ].join("");
-  const chips = (f.evChips||[]).map(c=>`<span class="evchip">${esc(c)}</span>`).join("");
-  const accChip = u=>{const a=srcAccess(u); return `<span class="acc ${a.cls}">${a.label}</span>`;};
-  const links = f.links.map(l=>`<div class="srcline"><a href="${attr(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)}</a>${accChip(l.url)}</div>`).join("");
-  const sec = f.secondary ? `<div class="srcline secondary">${esc(f.secondary.text)}<a href="${attr(f.secondary.url)}" target="_blank" rel="noopener noreferrer">${esc(f.secondary.label)}</a>${esc(f.secondary.tail||"")}${accChip(f.secondary.url)}</div>` : "";
-  const hype = f.hypeHtml || esc(f.hype || "");
-  return `<article class="card t-${f.tier}" data-name="${attr(f.name)}">
-    <div class="top"><h2>${esc(f.name)}</h2><div class="head"><span class="badge">${TIER_LABEL[f.tier]}</span><button type="button" class="compare-toggle" data-compare="${attr(f.name)}" aria-pressed="false">对比</button></div></div>
-    <p class="verdict">${esc(f.verdict)}</p>
-    ${f.hook ? `<p class="hook">💡 ${esc(f.hook)}</p>` : ""}
-    <div class="tags">${tags}</div>
-    ${claimHTML(f.claims)}
-    <div class="row good"><span class="lab">✅ 真实好处</span><p>${esc(f.good)}</p></div>
-    <div class="row warn"><span class="lab">⚠️ 坑与风险</span><p>${esc(f.warn)}</p></div>
-    <div class="row hype"><span class="lab">🚫 被过度营销的说法</span><p>${hype}</p></div>
-    <div class="use"><span class="lab">🍽 怎么用</span><dl>
-      <dt>频率/份量</dt><dd>${esc(f.use.freq)}</dd>
-      ${f.dose?`<dt>剂量·见效</dt><dd>${esc(f.dose)}</dd>`:""}
-      <dt>适合场景</dt><dd>${esc(f.use.scene)}</dd>
-      <dt>谨慎人群</dt><dd>${esc(f.use.caution)}</dd>
-    </dl></div>
-    ${f.interactions?`<div class="inter"><span class="lab">⚡ 和药/食物的冲突</span><p>${esc(f.interactions)}</p></div>`:""}
-    <div class="ev"><span class="lab">📚 证据出处 · 点开读原文</span><span class="srcq ${(f.links||[]).some(l=>srcRank(l.url)===1)?"q1":"q2"}">${(f.links||[]).some(l=>srcRank(l.url)===1)?"有一手证据":"待补一手源"}</span>
-      <div class="evchips">${chips}</div>
-      ${links}
-      ${sec}
-    </div>
-  </article>`;
-}
+<script>
+/* 冷门食物 · 证据分级 — 应用逻辑（无框架原生 JS） */
+(function () {
+  "use strict";
+  var FOODS = window.FOODS || [];
+  var META = window.FOOD_META || {};
+  var STRENGTH_LABEL = window.STRENGTH_LABEL || { 4: "证据 强", 3: "证据 中等", 2: "证据 有限", 1: "证据 很弱" };
 
-function orderedLabels(kind, order){
-  const set = new Set();
-  FOODS.forEach(f => (kind==="target"?f.targets:f.risks).forEach(v=>set.add(v)));
-  return order.filter(x=>set.has(x)).concat([...set].filter(x=>!order.includes(x)));
-}
-
-function buildFilterButtons(g, order){
-  const ordered = orderedLabels(g, order);
-  const container = document.querySelector(`.fgroup[data-group="${g}"]`);
-  ordered.forEach(v=>{
-    const b = document.createElement("button");
-    b.dataset.g = g; b.dataset.v = v;
-    b.dataset.label = v;
-    b.setAttribute("aria-pressed","false");
-    b.textContent = v;
-    container.appendChild(b);
+  // 证据强度：从证据类型自动推导（"有多少扎实研究撑着"，与好坏无关）
+  function weightOf(type) {
+    var w = { "meta": 4, "权威机构": 4, "RCT": 3, "队列": 2, "综述": 2, "缺证据": 1, "二级参考": 1 };
+    return w[type] != null ? w[type] : 2;
+  }
+  function computeStrength(f) {
+    var ev = f.evidence || [];
+    if (!ev.length) return 1;
+    var prim = ev.filter(function (e) { return e.primary; });
+    var base;
+    if (prim.length) base = Math.max.apply(null, prim.map(function (e) { return weightOf(e.type); }));
+    else base = Math.min(2, Math.max.apply(null, ev.map(function (e) { return weightOf(e.type); })));
+    return Math.max(1, Math.min(4, base));
+  }
+  // 合并误区 + 证据强度（auto，少数 over 手动校正）
+  FOODS.forEach(function (f) {
+    var m = META[f.id] || {};
+    f.myth = m.myth || "";
+    f.strengthAuto = computeStrength(f);
+    f.strength = m.over || f.strengthAuto;
+    f.strengthWhy = m.overWhy || "";
   });
-}
 
-function buildProfileButtons(){
-  const targetBox = document.querySelector(".profile-target");
-  orderedLabels("target", TARGET_ORDER).forEach(v=>{
-    const b = document.createElement("button");
-    b.type = "button";
-    b.dataset.profileTarget = v;
-    b.setAttribute("aria-pressed", "false");
-    b.textContent = v;
-    targetBox.appendChild(b);
-  });
-  const riskBox = document.querySelector(".profile-risks");
-  orderedLabels("risk", RISK_ORDER).forEach(v=>{
-    const b = document.createElement("button");
-    b.type = "button";
-    b.dataset.profileRisk = v;
-    b.setAttribute("aria-pressed", "false");
-    b.textContent = v;
-    riskBox.appendChild(b);
-  });
-}
+  /* ---------- 静态文案 / 映射 ---------- */
+  var TIER = {
+    green: { label: "比较扎实", glyph: "🟢", short: "扎实" },
+    amber: { label: "有营养但有坑", glyph: "🟡", short: "有坑" },
+    red:   { label: "大头是营销", glyph: "🔴", short: "营销" }
+  };
+  var ACT = {
+    "值得优先看": { ic: "✓", k: "go" },
+    "特定场景再试": { ic: "△", k: "maybe" },
+    "不为功效花钱": { ic: "✕", k: "no" }
+  };
+  var ACCESS = {
+    "free": "免费可读", "abstract-free": "摘要免费",
+    "abstract-paid": "摘要付费", "secondary": "二级参考"
+  };
 
-function rememberButtonLabels(){
-  document.querySelectorAll(".fgroup button").forEach(b=>{
-    b.dataset.label = b.dataset.label || b.textContent.trim();
-  });
-}
+  /* ---------- 状态 ---------- */
+  var S = { q: "", tier: "all", targets: [], risks: [], view: "full",
+            goals: [], conds: [], compare: [], expanded: {} };
 
-function validateData(){
-  const validTiers = new Set(Object.keys(TIER_LABEL));
-  const seen = new Set();
-  FOODS.forEach((f,i)=>{
-    const label = `FOODS[${i}] ${f.name || "(未命名)"}`;
-    if(!f.name) console.warn(label, "缺 name");
-    if(seen.has(f.name)) console.warn("重复食物名：", f.name);
-    seen.add(f.name);
-    if(!validTiers.has(f.tier)) console.warn(label, "tier 无效：", f.tier);
-    if(!Array.isArray(f.targets)) console.warn(label, "targets 应为数组");
-    if(!Array.isArray(f.risks)) console.warn(label, "risks 应为数组");
-    if(!f.good || !f.warn || !(f.hype || f.hypeHtml) || !f.verdict) console.warn(label, "缺少核心文案字段");
-    if(!f.use || !f.use.freq || !f.use.scene || !f.use.caution) console.warn(label, "use 字段不完整");
-    (f.claims || []).forEach(c=>{
-      if(!c.title || !c.text || !validTiers.has(c.tier)) console.warn(label, "claims 字段不完整：", c);
+  /* ---------- 工具 ---------- */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function uniq(arr) { var o = {}, r = []; arr.forEach(function (x) { if (!o[x]) { o[x] = 1; r.push(x); } }); return r; }
+  function effClass(eff) { if (/↑/.test(eff)) return "up"; if (/↓/.test(eff)) return "down"; return ""; }
+
+  var allTargets = uniq([].concat.apply([], FOODS.map(function (f) { return f.targets || []; })));
+  var allRisks = uniq([].concat.apply([], FOODS.map(function (f) { return f.risks || []; })));
+
+  /* ---------- URL 同步 ---------- */
+  function writeURL() {
+    var p = new URLSearchParams(location.search);
+    if (S.q) p.set("fq", S.q); else p.delete("fq");
+    if (S.tier !== "all") p.set("ftier", S.tier); else p.delete("ftier");
+    if (S.targets.length) p.set("ftg", S.targets.join(",")); else p.delete("ftg");
+    if (S.risks.length) p.set("frk", S.risks.join(",")); else p.delete("frk");
+    if (S.view !== "full") p.set("fv", S.view); else p.delete("fv");
+    if (S.compare.length) p.set("fc", S.compare.join(",")); else p.delete("fc");
+    var s = p.toString();
+    history.replaceState(null, "", s ? "?" + s : location.pathname);
+  }
+  function readURL() {
+    var p = new URLSearchParams(location.search);
+    S.q = p.get("fq") || "";
+    var t = p.get("ftier");
+    S.tier = (t === "green" || t === "amber" || t === "red") ? t : "all";
+    S.targets = (p.get("ftg") || "").split(",").filter(function (x) { return allTargets.indexOf(x) > -1; });
+    S.risks = (p.get("frk") || "").split(",").filter(function (x) { return allRisks.indexOf(x) > -1; });
+    S.view = p.get("fv") === "compact" ? "compact" : "full";
+    S.compare = (p.get("fc") || "").split(",").filter(Boolean);
+  }
+
+  /* ---------- 筛选 ---------- */
+  function matchSearch(f, q) {
+    if (!q) return true;
+    q = q.toLowerCase();
+    var hay = [f.name, f.en, f.hook, f.verdict, f.dose, f.interactions]
+      .concat(f.targets || [], f.risks || [], f.use ? [f.use.scene, f.use.caution, f.use.freq] : [])
+      .join(" ").toLowerCase();
+    return hay.indexOf(q) > -1;
+  }
+  function filtered() {
+    return FOODS.filter(function (f) {
+      if (S.tier !== "all" && f.tier !== S.tier) return false;
+      if (S.targets.length && !S.targets.some(function (t) { return (f.targets || []).indexOf(t) > -1; })) return false;
+      if (S.risks.length && !S.risks.some(function (r) { return (f.risks || []).indexOf(r) > -1; })) return false;
+      if (!matchSearch(f, S.q)) return false;
+      return true;
     });
-    if(!Array.isArray(f.links) || f.links.length===0) console.warn(label, "缺 links");
-    (f.links || []).forEach(l=>{
-      if(!l.label) console.warn(label, "出处缺 label：", l);
-      else if(!trustedUrl(l.url)) console.warn(label, "出处链接非 https 或域名不在可信名单：", l.url);
+  }
+
+  /* ---------- 构建静态控件 ---------- */
+  function buildTierBar() {
+    var bar = $("#tierbar");
+    var counts = { all: FOODS.length, green: 0, amber: 0, red: 0 };
+    FOODS.forEach(function (f) { counts[f.tier]++; });
+    var defs = [
+      { t: "all", lab: "全部" },
+      { t: "green", lab: "扎实" },
+      { t: "amber", lab: "有坑" },
+      { t: "red", lab: "营销" }
+    ];
+    bar.innerHTML = "";
+    defs.forEach(function (d) {
+      var b = el("button", "tierbtn");
+      b.setAttribute("data-t", d.t);
+      b.setAttribute("aria-pressed", S.tier === d.t ? "true" : "false");
+      b.innerHTML = '<span class="lab"><span class="seed"></span>' + d.lab + '</span><span class="cnt">' + counts[d.t] + '</span>';
+      b.addEventListener("click", function () { S.tier = (S.tier === d.t && d.t !== "all") ? "all" : d.t; render(); });
+      bar.appendChild(b);
     });
-    const ranks = (f.links || []).map(l=>srcRank(l.url));
-    if(ranks.length && !ranks.includes(1)) console.warn(label, "⚠ 主张仅靠二级/科普来源支撑，建议补一手文献：", (f.links||[]).map(l=>l.url).join(" "));
-    if(f.secondary && !trustedUrl(f.secondary.url)) console.warn(label, "二级参考链接非 https 或域名不可信：", f.secondary.url);
-  });
-}
-
-// render
-validateData();
-const grid = document.getElementById("grid");
-grid.innerHTML = FOODS.map(cardHTML).join("");
-buildFilterButtons("target", TARGET_ORDER);
-buildFilterButtons("risk", RISK_ORDER);
-buildProfileButtons();
-rememberButtonLabels();
-document.getElementById("total").textContent = FOODS.length;
-
-// 过滤/搜索基于数据而非渲染出的 DOM 文本：每个食物预计算一次小写 search 串，
-// 只含食物数据（名称/结论/好处/风险/标签/剂量/相互作用/证据标签），
-// 不含 ✅真实好处、📚证据 这类每张卡都重复的 UI 文案。卡片与 FOODS 同序，按下标配对。
-const cardEls = Array.from(grid.querySelectorAll(".card"));
-const model = FOODS.map((f,i)=>({
-  el: cardEls[i],
-  food: f,
-  tier: f.tier,
-  targets: f.targets,
-  risks: f.risks,
-  search: [f.name, f.verdict, f.good, f.warn, (f.hypeHtml || f.hype || "").replace(/<[^>]+>/g," "),
-           f.dose||"", f.interactions||"", f.targets.join(" "), f.risks.join(" "),
-           (f.use?[f.use.freq,f.use.scene,f.use.caution].join(" "):""),
-           (f.evChips||[]).join(" "), (f.claims||[]).map(c=>`${c.title} ${c.text}`).join(" ")].join(" ").toLowerCase()
-}));
-
-const foodByName = new Map(FOODS.map(f=>[f.name, f]));
-const state = {tier:"all", target:"all", risk:"all", q:"", mode:"full", profileTarget:"all", profileRisks:[], compare:[]};
-const noResults = document.getElementById("noresults");
-const countEl = document.getElementById("count");
-const summaryEl = document.getElementById("summary");
-const profileResults = document.getElementById("profile-results");
-const comparePanel = document.getElementById("compare-panel");
-const compareTable = document.getElementById("compare-table");
-const compareCount = document.getElementById("compare-count");
-const qInput = document.getElementById("q");
-const clearBtn = document.getElementById("clear");
-const clearEmptyBtn = document.getElementById("clear-empty");
-const copyBtn = document.getElementById("copylink");
-const clearCompareBtn = document.getElementById("clear-compare");
-const viewButtons = Array.from(document.querySelectorAll(".viewtoggle button"));
-const compareButtons = Array.from(document.querySelectorAll(".compare-toggle"));
-
-function matches(m, overrides={}){
-  const tier = overrides.tier ?? state.tier;
-  const target = overrides.target ?? state.target;
-  const risk = overrides.risk ?? state.risk;
-  const q = String(overrides.q ?? state.q).trim().toLowerCase();
-  return (tier==="all" || m.tier===tier)
-    && (target==="all" || m.targets.includes(target))
-    && (risk==="all" || m.risks.includes(risk))
-    && (q==="" || m.search.includes(q));
-}
-
-function setGroup(g, value){
-  const group = document.querySelector(`.fgroup[data-group="${g}"]`);
-  if(!group) return;
-  const buttons = Array.from(group.querySelectorAll("button"));
-  const next = buttons.some(b=>b.dataset.v===value) ? value : "all";
-  state[g] = next;
-  buttons.forEach(b=>{
-    const on = b.dataset.v===next;
-    b.classList.toggle("active", on);
-    b.setAttribute("aria-pressed", on ? "true" : "false");
-  });
-}
-
-function setMode(mode){
-  state.mode = mode==="compact" ? "compact" : "full";
-  document.body.classList.toggle("compact", state.mode==="compact");
-  viewButtons.forEach(b=>{
-    const on = b.dataset.mode===state.mode;
-    b.classList.toggle("active", on);
-    b.setAttribute("aria-pressed", on ? "true" : "false");
-  });
-}
-
-function setProfileTarget(value){
-  const buttons = Array.from(document.querySelectorAll("[data-profile-target]"));
-  const next = buttons.some(b=>b.dataset.profileTarget===value) ? value : "all";
-  state.profileTarget = next;
-  buttons.forEach(b=>{
-    const on = b.dataset.profileTarget===next;
-    b.classList.toggle("active", on);
-    b.setAttribute("aria-pressed", on ? "true" : "false");
-  });
-}
-
-function toggleProfileRisk(value){
-  state.profileRisks = state.profileRisks.includes(value)
-    ? state.profileRisks.filter(x=>x!==value)
-    : state.profileRisks.concat(value);
-  document.querySelectorAll("[data-profile-risk]").forEach(b=>{
-    const on = state.profileRisks.includes(b.dataset.profileRisk);
-    b.classList.toggle("active", on);
-    b.setAttribute("aria-pressed", on ? "true" : "false");
-  });
-}
-
-function updateFilterCounts(){
-  document.querySelectorAll(".fgroup button[data-g]").forEach(btn=>{
-    const g = btn.dataset.g;
-    const value = btn.dataset.v;
-    const n = model.reduce((sum,m)=>sum + (matches(m, {[g]: value}) ? 1 : 0), 0);
-    btn.textContent = `${btn.dataset.label} ${n}`;
-    btn.setAttribute("aria-label", `${btn.dataset.label}，${n} 种食物`);
-  });
-}
-
-function updateSummary(){
-  const parts = [];
-  if(state.tier!=="all") parts.push(TIER_LABEL[state.tier]);
-  if(state.target!=="all") parts.push(`目标：${state.target}`);
-  if(state.risk!=="all") parts.push(`谨慎：${state.risk}`);
-  if(state.q.trim()) parts.push(`搜索：${state.q.trim()}`);
-  summaryEl.innerHTML = parts.map(p=>`<span>${esc(p)}</span>`).join("");
-}
-
-function tierValue(t){return t==="green" ? 0 : t==="amber" ? 1 : 2;}
-function terse(s, n=58){return s.length>n ? `${s.slice(0,n)}…` : s;}
-function screenItem(f, note){
-  return `<div class="screen-item"><b>${esc(f.name)}</b><span>${esc(note)}</span></div>`;
-}
-
-// 按所选目标的「有效证据档」：若该食物有匹配此目标的 claim（如椰子油漱口→口腔、牛骨汤助眠→睡眠），
-// 用 claim 的档而不是食物总档，避免「红档食物的某个真实窄用途」被一刀切到「不为功效买」。
-function effTier(f, goal){
-  if(goal && goal!=="all" && Array.isArray(f.claims)){
-    const c = f.claims.find(c=>c.goal===goal);
-    if(c) return c.tier;
   }
-  return f.tier;
-}
-function actionForGoal(f, goal){ return ACTION_BY_TIER[effTier(f, goal)] || {label:"先读证据", cls:""}; }
-function renderProfile(){
-  const active = state.profileTarget!=="all" || state.profileRisks.length>0;
-  profileResults.classList.toggle("show", active);
-  if(!active){
-    profileResults.innerHTML = "";
-    return;
+
+  function buildFilterChips() {
+    var tc = $("#targetChips"); tc.innerHTML = "";
+    allTargets.forEach(function (t) {
+      var c = el("button", "fchip", t);
+      c.setAttribute("aria-pressed", S.targets.indexOf(t) > -1 ? "true" : "false");
+      c.addEventListener("click", function () { toggleArr(S.targets, t); render(); });
+      tc.appendChild(c);
+    });
+    var rc = $("#riskChips"); rc.innerHTML = "";
+    allRisks.forEach(function (r) {
+      var c = el("button", "fchip", "⚠ " + r);
+      c.setAttribute("aria-pressed", S.risks.indexOf(r) > -1 ? "true" : "false");
+      c.addEventListener("click", function () { toggleArr(S.risks, r); render(); });
+      rc.appendChild(c);
+    });
   }
-  const target = state.profileTarget;
-  const risks = state.profileRisks;
-  const targetHit = f => target==="all" || f.targets.includes(target);
-  const riskHits = f => risks.filter(r=>f.risks.includes(r));
-  const et = f => effTier(f, target);
-  const priority = FOODS
-    .filter(f => targetHit(f) && riskHits(f).length===0 && et(f)!=="red")
-    .sort((a,b)=>tierValue(et(a))-tierValue(et(b)) || a.name.localeCompare(b.name, "zh-Hans-CN"))
-    .slice(0,5);
-  const cautious = FOODS
-    .map(f=>({f, hits:riskHits(f)}))
-    .filter(x => x.hits.length && (target==="all" || x.f.targets.includes(target) || et(x.f)!=="red"))
-    .sort((a,b)=>tierValue(et(b.f))-tierValue(et(a.f)) || a.f.name.localeCompare(b.f.name, "zh-Hans-CN"))
-    .slice(0,5);
-  const lowValue = FOODS
-    .filter(f => targetHit(f) && riskHits(f).length===0 && et(f)==="red")
-    .sort((a,b)=>a.name.localeCompare(b.name, "zh-Hans-CN"))
-    .slice(0,5);
-  const empty = `<div class="screen-item"><span>暂无匹配</span></div>`;
-  profileResults.innerHTML = `
-    <section class="screen-col"><h3>优先看</h3><div class="screen-list">${priority.map(f=>screenItem(f, `${actionForGoal(f, target).label} · ${terse(f.verdict)}`)).join("") || empty}</div></section>
-    <section class="screen-col"><h3>谨慎/先问</h3><div class="screen-list">${cautious.map(x=>screenItem(x.f, `命中：${x.hits.join("、")} · ${terse(x.f.use.caution)}`)).join("") || empty}</div></section>
-    <section class="screen-col"><h3>不为功效买</h3><div class="screen-list">${lowValue.map(f=>screenItem(f, terse(f.verdict))).join("") || empty}</div></section>
-  `;
-}
 
-function updateCompareButtons(){
-  compareButtons.forEach(btn=>{
-    const on = state.compare.includes(btn.dataset.compare);
-    btn.classList.toggle("active", on);
-    btn.setAttribute("aria-pressed", on ? "true" : "false");
-    btn.textContent = on ? "已选" : "对比";
-  });
-}
-
-function compareCell(f, key){
-  if(key==="action") return actionFor(f).label;
-  if(key==="claims") return (f.claims || []).map(c=>`${c.title}：${CLAIM_LABEL[c.tier] || c.tier}`).join(" / ") || "未分用途";
-  if(key==="tier") return TIER_LABEL[f.tier];
-  if(key==="targets") return f.targets.join("、") || "无";
-  if(key==="risks") return f.risks.join("、") || "无";
-  if(key==="dose") return f.dose || f.use.freq;
-  if(key==="interactions") return f.interactions || "无明确冲突";
-  if(key==="evidence") return (f.evChips||[]).join(" / ");
-  return f[key] || "";
-}
-
-function renderCompare(){
-  const foods = state.compare.map(n=>foodByName.get(n)).filter(Boolean);
-  comparePanel.classList.toggle("show", foods.length>0);
-  compareCount.textContent = foods.length ? `${foods.length} / 4` : "";
-  updateCompareButtons();
-  if(!foods.length){
-    compareTable.innerHTML = "";
-    return;
+  function buildScreenChips() {
+    var gc = $("#goalChips"); gc.innerHTML = "";
+    allTargets.forEach(function (t) {
+      var c = el("button", "fchip", t);
+      c.setAttribute("aria-pressed", S.goals.indexOf(t) > -1 ? "true" : "false");
+      c.addEventListener("click", function () { toggleArr(S.goals, t); c.setAttribute("aria-pressed", S.goals.indexOf(t) > -1 ? "true" : "false"); $("#runScreen").disabled = S.goals.length === 0; });
+      gc.appendChild(c);
+    });
+    var cc = $("#condChips"); cc.innerHTML = "";
+    allRisks.forEach(function (r) {
+      var c = el("button", "fchip", "⚠ " + r);
+      c.setAttribute("aria-pressed", S.conds.indexOf(r) > -1 ? "true" : "false");
+      c.addEventListener("click", function () { toggleArr(S.conds, r); c.setAttribute("aria-pressed", S.conds.indexOf(r) > -1 ? "true" : "false"); });
+      cc.appendChild(c);
+    });
   }
-  const rows = [
-    ["行动", "action"],
-    ["用途", "claims"],
-    ["证据", "tier"],
-    ["结论", "verdict"],
-    ["目标", "targets"],
-    ["谨慎", "risks"],
-    ["剂量", "dose"],
-    ["冲突", "interactions"],
-    ["证据点", "evidence"]
-  ];
-  compareTable.innerHTML = `<table class="compare-table">
-    <thead><tr><th></th>${foods.map(f=>`<th>${esc(f.name)}</th>`).join("")}</tr></thead>
-    <tbody>${rows.map(([label,key])=>`<tr><th>${esc(label)}</th>${foods.map(f=>`<td>${esc(compareCell(f,key))}</td>`).join("")}</tr>`).join("")}</tbody>
-  </table>`;
-}
 
-function toggleCompare(name){
-  if(state.compare.includes(name)){
-    state.compare = state.compare.filter(x=>x!==name);
-  }else{
-    state.compare = state.compare.concat(name);
-    if(state.compare.length>4) state.compare = state.compare.slice(state.compare.length-4);
+  function toggleArr(arr, v) { var i = arr.indexOf(v); if (i > -1) arr.splice(i, 1); else arr.push(v); }
+
+  /* ---------- 卡片渲染 ---------- */
+  function evChip(e) {
+    var parts = [];
+    if (e.year && e.year !== "—") parts.push(e.year);
+    parts.push(e.type);
+    if (e.n) parts.push(e.n);
+    var s = '<span class="evchip kind" data-p="' + (e.primary ? 1 : 0) + '">' + parts.join(" · ") + '</span>';
+    if (e.effect) s += '<span class="evchip eff ' + effClass(e.effect) + '">' + e.effect + '</span>';
+    return s;
   }
-  renderCompare();
-  syncUrl();
-}
 
-function syncUrl(){
-  const params = new URLSearchParams();
-  if(state.q.trim()) params.set("q", state.q.trim());
-  if(state.tier!=="all") params.set("tier", state.tier);
-  if(state.target!=="all") params.set("target", state.target);
-  if(state.risk!=="all") params.set("risk", state.risk);
-  if(state.mode==="compact") params.set("view", "compact");
-  if(state.profileTarget!=="all") params.set("mine", state.profileTarget);
-  if(state.profileRisks.length) params.set("risks", state.profileRisks.join("|"));
-  if(state.compare.length) params.set("compare", state.compare.join("|"));
-  const query = params.toString();
-  history.replaceState(null, "", `${location.pathname}${query ? `?${query}` : ""}`);
-}
+  function cardEl(f, idx) {
+    var card = el("div", "card");
+    card.setAttribute("data-tier", f.tier);
+    card.setAttribute("data-id", f.id);
+    card.setAttribute("data-screen-label", f.name);
+    if (S.compare.indexOf(f.id) > -1) card.classList.add("selected");
+    var hasPrimary = (f.evidence || []).some(function (e) { return e.primary; });
+    var no = ("0" + (idx + 1)).slice(-2);
 
-function apply({sync=true}={}){
-  let shown = 0;
-  model.forEach(m=>{
-    const show = matches(m);
-    m.el.classList.toggle("hide", !show);
-    if(show) shown++;
-  });
-  noResults.style.display = shown===0 ? "block" : "none";
-  countEl.textContent = (shown===model.length) ? `共 ${model.length} 种食物` : `显示 ${shown} / ${model.length} 种`;
-  updateFilterCounts();
-  updateSummary();
-  renderProfile();
-  renderCompare();
-  if(sync) syncUrl();
-}
+    /* 评级印章（档案皮肤专用，CSS 控制显隐） */
+    var stamp = el("div", "stamp");
+    stamp.setAttribute("data-tier", f.tier);
+    stamp.innerHTML = '<span class="sg">' + TIER[f.tier].short + '</span><span class="ss">证据档</span>';
+    card.appendChild(stamp);
 
-function clearFilters(){
-  state.q = "";
-  qInput.value = "";
-  setGroup("tier", "all");
-  setGroup("target", "all");
-  setGroup("risk", "all");
-  setProfileTarget("all");
-  state.profileRisks = [];
-  document.querySelectorAll("[data-profile-risk]").forEach(b=>{
-    b.classList.remove("active");
-    b.setAttribute("aria-pressed", "false");
-  });
-  apply();
-}
+    /* 主体 */
+    var body = el("div", "body");
 
-function restoreFromUrl(){
-  const params = new URLSearchParams(location.search);
-  state.q = params.get("q") || "";
-  qInput.value = state.q;
-  setGroup("tier", params.get("tier") || "all");
-  setGroup("target", params.get("target") || "all");
-  setGroup("risk", params.get("risk") || "all");
-  setMode(params.get("view")==="compact" ? "compact" : "full");
-  setProfileTarget(params.get("mine") || "all");
-  const urlRisks = (params.get("risks") || "").split("|").filter(Boolean);
-  const validRisks = new Set(Array.from(document.querySelectorAll("[data-profile-risk]")).map(b=>b.dataset.profileRisk));
-  state.profileRisks = urlRisks.filter(r=>validRisks.has(r));
-  document.querySelectorAll("[data-profile-risk]").forEach(b=>{
-    const on = state.profileRisks.includes(b.dataset.profileRisk);
-    b.classList.toggle("active", on);
-    b.setAttribute("aria-pressed", on ? "true" : "false");
-  });
-  state.compare = (params.get("compare") || "").split("|").filter(n=>foodByName.has(n)).slice(0,4);
-}
+    /* 案卷头（档案皮肤专用） */
+    var cf = el("div", "casefile");
+    cf.innerHTML = '<span class="no">FILE.' + no + '</span><span class="sep">·</span><span class="lab">证据分级档</span>' +
+      '<span class="grow"></span><span class="cfp ' + (hasPrimary ? "" : "pending") + '">' +
+      (hasPrimary ? "一手证据 ✓" : "待补一手源 ◷") + '</span>';
+    body.appendChild(cf);
 
-document.querySelectorAll(".fgroup").forEach(group=>{
-  group.addEventListener("click", e=>{
-    const btn = e.target.closest("button[data-g]");
-    if(!btn) return;
-    setGroup(btn.dataset.g, btn.dataset.v);
-    apply();
-  });
-});
+    var eye = el("div", "eyebrow");
+    eye.innerHTML =
+      '<span class="tierpill"><span class="gl"></span>' + TIER[f.tier].glyph.replace(/[🟢🟡🔴]/, "") + TIER[f.tier].label + '</span>' +
+      '<span class="en">' + f.en + '</span><span class="grow"></span>' +
+      '<span class="primarybadge ' + (hasPrimary ? "" : "pending") + '">' + (hasPrimary ? "✓ 有一手证据" : "◷ 待补一手源") + '</span>';
+    body.appendChild(eye);
 
-qInput.addEventListener("input", e=>{ state.q = e.target.value; apply(); });
-clearBtn.addEventListener("click", clearFilters);
-clearEmptyBtn.addEventListener("click", clearFilters);
-viewButtons.forEach(btn=>btn.addEventListener("click", ()=>{
-  setMode(btn.dataset.mode);
-  apply();
-}));
-document.querySelector(".profile-target").addEventListener("click", e=>{
-  const btn = e.target.closest("[data-profile-target]");
-  if(!btn) return;
-  setProfileTarget(btn.dataset.profileTarget);
-  apply();
-});
-document.querySelector(".profile-risks").addEventListener("click", e=>{
-  const btn = e.target.closest("[data-profile-risk]");
-  if(!btn) return;
-  toggleProfileRisk(btn.dataset.profileRisk);
-  apply();
-});
-grid.addEventListener("click", e=>{
-  const btn = e.target.closest("[data-compare]");
-  if(!btn) return;
-  toggleCompare(btn.dataset.compare);
-});
-clearCompareBtn.addEventListener("click", ()=>{
-  state.compare = [];
-  renderCompare();
-  syncUrl();
-});
-copyBtn.addEventListener("click", async ()=>{
-  syncUrl();
-  const old = copyBtn.textContent;
-  try{
-    if(!navigator.clipboard) throw new Error("Clipboard API unavailable");
-    await navigator.clipboard.writeText(location.href);
-    copyBtn.textContent = "已复制";
-  }catch(e){
-    copyBtn.textContent = "地址已更新";
+    /* 行动判断 + 证据强度（决策主轴，置顶） */
+    var a = ACT[f.action] || { ic: "·", k: "maybe" };
+    var segs = "";
+    for (var i = 1; i <= 4; i++) segs += '<span class="sg2' + (i <= f.strength ? " on" : "") + '"></span>';
+    var vb = el("div", "verdictbar");
+    var stTitle = "证据强度：从研究类型自动推导（meta/权威机构=强，RCT=中高，综述/队列=中，二级参考=弱）" +
+      (f.strengthWhy ? "。已校正：" + f.strengthWhy : "");
+    vb.innerHTML =
+      '<span class="vact" data-k="' + a.k + '"><span class="vic">' + a.ic + '</span>' + f.action + '</span>' +
+      '<span class="strength" title="' + stTitle + '">' +
+        '<span class="segs">' + segs + '</span><span class="slab">' + (STRENGTH_LABEL[f.strength] || "") +
+        (f.strengthWhy ? ' <span class="adj">·校正</span>' : "") + '</span></span>';
+    body.appendChild(vb);
+
+    /* 误区 → 真相（产品灵魂：打脸瞬间） */
+    var mt = el("div", "mythtruth");
+    var mythHTML = f.myth ? '<p class="myth"><span class="ml">误区</span><span class="mtx">' + f.myth + '</span></p>' : "";
+    mt.innerHTML = mythHTML +
+      '<p class="hook"><span class="kicker">真相</span><span class="bulb">💡 </span>' + f.hook + '</p>';
+    body.appendChild(mt);
+
+    var nr = el("div", "name-row");
+    nr.innerHTML = '<span class="name">' + f.name + '</span><span class="verdict">' + f.verdict + '</span>';
+    body.appendChild(nr);
+
+    /* 标签：针对 / 谨慎（行动已上移至 verdictbar） */
+    var tags = el("div", "tags");
+    (f.targets || []).forEach(function (t) { tags.appendChild(el("span", "tag target", "针对 " + t)); });
+    (f.risks || []).forEach(function (r) { tags.appendChild(el("span", "tag risk", '<span class="ic">⚠</span>' + r)); });
+    body.appendChild(tags);
+
+    /* 紧凑视图证据 chip */
+    if (f.evidence && f.evidence.length) {
+      var ce = el("div", "compact-ev");
+      ce.innerHTML = f.evidence.map(evChip).join("");
+      body.appendChild(ce);
+    }
+
+    /* 用途分层 */
+    if (f.claims && f.claims.length) {
+      var cl = el("div", "claims");
+      cl.innerHTML = '<div class="ttl">同一食物 · 不同用途不同档</div>' + f.claims.map(function (c) {
+        return '<div class="claim"><span class="ct" data-t="' + c.tier + '"><span class="gl"></span>' + TIER[c.tier].short + '</span>' +
+          '<span class="cu">' + c.use + '</span><span class="cn">— ' + c.note + '</span></div>';
+      }).join("");
+      body.appendChild(cl);
+    }
+
+    /* 详情（完整视图 + 展开） */
+    var detail = el("div", "detail");
+    detail.innerHTML =
+      '<div class="threecol">' +
+        block("good", "✅ 真实好处", f.benefits) +
+        block("bad", "⚠️ 坑与风险", f.pitfalls) +
+        block("hype", "🚫 被过度营销", f.marketing) +
+      '</div>' +
+      '<div class="howto">' +
+        howrow("怎么用", "<b>" + f.use.freq + "</b>") +
+        howrow("适合场景", f.use.scene) +
+        howrow("谨慎人群", f.use.caution) +
+        howrow("剂量·见效", f.dose) +
+      '</div>' +
+      (f.interactions ? '<div class="interactions"><span class="ic">⚡</span><span><b>和药 / 食物冲突：</b>' + f.interactions + '</span></div>' : "") +
+      evidenceBlock(f, hasPrimary);
+    body.appendChild(detail);
+    card.appendChild(body);
+
+    /* 底部操作 */
+    var foot = el("div", "cardfoot");
+    var exp = el("button", "expand");
+    var isOpen = S.expanded[f.id];
+    exp.innerHTML = '<span class="ar">' + (isOpen ? "▲" : "▼") + '</span>' + (isOpen ? "收起" : "展开全部");
+    var cmpOn = S.compare.indexOf(f.id) > -1;
+    var cmp = el("button", "cmp", (cmpOn ? "✓ 已加入对比" : "↔ 对比"));
+    cmp.setAttribute("aria-pressed", cmpOn ? "true" : "false");
+    var share = el("button", "sharebtn", "↗ 分享");
+    share.setAttribute("aria-label", "生成分享卡");
+    foot.appendChild(exp); foot.appendChild(share); foot.appendChild(cmp);
+    card.appendChild(foot);
+
+    /* 展开/收起：完整视图下 detail 受 expanded 控制 */
+    function applyExpand() {
+      if (S.view === "compact") { detail.style.display = "none"; foot.style.display = "none"; return; }
+      foot.style.display = "flex";
+      detail.style.display = S.expanded[f.id] ? "block" : "none";
+    }
+    applyExpand();
+    exp.addEventListener("click", function () {
+      S.expanded[f.id] = !S.expanded[f.id];
+      exp.innerHTML = '<span class="ar">' + (S.expanded[f.id] ? "▲" : "▼") + '</span>' + (S.expanded[f.id] ? "收起" : "展开全部");
+      applyExpand();
+    });
+    cmp.addEventListener("click", function () { toggleCompare(f.id); });
+    share.addEventListener("click", function () { openShare(f); });
+
+    return card;
   }
-  window.setTimeout(()=>{ copyBtn.textContent = old; }, 1400);
-});
 
-restoreFromUrl();
-apply();
+  function block(kind, head, items) {
+    return '<div class="block ' + kind + '"><div class="bh">' + head + '</div><ul>' +
+      (items || []).map(function (i) { return "<li>" + i + "</li>"; }).join("") + '</ul></div>';
+  }
+  function howrow(k, v) { return '<div class="howrow"><span class="k">' + k + '</span><span class="v">' + v + '</span></div>'; }
+  function evidenceBlock(f, hasPrimary) {
+    var rows = (f.evidence || []).map(function (e) {
+      return '<div class="evrow"><div class="top">' + evChip(e) + '</div>' +
+        '<a href="#" onclick="return false;" title="（演示）点开查看出处"><span class="access" data-x="' + e.access + '">' + (ACCESS[e.access] || "") + '</span>' +
+        '<span class="ti">' + e.title + '</span></a></div>';
+    }).join("");
+    return '<div class="evidence"><div class="evhead"><span class="t">📚 证据出处</span>' +
+      '<span class="primarybadge ' + (hasPrimary ? "" : "pending") + '">' + (hasPrimary ? "✓ 有一手证据" : "◷ 待补一手源") + '</span></div>' +
+      '<div class="evlist">' + rows + '</div></div>';
+  }
 
-// 渐进式展开：默认折叠「更多筛选」和「按我的情况看」，保持默认视图干净
-(function(){
-  const moreFilters = document.getElementById("more-filters");
-  const profilePanel = document.getElementById("profile-panel");
-  const tFilters = document.getElementById("toggle-filters");
-  const tProfile = document.getElementById("toggle-profile");
-  const badge = document.getElementById("filter-count");
-  function setOpen(panel, btn, open){
-    panel.classList.toggle("open", open);
+  /* ---------- 对比 ---------- */
+  function toggleCompare(id) {
+    var i = S.compare.indexOf(id);
+    if (i > -1) S.compare.splice(i, 1);
+    else { if (S.compare.length >= 4) { flashBar("最多对比 4 个"); return; } S.compare.push(id); }
+    render();
+  }
+  function flashBar(msg) {
+    var lab = $("#cmpLabel"); var old = lab.textContent; lab.textContent = msg;
+    setTimeout(function () { syncCompareBar(); }, 1200);
+  }
+  function syncCompareBar() {
+    var bar = $("#compareBar");
+    bar.classList.toggle("show", S.compare.length > 0);
+    $("#cmpLabel").textContent = "已选 " + S.compare.length + " 个对比";
+    $("#cmpOpen").disabled = S.compare.length < 2;
+    var seeds = $("#cmpSeeds"); seeds.innerHTML = "";
+    S.compare.forEach(function (id) {
+      var f = FOODS.filter(function (x) { return x.id === id; })[0]; if (!f) return;
+      var s = el("span", "sd", f.name.slice(0, 1));
+      s.style.background = "var(--" + (f.tier === "green" ? "g" : f.tier === "amber" ? "a" : "r") + ")";
+      seeds.appendChild(s);
+    });
+  }
+  function openCompare() {
+    var foods = S.compare.map(function (id) { return FOODS.filter(function (x) { return x.id === id; })[0]; }).filter(Boolean);
+    var rows = [
+      ["档位", function (f) { return '<span class="evchip kind" data-p="' + (f.evidence.some(function(e){return e.primary;}) ? 1 : 0) + '">' + TIER[f.tier].glyph.replace(/[🟢🟡🔴]/, "") + TIER[f.tier].label + '</span>'; }],
+      ["行动", function (f) { return f.action; }],
+      ["冷门点", function (f) { return f.hook; }],
+      ["结论", function (f) { return f.verdict; }],
+      ["针对", function (f) { return (f.targets || []).join("、"); }],
+      ["谨慎", function (f) { return (f.risks || []).join("、") || "—"; }],
+      ["怎么用", function (f) { return f.use.freq; }],
+      ["剂量·见效", function (f) { return f.dose; }],
+      ["药物冲突", function (f) { return f.interactions || "—"; }],
+      ["证据", function (f) { return (f.evidence || []).map(function (e) { return e.year + " " + e.type + (e.effect ? " " + e.effect : ""); }).join("；"); }]
+    ];
+    var t = $("#cmpTable");
+    var head = "<thead><tr><th></th>" + foods.map(function (f) { return "<th>" + f.name + "</th>"; }).join("") + "</tr></thead>";
+    var bodyR = "<tbody>" + rows.map(function (r) {
+      return "<tr><th>" + r[0] + "</th>" + foods.map(function (f) { return "<td>" + r[1](f) + "</td>"; }).join("") + "</tr>";
+    }).join("") + "</tbody>";
+    t.innerHTML = head + bodyR;
+    $("#compareModal").classList.add("show");
+  }
+
+  /* ---------- 分享卡 ---------- */
+  function foodURL(f) {
+    var p = new URLSearchParams(location.search);
+    ["fq", "ftg", "frk", "fc"].forEach(function (k) { p.delete(k); });
+    p.set("fq", f.name);
+    return location.origin + location.pathname + "?" + p.toString();
+  }
+  function openShare(f) {
+    var a = ACT[f.action] || { ic: "·", k: "maybe" };
+    var topEv = (f.evidence || []).filter(function (e) { return e.primary; })[0] || (f.evidence || [])[0];
+    var evLine = topEv ? (topEv.year !== "—" ? topEv.year + " · " : "") + topEv.type + (topEv.effect ? " · " + topEv.effect : "") : "";
+    var segs = "";
+    for (var i = 1; i <= 4; i++) segs += '<span class="psg' + (i <= f.strength ? " on" : "") + '"></span>';
+    var poster = $("#sharePoster");
+    poster.setAttribute("data-tier", f.tier);
+    poster.innerHTML =
+      '<div class="ph"><span class="pbrand"><span class="pdot"></span>冷门食物</span><span class="ptag">查过再信 · 证据分级</span></div>' +
+      '<div class="pstamp" data-tier="' + f.tier + '"><span class="psg2">' + TIER[f.tier].short + '</span><span class="pss">证据档</span></div>' +
+      '<div class="pname">' + f.name + '<span class="pen">' + f.en + '</span></div>' +
+      (f.myth ? '<p class="pmyth"><span class="pml">误区</span><span class="pmtx">' + f.myth + '</span></p>' : "") +
+      '<p class="phook"><span class="pk">真相</span>' + f.hook + '</p>' +
+      '<div class="pverdict"><span class="pvact" data-k="' + a.k + '">' + a.ic + " " + f.action + '</span>' +
+        '<span class="pstrength"><span class="psegs">' + segs + '</span>' + (STRENGTH_LABEL[f.strength] || "") + '</span></div>' +
+      (evLine ? '<div class="pev">📚 ' + evLine + (f.evidence.some(function (e) { return e.primary; }) ? " · 有一手证据 ✓" : "") + '</div>' : "") +
+      '<div class="pfoot">把"该不该信"查清楚 · 长按或截图保存分享</div>';
+    // 复制按钮文案
+    var shareText = "【冷门食物 · " + f.name + "】\n误区：" + (f.myth || "") + "\n真相：" + f.hook +
+      "\n判断：" + f.action + "（" + (STRENGTH_LABEL[f.strength] || "") + "）\n" + foodURL(f);
+    $("#shareCopyText").onclick = function () { copyText(shareText, this, "复制文案"); };
+    $("#shareCopyLink").onclick = function () { copyText(foodURL(f), this, "复制链接"); };
+    $("#shareModal").classList.add("show");
+  }
+  function copyText(txt, btn, label) {
+    function ok() { var o = btn.textContent; btn.textContent = "✓ 已复制"; setTimeout(function () { btn.textContent = label; }, 1400); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, ok);
+    else { var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (e) {} ta.remove(); ok(); }
+  }
+
+  /* ---------- 个人筛查 ---------- */
+  function runScreen() {
+    var res = $("#screenResults");
+    var cols = { prioritize: [], caution: [], skip: [] };
+    FOODS.forEach(function (f) {
+      // 仅纳入与所选目标相关的食物
+      var relGoals = S.goals.filter(function (g) { return (f.targets || []).indexOf(g) > -1; });
+      if (!relGoals.length) return;
+      // 安全优先：命中我的情况 → 谨慎
+      var hitCond = S.conds.filter(function (c) { return (f.risks || []).indexOf(c) > -1; });
+      // 该目标下的有效档（claims 感知）
+      var effTier = f.tier, usedClaim = null;
+      if (f.claims) {
+        var cl = f.claims.filter(function (c) { return relGoals.indexOf(c.goal) > -1; })[0];
+        if (cl) { effTier = cl.tier; usedClaim = cl; }
+      }
+      var why;
+      if (hitCond.length) {
+        why = '<span class="u">先问医生：</span>你选了「' + hitCond.join("、") + '」，' +
+              (f.interactions && f.interactions !== "基本无药物冲突" ? f.interactions : "需结合自身情况评估");
+        cols.caution.push({ f: f, why: why, tier: effTier });
+      } else if (effTier === "red") {
+        why = (usedClaim ? "「" + usedClaim.use + "」用途：" + usedClaim.note : f.verdict);
+        cols.skip.push({ f: f, why: why, tier: effTier });
+      } else {
+        why = (usedClaim ? "「" + usedClaim.use + "」用途有料：" + usedClaim.note : f.verdict);
+        cols.prioritize.push({ f: f, why: why, tier: effTier });
+      }
+    });
+    var defs = [
+      { k: "prioritize", icon: "✅", title: "优先看", empty: "选中的目标里，暂时没有「优先看」的。" },
+      { k: "caution", icon: "🩺", title: "谨慎 · 先问医生", empty: "按你勾的情况，没有需要特别当心的。" },
+      { k: "skip", icon: "🚫", title: "别为功效花钱", empty: "没有命中「智商税」的项。" }
+    ];
+    res.innerHTML = defs.map(function (d) {
+      var items = cols[d.k];
+      var inner = items.length
+        ? '<div class="items">' + items.map(function (it) {
+            return '<div class="sitem" data-t="' + it.tier + '"><span class="sgl"></span><div><div class="snm">' + it.f.name +
+              '</div><div class="why">' + it.why + '</div></div></div>';
+          }).join("") + "</div>"
+        : '<div class="empty-s">' + d.empty + '</div>';
+      return '<div class="scol" data-k="' + d.k + '"><div class="sh">' + d.icon + " " + d.title +
+        '<span class="num">' + items.length + '</span></div>' + inner + "</div>";
+    }).join("");
+    res.hidden = false;
+  }
+
+  /* ---------- 主渲染 ---------- */
+  function render() {
+    var app = $("#app");
+    app.setAttribute("data-view", S.view);
+    app.setAttribute("data-tier", S.tier);
+
+    // 控件状态
+    $$("#tierbar .tierbtn").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-t") === S.tier ? "true" : "false"); });
+    $$("#targetChips .fchip").forEach(function (c) { c.setAttribute("aria-pressed", S.targets.indexOf(c.textContent) > -1 ? "true" : "false"); });
+    $$("#riskChips .fchip").forEach(function (c) { c.setAttribute("aria-pressed", S.risks.indexOf(c.textContent.replace("⚠ ", "")) > -1 ? "true" : "false"); });
+    $("#viewFull").setAttribute("aria-pressed", S.view === "full" ? "true" : "false");
+    $("#viewCompact").setAttribute("aria-pressed", S.view === "compact" ? "true" : "false");
+    $("#searchWrap").classList.toggle("has-val", !!S.q);
+
+    var list = filtered();
+    var cards = $("#cards"); cards.innerHTML = "";
+    list.forEach(function (f, i) { cards.appendChild(cardEl(f, i)); });
+
+    $("#empty").hidden = list.length !== 0;
+    cards.style.display = list.length ? "flex" : "none";
+    var activeFilters = (S.tier !== "all") || S.targets.length || S.risks.length || S.q;
+    $("#resultCount").innerHTML = "共 <b>" + list.length + "</b> / " + FOODS.length + " 种" +
+      (activeFilters ? " · 已筛选" : "");
+    $("#resetAll").hidden = !activeFilters;
+    $("#footCount").textContent = FOODS.length;
+
+    syncCompareBar();
+    writeURL();
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  function bind() {
+    var sb = $("#search");
+    sb.value = S.q;
+    sb.addEventListener("input", function () { S.q = sb.value.trim(); render(); });
+    $("#clearSearch").addEventListener("click", function () { S.q = ""; sb.value = ""; sb.focus(); render(); });
+
+    $("#toggleFilters").addEventListener("click", function () { togglePanel("filterPanel", this); });
+    $("#toggleScreen").addEventListener("click", function () { togglePanel("screenPanel", this); });
+    var lt = $("#legendTog");
+    if (lt) lt.addEventListener("click", function () {
+      var lg = $("#legend"), open = lg.hidden;
+      lg.hidden = !open; lt.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    $("#viewFull").addEventListener("click", function () { S.view = "full"; render(); });
+    $("#viewCompact").addEventListener("click", function () { S.view = "compact"; render(); });
+    $("#runScreen").addEventListener("click", runScreen);
+
+    $("#resetAll").addEventListener("click", resetAll);
+    $("#emptyReset").addEventListener("click", resetAll);
+
+    $("#cmpClear").addEventListener("click", function () { S.compare = []; render(); });
+    $("#cmpOpen").addEventListener("click", openCompare);
+    $("#cmpClose").addEventListener("click", function () { $("#compareModal").classList.remove("show"); });
+    $("#cmpScrim").addEventListener("click", function () { $("#compareModal").classList.remove("show"); });
+    var sc = $("#shareClose"), ss = $("#shareScrim");
+    if (sc) sc.addEventListener("click", function () { $("#shareModal").classList.remove("show"); });
+    if (ss) ss.addEventListener("click", function () { $("#shareModal").classList.remove("show"); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") { $("#compareModal").classList.remove("show"); $("#shareModal").classList.remove("show"); } });
+  }
+  function togglePanel(id, btn) {
+    var p = $("#" + id), open = !p.classList.contains("open");
+    p.classList.toggle("open", open);
     btn.setAttribute("aria-expanded", open ? "true" : "false");
-    btn.classList.toggle("active", open);
   }
-  tFilters.addEventListener("click", ()=> setOpen(moreFilters, tFilters, !moreFilters.classList.contains("open")));
-  tProfile.addEventListener("click", ()=> setOpen(profilePanel, tProfile, !profilePanel.classList.contains("open")));
-  const ACTIVE_FILTER_SEL = '.fgroup[data-group="target"] button.active:not([data-v="all"]), .fgroup[data-group="risk"] button.active:not([data-v="all"])';
-  function updateBadge(){
-    const n = document.querySelectorAll(ACTIVE_FILTER_SEL).length;
-    badge.textContent = n ? " " + n : "";
-    tFilters.classList.toggle("has-active", n>0);
+  function resetAll() {
+    S.q = ""; S.tier = "all"; S.targets = []; S.risks = [];
+    $("#search").value = "";
+    buildFilterChips();
+    render();
   }
-  document.querySelector(".controls").addEventListener("click", updateBadge);
-  const q = document.getElementById("q");
-  if(q) q.addEventListener("input", updateBadge);
-  // 初始：若 URL 已恢复出激活的筛选/筛查，自动展开对应面板（不偷偷藏起来）
-  updateBadge();
-  if(document.querySelector(ACTIVE_FILTER_SEL)) setOpen(moreFilters, tFilters, true);
-  if(document.querySelector('[data-profile-target].active:not([data-profile-target="all"]), [data-profile-risk].active')) setOpen(profilePanel, tProfile, true);
+
+  /* ---------- 初始化 ---------- */
+  readURL();
+  buildTierBar();
+  buildFilterChips();
+  buildScreenChips();
+  bind();
+  render();
 })();
+
 </script>
+
 </body>
 </html>
