@@ -1,3 +1,5 @@
 .claude/
+.vercel/
+.DS_Store
 NOTES.md
 DESIGN_BRIEF.md
