@@ -16,7 +16,8 @@
 <meta name="theme-color" content="#F4F0E7">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" /></noscript>
 <style>
 /* ============================================================
    冷门食物 · 证据分级 — 设计系统
@@ -97,7 +98,7 @@ input{font-family:inherit;}
   box-shadow:var(--shadow);transition:border-color .15s,box-shadow .15s;
 }
 .search input::placeholder{color:var(--ink-4);}
-.search input:focus{border-color:var(--ink);outline:none;box-shadow:var(--shadow-lift);}
+.search input:focus{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink);}
 .search .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:16px;pointer-events:none;}
 .search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:8px;color:var(--ink-3);font-size:15px;display:none;align-items:center;justify-content:center;}
 .search .clr:hover{background:var(--paper-grain);color:var(--ink);}
@@ -171,6 +172,7 @@ input{font-family:inherit;}
 .legendtog:hover{color:var(--ink);border-color:var(--line-strong);}
 .legendtog[aria-expanded="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
 .legend{margin-top:11px;display:grid;grid-template-columns:1fr;gap:11px;background:var(--card);border:1.5px solid var(--line-2);border-radius:var(--rad);padding:15px 16px;box-shadow:var(--shadow);}
+.legend[hidden]{display:none;}
 .legend .lg{display:flex;gap:11px;align-items:center;font-size:12.5px;color:var(--ink-2);line-height:1.45;}
 .legend .lg b{display:block;color:var(--ink);font-weight:700;font-size:12.5px;}
 .legend .lg > span{flex:0 0 auto;}
@@ -460,7 +462,7 @@ body[data-bg="white"] .topbar{background:linear-gradient(180deg,#fff 72%,rgba(25
 body[data-theme="dossier"]{
   --paper:#E8EBE5; --paper-grain:#DFE3DC; --card:#FCFDFB;
   --line:#D2D7CD; --line-2:#C1C7BA; --line-strong:#A9B0A2;
-  --ink:#1B201B; --ink-2:#4D524B; --ink-3:#828A7D; --ink-4:#A9B0A3;
+  --ink:#1B201B; --ink-2:#4D524B; --ink-3:#646B5E; --ink-4:#A9B0A3;
   --rad:5px; --rad-lg:6px; --rad-sm:4px;
   --shadow:0 1px 0 rgba(27,32,27,.04);
   --shadow-lift:0 2px 0 rgba(27,32,27,.05), 0 16px 30px -22px rgba(27,32,27,.5);
@@ -609,7 +611,7 @@ body[data-theme="dossier"] .app[data-view="compact"] .stamp{top:11px;right:11px;
   </header>
 
   <div class="resultbar">
-    <span class="n" id="resultCount"></span>
+    <span class="n" id="resultCount" role="status" aria-live="polite" aria-atomic="true"></span>
     <span class="rbspace"></span>
     <button class="legendtog" id="legendTog" aria-expanded="false" aria-controls="legend">ⓘ 怎么读</button>
     <button class="reset" id="resetAll" hidden>清空筛选</button>
@@ -622,7 +624,7 @@ body[data-theme="dossier"] .app[data-view="compact"] .stamp{top:11px;right:11px;
     <div class="lg"><span class="lgmyth">误</span><div><b>误区 → 真相</b>划掉的是常见说法，下面那句才是证据说的</div></div>
   </div>
 
-  <main class="cards" id="cards" aria-live="polite"></main>
+  <main class="cards" id="cards"></main>
 
   <div class="empty" id="empty" hidden>
     <div class="big">没有匹配的食物</div>
@@ -757,7 +759,7 @@ const FOODS = [
   {
     name:"牛肝", tier:"amber",
     verdict:"营养密度天花板——但正因为太猛，天天大量吃反而危险。",
-    targets:["营养密度"], risks:["孕妇"],
+    targets:["营养密度"], risks:["孕妇","药物相互作用"],
     good:"维生素 B12、视黄醇形式维生素 A、铁、铜、叶酸密度极高，少量就能补足多种微量营养。",
     warn:"维生素 A 脂溶、会蓄积：约 100g 牛肝含 ~4970µg 维 A，已超成人每日上限（3000µg）。长期大量吃 → 维 A 中毒（头痛、肝损、骨问题）。孕期过量维 A 致畸，孕妇/备孕应避免肝类。",
     hype:'"超级食物天天吃""越多越好"——脂溶性维生素恰恰不是越多越好。',
@@ -927,7 +929,7 @@ const FOODS = [
   {
     name:"洋车前子壳", tier:"green",
     verdict:"便宜好用的可溶纤维，降 LDL、稳血糖、治便秘都靠谱，关键是配够水。",
-    targets:["肠胃","血糖","心血管"], risks:["糖尿病用药"],
+    targets:["肠胃","血糖","心血管"], risks:["糖尿病用药","药物相互作用"],
     good:"AJCN 一篇 28 试验 meta 显示约 10g/日显著降 LDL（低脂饮食下约 −7%）；另有 meta 显示降 HbA1c、空腹血糖。也改善便秘。",
     warn:"要 ≥10g/日才出效果；常见胀气腹胀。必须随大量水服，否则可能噎住/肠梗阻；与口服药同服影响吸收，间隔 1–2 小时。",
     hype:"「减肥刮油神器」——主要靠膨胀增饱腹、调脂调糖，对体重独立作用有限，不是燃脂。",
@@ -975,7 +977,7 @@ const FOODS = [
   {
     name:"红曲米", tier:"amber",
     verdict:"它就是没说明书的低剂量他汀——能降胆固醇，但你不知道每粒吃进多少药。",
-    targets:["心血管"], risks:["肝功能","孕妇"],
+    targets:["心血管"], risks:["肝功能","孕妇","药物相互作用"],
     good:"含 monacolin K（与洛伐他汀同一分子），多项 meta 显示显著降 LDL，幅度可与低剂量他汀相当。",
     warn:"既然是他汀，副作用也一样（肌痛、肝肾损伤）。市售产品 monacolin K 含量天差地别（NCCIH：从测不到到 5.48mg/份，差 60 倍）；霉菌毒素橘霉素污染常见。FDA 视含显著 monacolin K 者为未批准药物。",
     hype:"「天然温和、比他汀安全」——它就是他汀，剂量不透明反而更不可控。",
@@ -987,7 +989,7 @@ const FOODS = [
   {
     name:"甘草 / 甘草根", tier:"amber",
     verdict:"当药材短期可以，当零食或天天泡水喝就危险——它会偷偷拉高血压、压低血钾。",
-    targets:["肠胃","抗炎"], risks:["高血压","孕妇"],
+    targets:["肠胃","抗炎"], risks:["高血压","孕妇","药物相互作用"],
     good:"传统药用（消化、咽喉、抗炎），但高质量疗效证据有限。",
     warn:"甘草甜素抑制 11-β-HSD2，造成「假性醛固酮增多」：钠水潴留、高血压、低血钾、碱中毒。多篇病例报告记录严重高血压、低血钾甚至危及生命的心律失常。停用后多可恢复。",
     hype:"「润肺排毒抗炎万能养生根」——长期/大量的升压降钾风险被严重淡化。",
@@ -1144,7 +1146,7 @@ const FOODS = [
   {
     name:"黑咖啡", tier:"green",
     verdict:"证据最扎实的功能性饮品之一——护肝、降帕金森和 2 型糖尿病风险都有 meta 级证据，但没过滤的咖啡会偷偷升你的 LDL。",
-    targets:["护肝","血糖","心血管"], risks:["孕妇"],
+    targets:["护肝","血糖","心血管"], risks:["孕妇","药物相互作用"],
     good:"护肝：高咖啡摄入 vs 不喝，肝硬化风险降低约 47%（OR=0.53），肝癌降低约 50%（OR=0.50，含 16 项研究）。帕金森：咖啡因摄入者 PD 风险降低约 20%（HR=0.80）。2 型糖尿病：每天 5 杯 vs 不喝 RR≈0.71；去咖啡因咖啡也有保护效果（RR≈0.94/杯）。",
     warn:"咖啡醇（cafestol）问题：法压壶、土耳其煮法不过滤，保留大量 cafestol，每天 5–6 杯可使 LDL 升高 9–14%——cafestol 被称为食物中已知最强的胆固醇升高化合物。纸质滤纸可去除 >90%。咖啡因影响睡眠和焦虑；孕期需限量。",
     hype:'"功能咖啡""咖啡减肥"——添加剂成分无证据；短期代谢促进微弱且快速耐受。',
@@ -2104,6 +2106,7 @@ var OUT=FOODS.map(function(f,i){
   var meta={myth:MANUAL_MYTHS[f.name] || deriveMyth(f)};
   if(f.name.indexOf("姜黄")>-1){meta.over=2;meta.overWhy="meta 多用高浓度姜黄素+胡椒碱增强配方，对『日常调味量』把握弱";}
   if(f.name.indexOf("螺旋藻")>-1){meta.over=2;meta.overWhy="meta 样本小、效应温和，且污染/来源是更大变量";}
+  if(f.name.indexOf("巴西莓")>-1){meta.over=1;meta.overWhy="唯一来源是 NCCIH——而该权威页恰恰说『几乎无人体证据』，不是强证据";}
   META[id]=meta;
   return {
     id:id, name:f.name, en:f.en||"", tier:f.tier,
@@ -2521,9 +2524,11 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     $("#shareModal").classList.add("show");
   }
   function copyText(txt, btn, label) {
-    function ok() { var o = btn.textContent; btn.textContent = "✓ 已复制"; setTimeout(function () { btn.textContent = label; }, 1400); }
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, ok);
-    else { var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (e) {} ta.remove(); ok(); }
+    function flash(msg) { btn.textContent = msg; setTimeout(function () { btn.textContent = label; }, 1600); }
+    function ok() { flash("✓ 已复制"); }
+    function fail() { flash("复制失败，请长按选择"); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, fail);
+    else { var ta = document.createElement("textarea"); ta.value = txt; ta.setAttribute("readonly", ""); ta.style.position = "absolute"; ta.style.left = "-9999px"; document.body.appendChild(ta); ta.select(); var done = false; try { done = document.execCommand("copy"); } catch (e) {} ta.remove(); done ? ok() : fail(); }
   }
 
   /* ---------- 个人筛查 ---------- */
@@ -2593,6 +2598,11 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     list.forEach(function (f, i) { cards.appendChild(cardEl(f, i)); });
 
     $("#empty").hidden = list.length !== 0;
+    if (list.length === 0) {
+      var eb = $("#empty").querySelector(".big"), es = $("#empty").querySelector(".sm");
+      if (S.q) { eb.textContent = "没找到「" + S.q + "」"; es.textContent = "本库只收「信念≠证据」的认知差食物，常规食材可能没收录。"; }
+      else { eb.textContent = "没有匹配的食物"; es.textContent = "换个筛选条件试试。"; }
+    }
     cards.style.display = list.length ? "flex" : "none";
     var activeFilters = (S.tier !== "all") || S.targets.length || S.risks.length || S.q;
     $("#resultCount").innerHTML = "共 <b>" + list.length + "</b> / " + FOODS.length + " 种" +
