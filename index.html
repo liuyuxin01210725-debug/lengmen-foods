@@ -173,6 +173,15 @@ input{font-family:inherit;}
 .legendtog[aria-expanded="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);}
 .legend{margin-top:11px;display:grid;grid-template-columns:1fr;gap:11px;background:var(--card);border:1.5px solid var(--line-2);border-radius:var(--rad);padding:15px 16px;box-shadow:var(--shadow);}
 .legend[hidden]{display:none;}
+/* persona 个性化：命中「我的情况」的卡片 */
+.card.persona-hit{box-shadow:inset 4px 0 0 var(--r), var(--shadow);}
+.persona-banner{display:flex;gap:8px;align-items:flex-start;background:var(--r-tint);color:var(--r-deep);border:1px solid var(--r-soft);border-radius:var(--rad-sm);padding:9px 12px;font-size:13px;line-height:1.5;margin:0 0 13px;}
+.persona-banner .pbic{flex:0 0 auto;font-size:14px;}
+.persona-banner b{font-weight:700;}
+.tag.risk.hot{background:var(--r);color:#fff;border-color:var(--r);font-weight:700;}
+.resultbar .pcount{color:var(--r-deep);font-weight:700;}
+.card.flash{animation:cardflash 1.3s ease;}
+@keyframes cardflash{0%,100%{outline:0 solid transparent;outline-offset:0;}25%{outline:3px solid var(--a);outline-offset:3px;}}
 .legend .lg{display:flex;gap:11px;align-items:center;font-size:12.5px;color:var(--ink-2);line-height:1.45;}
 .legend .lg b{display:block;color:var(--ink);font-weight:700;font-size:12.5px;}
 .legend .lg > span{flex:0 0 auto;}
@@ -2194,6 +2203,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     if (S.tier !== "all") p.set("ftier", S.tier); else p.delete("ftier");
     if (S.targets.length) p.set("ftg", S.targets.join(",")); else p.delete("ftg");
     if (S.risks.length) p.set("frk", S.risks.join(",")); else p.delete("frk");
+    if (S.conds.length) p.set("fcd", S.conds.join(",")); else p.delete("fcd");
     if (S.view !== "full") p.set("fv", S.view); else p.delete("fv");
     if (S.compare.length) p.set("fc", S.compare.join(",")); else p.delete("fc");
     var s = p.toString();
@@ -2206,6 +2216,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     S.tier = (t === "green" || t === "amber" || t === "red") ? t : "all";
     S.targets = (p.get("ftg") || "").split(",").filter(function (x) { return allTargets.indexOf(x) > -1; });
     S.risks = (p.get("frk") || "").split(",").filter(function (x) { return allRisks.indexOf(x) > -1; });
+    S.conds = (p.get("fcd") || "").split(",").filter(function (x) { return allRisks.indexOf(x) > -1; });
     S.view = p.get("fv") === "compact" ? "compact" : "full";
     S.compare = (p.get("fc") || "").split(",").filter(Boolean);
   }
@@ -2273,14 +2284,14 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     allTargets.forEach(function (t) {
       var c = el("button", "fchip", t);
       c.setAttribute("aria-pressed", S.goals.indexOf(t) > -1 ? "true" : "false");
-      c.addEventListener("click", function () { toggleArr(S.goals, t); c.setAttribute("aria-pressed", S.goals.indexOf(t) > -1 ? "true" : "false"); $("#runScreen").disabled = S.goals.length === 0; });
+      c.addEventListener("click", function () { toggleArr(S.goals, t); c.setAttribute("aria-pressed", S.goals.indexOf(t) > -1 ? "true" : "false"); $("#runScreen").disabled = S.goals.length === 0; if (!$("#screenResults").hidden) { if (S.goals.length) runScreen(); else $("#screenResults").hidden = true; } });
       gc.appendChild(c);
     });
     var cc = $("#condChips"); cc.innerHTML = "";
     allRisks.forEach(function (r) {
       var c = el("button", "fchip", "⚠ " + r);
       c.setAttribute("aria-pressed", S.conds.indexOf(r) > -1 ? "true" : "false");
-      c.addEventListener("click", function () { toggleArr(S.conds, r); c.setAttribute("aria-pressed", S.conds.indexOf(r) > -1 ? "true" : "false"); });
+      c.addEventListener("click", function () { toggleArr(S.conds, r); c.setAttribute("aria-pressed", S.conds.indexOf(r) > -1 ? "true" : "false"); render(); if (!$("#screenResults").hidden && S.goals.length) runScreen(); });
       cc.appendChild(c);
     });
   }
@@ -2315,6 +2326,16 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
 
     /* 主体 */
     var body = el("div", "body");
+
+    /* persona：命中「我的情况」→ 顶部告警 + 红边 */
+    var hitCond = S.conds.filter(function (c) { return (f.risks || []).indexOf(c) > -1; });
+    if (hitCond.length) {
+      card.classList.add("persona-hit");
+      var pbn = el("div", "persona-banner");
+      pbn.innerHTML = '<span class="pbic">⚠</span><span><b>你勾了「' + hitCond.join("、") + '」</b>：这条对你需先问医生' +
+        (f.interactions && f.interactions.charAt(0) !== "无" ? "——" + f.interactions : "") + '</span>';
+      body.appendChild(pbn);
+    }
 
     /* 案卷头（档案皮肤专用） */
     var cf = el("div", "casefile");
@@ -2358,7 +2379,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     /* 标签：针对 / 谨慎（行动已上移至 verdictbar） */
     var tags = el("div", "tags");
     (f.targets || []).forEach(function (t) { tags.appendChild(el("span", "tag target", "针对 " + t)); });
-    (f.risks || []).forEach(function (r) { tags.appendChild(el("span", "tag risk", '<span class="ic">⚠</span>' + r)); });
+    (f.risks || []).forEach(function (r) { tags.appendChild(el("span", "tag risk" + (hitCond.indexOf(r) > -1 ? " hot" : ""), '<span class="ic">⚠</span>' + r)); });
     body.appendChild(tags);
 
     /* 紧凑视图证据 chip */
@@ -2569,7 +2590,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
       var items = cols[d.k];
       var inner = items.length
         ? '<div class="items">' + items.map(function (it) {
-            return '<div class="sitem" data-t="' + it.tier + '"><span class="sgl"></span><div><div class="snm">' + it.f.name +
+            return '<div class="sitem" data-t="' + it.tier + '" data-id="' + it.f.id + '" role="button" tabindex="0"><span class="sgl"></span><div><div class="snm">' + it.f.name +
               '</div><div class="why">' + it.why + '</div></div></div>';
           }).join("") + "</div>"
         : '<div class="empty-s">' + d.empty + '</div>';
@@ -2594,6 +2615,15 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     $("#searchWrap").classList.toggle("has-val", !!S.q);
 
     var list = filtered();
+    // persona：命中「我的情况」的卡片浮到最前
+    var hitCount = 0;
+    if (S.conds.length) {
+      var pHits = [], pRest = [];
+      list.forEach(function (f) {
+        if ((f.risks || []).some(function (r) { return S.conds.indexOf(r) > -1; })) pHits.push(f); else pRest.push(f);
+      });
+      hitCount = pHits.length; list = pHits.concat(pRest);
+    }
     var cards = $("#cards"); cards.innerHTML = "";
     list.forEach(function (f, i) { cards.appendChild(cardEl(f, i)); });
 
@@ -2604,9 +2634,10 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
       else { eb.textContent = "没有匹配的食物"; es.textContent = "换个筛选条件试试。"; }
     }
     cards.style.display = list.length ? "flex" : "none";
-    var activeFilters = (S.tier !== "all") || S.targets.length || S.risks.length || S.q;
+    var activeFilters = (S.tier !== "all") || S.targets.length || S.risks.length || S.q || S.conds.length || S.goals.length;
     $("#resultCount").innerHTML = "共 <b>" + list.length + "</b> / " + FOODS.length + " 种" +
-      (activeFilters ? " · 已筛选" : "");
+      (activeFilters ? " · 已筛选" : "") +
+      (hitCount ? ' · <b class="pcount">你的情况命中 ' + hitCount + ' 项（置顶标红）</b>' : "");
     $("#resetAll").hidden = !activeFilters;
     $("#footCount").textContent = FOODS.length;
 
@@ -2631,6 +2662,17 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     $("#viewFull").addEventListener("click", function () { S.view = "full"; render(); });
     $("#viewCompact").addEventListener("click", function () { S.view = "compact"; render(); });
     $("#runScreen").addEventListener("click", runScreen);
+    (function () {
+      var sr = $("#screenResults");
+      function jump(it) {
+        var card = $('.card[data-id="' + it.getAttribute("data-id") + '"]');
+        if (!card) return;
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+        card.classList.add("flash"); setTimeout(function () { card.classList.remove("flash"); }, 1300);
+      }
+      sr.addEventListener("click", function (e) { var it = e.target.closest(".sitem"); if (it) jump(it); });
+      sr.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { var it = e.target.closest(".sitem"); if (it) { e.preventDefault(); jump(it); } } });
+    })();
 
     $("#resetAll").addEventListener("click", resetAll);
     $("#emptyReset").addEventListener("click", resetAll);
@@ -2651,8 +2693,12 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
   }
   function resetAll() {
     S.q = ""; S.tier = "all"; S.targets = []; S.risks = [];
+    S.goals = []; S.conds = [];
     $("#search").value = "";
+    var sr = $("#screenResults"); if (sr) sr.hidden = true;
+    var rb = $("#runScreen"); if (rb) rb.disabled = true;
     buildFilterChips();
+    buildScreenChips();
     render();
   }
 
