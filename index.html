@@ -364,7 +364,8 @@ input{font-family:inherit;}
 .scol[data-k="caution"] .sh{background:var(--a-bg);color:var(--a-deep);}
 .scol[data-k="skip"] .sh{background:var(--r-bg);color:var(--r-deep);}
 .scol .items{padding:8px;display:flex;flex-direction:column;gap:7px;}
-.sitem{display:flex;align-items:flex-start;gap:11px;padding:11px 12px;border-radius:var(--rad-sm);background:var(--paper-grain);border:1px solid var(--line);}
+.sitem{display:flex;align-items:flex-start;gap:11px;padding:11px 12px;border-radius:var(--rad-sm);background:var(--paper-grain);border:1px solid var(--line);cursor:pointer;}
+.sitem:hover{border-color:var(--line-strong);}
 .sitem .sgl{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:0 0 auto;}
 .sitem[data-t="green"] .sgl{background:var(--g);} .sitem[data-t="amber"] .sgl{background:var(--a);} .sitem[data-t="red"] .sgl{background:var(--r);}
 .sitem .snm{font-family:var(--serif);font-weight:700;font-size:14.5px;}
@@ -597,10 +598,6 @@ body[data-theme="dossier"] .app[data-view="compact"] .stamp{top:11px;right:11px;
         <h3>按目标看 · 想解决什么</h3>
         <div class="chips" id="targetChips"></div>
       </div>
-      <div class="grp">
-        <h3>谨慎人群 · 把不适合我的标出来</h3>
-        <div class="chips" id="riskChips"></div>
-      </div>
     </div></div></div>
 
     <div class="panel" id="screenPanel"><div class="inner"><div class="pad">
@@ -714,7 +711,7 @@ function toEvidence(f){var links=(f.links||[]).slice();
 if(f.secondary&&f.secondary.url)links.push({label:f.secondary.label,url:f.secondary.url,_sec:true});
 var n=evN(f),eff=evEffect(f);
 return links.map(function(l,idx){var rank=srcRank(l.url);
-return {year:evYear(l.label),type:l._sec?"二级参考":evType(l.label,f),n:idx===0?n:"",effect:idx===0?eff:"",title:l.label,url:l.url,access:l._sec?"secondary":srcAccess(l.url),primary:(rank===1&&!l._sec)};});}
+return {year:evYear(l.label),type:l._sec?"二级参考":(l.type||evType(l.label,f)),n:idx===0?n:"",effect:idx===0?eff:"",title:l.label,url:l.url,access:l._sec?"secondary":srcAccess(l.url),primary:(rank===1&&!l._sec)};});}
 
 const FOODS = [
   {
@@ -1367,7 +1364,7 @@ const FOODS = [
     hype:'"完全蛋白"营销不能让你忽略它仍是高脂坚果，不能替代主要蛋白来源（如肉/鱼/蛋）。',
     use:{freq:"每天 1-2 盎司（约 28-56g，约 49-98 颗）。", scene:"零食、糖尿病人群餐后血糖管理。", caution:"选择带壳、密封、干燥储存的产品；孕妇/肝病者注意黄曲霉风险，认准正规品牌。"},
     evChips:["PDCAAS 完全蛋白（5 岁+）","餐后血糖↓28%","HbA1c↓0.2%","黄曲霉污染高风险"],
-    links:[{label:"Frontiers in Nutrition：开心果与餐后血糖（2019）", url:"https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2019.00186/full"},{label:"PMC：开心果与糖尿病代谢（2019）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC6927994/"}],
+    links:[{label:"Frontiers in Nutrition：开心果与餐后血糖（2019）", url:"https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2019.00186/full", type:"RCT"},{label:"PMC：开心果与糖尿病代谢（2019）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC6927994/"}],
     secondary:null
   },
   {
@@ -2269,13 +2266,6 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
       c.setAttribute("aria-pressed", S.targets.indexOf(t) > -1 ? "true" : "false");
       c.addEventListener("click", function () { toggleArr(S.targets, t); render(); });
       tc.appendChild(c);
-    });
-    var rc = $("#riskChips"); rc.innerHTML = "";
-    allRisks.forEach(function (r) {
-      var c = el("button", "fchip", "⚠ " + r);
-      c.setAttribute("aria-pressed", S.risks.indexOf(r) > -1 ? "true" : "false");
-      c.addEventListener("click", function () { toggleArr(S.risks, r); render(); });
-      rc.appendChild(c);
     });
   }
 
