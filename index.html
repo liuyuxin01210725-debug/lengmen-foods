@@ -684,9 +684,9 @@ var app=document.getElementById('app');if(app)app.setAttribute('data-density','c
 <script>(function(){
 
 function linkHost(u){try{return new URL(u).host;}catch(e){return "";}}
-var SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","cacmap.fda.gov","hhs.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu","acc.org","cambridge.org","acs.org","plos.org","jacionline.org","clinicaltrials.gov"];
+var SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","hhs.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu","acc.org","cambridge.org","acs.org","plos.org","jacionline.org","clinicaltrials.gov"];
 var SRC_TIER2=["examine.com","healthline.com","medicalnewstoday.com","drugs.com","goodrx.com","clevelandclinic.org","mskcc.org","arthritis.org","breastcancer.org","wikipedia.org","foodstruct.com","omegaquant.com","glycemicsnap.com","merckvetmanual.com","ucihealth.org","associatesinnephrologypc.com","drkarafitzgerald.com","westonaprice.org","chriskresser.com","aafp.org"];
-function srcRank(u){var h=linkHost(u);if(SRC_TIER1.some(function(d){return h===d||h.endsWith("."+d);}))return 1;if(SRC_TIER2.some(function(d){return h===d||h.endsWith("."+d);}))return 2;return 0;}
+function srcRank(u){var h=linkHost(u);if(h==="web.archive.org"){var wm=String(u).match(/web\.archive\.org\/web\/[^/]+\/(https?:\/\/[^\s"]+)/);if(wm)h=linkHost(wm[1]);}if(SRC_TIER1.some(function(d){return h===d||h.endsWith("."+d);}))return 1;if(SRC_TIER2.some(function(d){return h===d||h.endsWith("."+d);}))return 2;return 0;}
 function srcAccess(u){u=String(u||"");if(u.indexOf("examine.com")>-1)return "secondary";
 var free=["pmc.ncbi.nlm.nih.gov","ncbi.nlm.nih.gov/pmc","ncbi.nlm.nih.gov/books","ods.od.nih.gov","nccih.nih.gov","frontiersin.org","nutritionsource.hsph.harvard.edu","drugs.com"];
 if(free.some(function(d){return u.indexOf(d)>-1;}))return "free";
@@ -815,11 +815,11 @@ const FOODS = [
     verdict:"抗炎/关节有初步证据，但吸收差，高浓缩补剂有肝损报告。",
     targets:["抗炎","关节骨骼"], risks:["孕妇","肾结石","抗凝/手术","肝功能"],
     good:"多项 meta 显示口服姜黄/姜黄素能改善膝骨关节炎的疼痛和僵硬（证据初步、需更高质量研究）。",
-    warn:"姜黄素口服吸收极差，常加胡椒碱把吸收提到 ~20 倍——但这也放大肝毒性，近年有姜黄+胡椒碱补剂导致药物性肝损伤的病例。普通做菜量的姜黄是安全的。",
+    warn:"姜黄素口服吸收极差，常加胡椒碱把吸收提到 ~20 倍——但这也放大肝毒性。NIH LiverTox（2025）已把姜黄列为美国最常见的草本相关肝损原因，多为免疫介导（逾 70% 病例携带 HLA-B*35:01），并有急性肝衰竭甚至死亡个案；风险集中在高剂量、加胡椒碱/高吸收配方。绝对风险仍很低，普通做菜量的姜黄是安全的。",
     hype:'"姜黄素抗癌/抗衰老/万能抗炎"——从初步证据外推过头。',
     use:{freq:"当香料做菜安全；高浓缩+胡椒碱补剂别长期大剂量。", scene:"想辅助关节不适、喜欢这个味道的人。", caution:"孕妇（大剂量）、肾结石（草酸）、服抗凝药/术前、胆道阻塞者谨慎。"},
-    evChips:["OA meta 改善疼痛（初步）","吸收差·需胡椒碱","高剂量+胡椒碱 → 肝损报告"],
-    links:[{label:"NCCIH：姜黄", url:"https://www.nccih.nih.gov/health/turmeric"},{label:"PMC：姜黄素治骨关节炎 meta", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8202067/"}],
+    evChips:["OA meta 改善疼痛（初步）","吸收差·需胡椒碱","LiverTox：美国草本肝损首因（高剂量+胡椒碱）"],
+    links:[{label:"NCCIH：姜黄", url:"https://www.nccih.nih.gov/health/turmeric"},{label:"NIH LiverTox：姜黄/姜黄素肝损", url:"https://www.ncbi.nlm.nih.gov/books/NBK548561/"},{label:"PMC：姜黄素治骨关节炎 meta", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8202067/"}],
     secondary:null
   },
   {
@@ -985,11 +985,11 @@ const FOODS = [
     verdict:"它就是没说明书的低剂量他汀——能降胆固醇，但你不知道每粒吃进多少药。",
     targets:["心血管"], risks:["肝功能","孕妇","药物相互作用"],
     good:"含 monacolin K（与洛伐他汀同一分子），多项 meta 显示显著降 LDL，幅度可与低剂量他汀相当。",
-    warn:"既然是他汀，副作用也一样（肌痛、肝肾损伤）。市售产品 monacolin K 含量天差地别（NCCIH：从测不到到 5.48mg/份，差 60 倍）；霉菌毒素橘霉素污染常见。FDA 视含显著 monacolin K 者为未批准药物。",
+    warn:"既然是他汀，副作用也一样（肌痛、肝肾损伤）。市售产品 monacolin K 含量天差地别（NCCIH：从测不到到 5.48mg/份，差 60 倍）；霉菌毒素橘霉素污染常见。FDA 视含显著 monacolin K 者为未批准药物；EFSA（2025）进一步认为即便每日 ≤3mg monacolin K 也无法确立安全摄入量，欧盟正推进对红曲米 monacolins 的全面限制（预计 2026 年）。",
     hype:"「天然温和、比他汀安全」——它就是他汀，剂量不透明反而更不可控。",
     use:{freq:"若用，选标注 monacolin K 剂量且检测橘霉素的产品，并知情这是他汀。", scene:"轻中度高胆固醇、明确知情者。", caution:"孕妇、肝功能异常、已服他汀或多药者禁用/慎用，先问医生。"},
-    evChips:["monacolin K = 洛伐他汀","meta 显著降 LDL","含量品牌差 60 倍","橘霉素污染"],
-    links:[{label:"NCCIH：红曲米", url:"https://www.nccih.nih.gov/health/red-yeast-rice"}],
+    evChips:["monacolin K = 洛伐他汀","meta 显著降 LDL","含量品牌差 60 倍","橘霉素污染","EFSA 2025：任何剂量都难言安全"],
+    links:[{label:"NCCIH：红曲米", url:"https://www.nccih.nih.gov/health/red-yeast-rice"},{label:"EFSA：红曲米 monacolins 安全性意见（2025）", url:"https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2025.9276"}],
     secondary:{text:"meta：", label:"Atherosclerosis 系统综述/meta（2015）", url:"https://www.sciencedirect.com/science/article/pii/S0021915015002221"}
   },
   {
@@ -1486,7 +1486,7 @@ const FOODS = [
     hype:"「吸出体内毒素」「重金属排毒」「净化肠道」——零人体证据。",
     use:{freq:"不建议常规口服；外用面膜偶尔可。", scene:"如要用，外用而非内服；任何「净化方案」直接跳过。", caution:"孕妇、婴幼儿、服药人群绝对避免口服。"},
     evChips:["FDA 召回（铅）","无人体排毒证据","非选择性吸附","儿童慢性铅中毒报告"],
-    links:[{label:"FDA：Best Bentonite Clay 警告（2016）", url:"https://cacmap.fda.gov/drugs/drug-safety-and-availability/fda-warns-consumers-not-use-best-bentonite-clay"},{label:"FDA：Bentonite Me Baby 警告（2016）", url:"https://www.fda.gov/drugs/drug-safety-and-availability/fda-warns-consumers-about-health-risks-alikay-naturals-bentonite-me-baby-bentonite-clay"}],
+    links:[{label:"FDA：Best Bentonite Clay 警告（2016·存档）", url:"https://web.archive.org/web/20251214113742/https://www.fda.gov/drugs/drug-safety-and-availability/fda-warns-consumers-not-use-best-bentonite-clay"},{label:"FDA：Bentonite Me Baby 警告（2016·存档）", url:"https://web.archive.org/web/20260408133950/https://www.fda.gov/drugs/drug-safety-and-availability/fda-warns-consumers-about-health-risks-alikay-naturals-bentonite-me-baby-bentonite-clay"}],
     secondary:null
   },
   {
@@ -1623,14 +1623,14 @@ const FOODS = [
   },
   {
     name:"酸奶（含活菌）", tier:"green",
-    verdict:"AAD（抗生素相关腹泻）meta：益生菌组 8% vs 对照 17.7%——但起作用的是 LGG 和布拉氏酵母这类特定菌株，不是货架上随便一瓶「益生菌酸奶」；巴氏杀菌的「酸奶饮料」里没有活菌。",
+    verdict:"起作用的是 LGG、布拉氏酵母这类特定菌株，不是货架上随便一瓶「益生菌酸奶」；巴氏杀菌的「酸奶饮料」里没有活菌。2025 年 Cochrane 更新（40 项 RCT、1.3 万余人）认为益生菌可能明显降低抗生素相关腹泻风险，但证据确定性只到低-中等、且最大两项试验未见明确获益——当锦上添花，别当药。",
     targets:["肠胃","免疫"], risks:[],
-    good:"特定菌株（Lactobacillus rhamnosus GG / Saccharomyces boulardii）对 AAD 预防、IBS 症状改善、急性腹泻病程缩短有 meta 证据。含活菌酸奶对乳糖不耐受人群消化乳糖更友好。",
+    good:"特定菌株（Lactobacillus rhamnosus GG / Saccharomyces boulardii）对 AAD 预防、IBS 症状改善、急性腹泻病程缩短有 meta 证据（2025 Cochrane：可能有益，低-中等确定性；早期 LGG 组合 RCT 曾报 8% vs 17.7%，属较乐观估计）。含活菌酸奶对乳糖不耐受人群消化乳糖更友好。",
     warn:"商业酸奶 CFU 常远低于研究剂量；巴氏杀菌后的「酸奶饮料」/「乳酸菌饮料」无活菌，标签留意「含活菌」「未经热处理」。免疫抑制者/早产儿慎用活菌产品。",
     hype:"「益生菌酸奶治百病」「增强免疫」「每天一瓶不感冒」——菌株不对、数量不够，效果与白水无异。",
     use:{freq:"每天 1 杯（约 150-200g）含活菌、低糖酸奶。", scene:"抗生素疗程中、乳糖不耐受人群、肠胃敏感期。", caution:"重度免疫抑制（化疗、HIV 晚期）者慎用活菌；糖尿病人选无糖款。"},
-    evChips:["AAD：8% vs 17.7%（meta）","菌株特异性（LGG / S. boulardii）","商业 CFU 常不足","巴氏杀菌品无活菌"],
-    links:[{label:"PMC：益生菌与 AAD 综述", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10335840/"}],
+    evChips:["AAD：2025 Cochrane 或有益·低-中确定性","菌株特异性（LGG / S. boulardii）","商业 CFU 常不足","巴氏杀菌品无活菌"],
+    links:[{label:"Cochrane：益生菌预防抗生素相关腹泻（2025 更新）", url:"https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD006095.pub5/full"},{label:"PMC：益生菌与 AAD 综述", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10335840/"}],
     secondary:null
   },
   {
@@ -2199,7 +2199,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     if (S.q) p.set("fq", S.q); else p.delete("fq");
     if (S.tier !== "all") p.set("ftier", S.tier); else p.delete("ftier");
     if (S.targets.length) p.set("ftg", S.targets.join(",")); else p.delete("ftg");
-    if (S.risks.length) p.set("frk", S.risks.join(",")); else p.delete("frk");
+    p.delete("frk"); // 「谨慎人群」筛选已并入「按我的情况看」（conds），清理遗留 frk 参数
     if (S.conds.length) p.set("fcd", S.conds.join(",")); else p.delete("fcd");
     if (S.view !== "full") p.set("fv", S.view); else p.delete("fv");
     if (S.compare.length) p.set("fc", S.compare.join(",")); else p.delete("fc");
@@ -2212,7 +2212,6 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     var t = p.get("ftier");
     S.tier = (t === "green" || t === "amber" || t === "red") ? t : "all";
     S.targets = (p.get("ftg") || "").split(",").filter(function (x) { return allTargets.indexOf(x) > -1; });
-    S.risks = (p.get("frk") || "").split(",").filter(function (x) { return allRisks.indexOf(x) > -1; });
     S.conds = (p.get("fcd") || "").split(",").filter(function (x) { return allRisks.indexOf(x) > -1; });
     S.view = p.get("fv") === "compact" ? "compact" : "full";
     S.compare = (p.get("fc") || "").split(",").filter(Boolean);
@@ -2231,7 +2230,6 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     return FOODS.filter(function (f) {
       if (S.tier !== "all" && f.tier !== S.tier) return false;
       if (S.targets.length && !S.targets.some(function (t) { return (f.targets || []).indexOf(t) > -1; })) return false;
-      if (S.risks.length && !S.risks.some(function (r) { return (f.risks || []).indexOf(r) > -1; })) return false;
       if (!matchSearch(f, S.q)) return false;
       return true;
     });
@@ -2323,7 +2321,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
       card.classList.add("persona-hit");
       var pbn = el("div", "persona-banner");
       pbn.innerHTML = '<span class="pbic">⚠</span><span><b>你勾了「' + hitCond.join("、") + '」</b>：这条对你需先问医生' +
-        (f.interactions && f.interactions.charAt(0) !== "无" ? "——" + f.interactions : "") + '</span>';
+        (rxNote(f) ? "——" + rxNote(f) : "") + '</span>';
       body.appendChild(pbn);
     }
 
@@ -2542,6 +2540,17 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     else { var ta = document.createElement("textarea"); ta.value = txt; ta.setAttribute("readonly", ""); ta.style.position = "absolute"; ta.style.left = "-9999px"; document.body.appendChild(ta); ta.select(); var done = false; try { done = document.execCommand("copy"); } catch (e) {} ta.remove(); done ? ok() : fail(); }
   }
 
+  /* 用药提示：返回该食物对用药者真正该看的相互作用/禁忌；纯「无…冲突」返回空字符串。
+     兼容「无明确药物冲突；<真实禁忌>」结构——首段以「无」开头时丢掉首段、保留分号后的真实禁忌。
+     banner 与 runScreen 共用，既避免「无 X 冲突」这类死分支自相矛盾，也不再吞掉分号后的禁忌。 */
+  function rxNote(f) {
+    var s = (f.interactions || "").trim();
+    if (!s) return "";
+    var parts = s.split(/[;；]/).map(function (x) { return x.trim(); }).filter(Boolean);
+    if (parts[0].charAt(0) === "无") return parts.slice(1).join("；");
+    return parts.join("；");
+  }
+
   /* ---------- 个人筛查 ---------- */
   function runScreen() {
     var res = $("#screenResults");
@@ -2561,7 +2570,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
       var why;
       if (hitCond.length) {
         why = '<span class="u">先问医生：</span>你选了「' + hitCond.join("、") + '」，' +
-              (f.interactions && f.interactions !== "基本无药物冲突" ? f.interactions : "需结合自身情况评估");
+              (rxNote(f) || "需结合自身情况评估");
         cols.caution.push({ f: f, why: why, tier: effTier });
       } else if (effTier === "red") {
         why = (usedClaim ? "「" + usedClaim.use + "」用途：" + usedClaim.note : f.verdict);
@@ -2599,7 +2608,6 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
     // 控件状态
     $$("#tierbar .tierbtn").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-t") === S.tier ? "true" : "false"); });
     $$("#targetChips .fchip").forEach(function (c) { c.setAttribute("aria-pressed", S.targets.indexOf(c.textContent) > -1 ? "true" : "false"); });
-    $$("#riskChips .fchip").forEach(function (c) { c.setAttribute("aria-pressed", S.risks.indexOf(c.textContent.replace("⚠ ", "")) > -1 ? "true" : "false"); });
     $("#viewFull").setAttribute("aria-pressed", S.view === "full" ? "true" : "false");
     $("#viewCompact").setAttribute("aria-pressed", S.view === "compact" ? "true" : "false");
     $("#searchWrap").classList.toggle("has-val", !!S.q);
@@ -2624,7 +2632,7 @@ window.STRENGTH_LABEL={4:"证据 强",3:"证据 中等",2:"证据 有限",1:"证
       else { eb.textContent = "没有匹配的食物"; es.textContent = "换个筛选条件试试。"; }
     }
     cards.style.display = list.length ? "flex" : "none";
-    var activeFilters = (S.tier !== "all") || S.targets.length || S.risks.length || S.q || S.conds.length || S.goals.length;
+    var activeFilters = (S.tier !== "all") || S.targets.length || S.q || S.conds.length || S.goals.length;
     $("#resultCount").innerHTML = "共 <b>" + list.length + "</b> / " + FOODS.length + " 种" +
       (activeFilters ? " · 已筛选" : "") +
       (hitCount ? ' · <b class="pcount">你的情况命中 ' + hitCount + ' 项（置顶标红）</b>' : "");

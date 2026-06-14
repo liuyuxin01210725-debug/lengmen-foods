@@ -8,7 +8,8 @@
 
 ## 用法
 
-- 在线版：<https://liuyuxin01210725-debug.github.io/lengmen-foods/>
+- 在线版（主）：<https://lengmen-foods.vercel.app/>（与 `index.html` 的 canonical 一致）
+- 镜像：<https://liuyuxin01210725-debug.github.io/lengmen-foods/>
 - 本地：直接用浏览器打开 `index.html` 即可，无后端、无依赖、无构建。
 
 ## 内容原则
