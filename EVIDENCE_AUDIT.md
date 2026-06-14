@@ -133,16 +133,19 @@
 | 胡萝卜 | 新增高频条目，方向基本准确 | 熟食加脂肪提高类胡萝卜素吸收可保留；皮肤变黄是无害可逆。 |
 | 蘑菇 | 新增高频条目，方向基本准确 | UV/日晒提高维 D2 是亮点；生食和野生菇风险保留。 |
 
-## 仍需补强的来源
+## 来源补强进度
 
-这些不阻塞工具使用，但不应承载强疗效结论：
+**2026-06-14 已补**（加一手 / 直接出处，均已联网核验可达）：
 
-- 枸杞：当前主要是 Drugs.com，后续可补 PubMed 个案/综述。
-- 腰果：当前有 Wikipedia / Medical News Today，后续应换食品安全或植物毒理来源。
-- 葵花籽（瓜子）：ConsumerLab 说法需要直接来源或软化。
-- 硅藻土：当前 Healthline，后续应换 FDA/毒理/职业暴露来源。
-- 椰子糖：当前 Healthline / Cleveland Clinic，GI 数字需要更强出处。
-- 鸡胸肉 vs 鸡腿肉：当前 FoodStruct，后续换 USDA FoodData Central。
+- 枸杞：加 Toxicology Reports 2015 枸杞酒+华法林出血一手案例（PMC5598317，INR 2.46→3.84），Drugs.com 保留为二级。
+- 腰果：Wikipedia 换为 Indian J Crit Care Med 2016 腰果壳油（CNSL）中毒一手案例（PMC4759998）。
+- 葵花籽（瓜子）：补 ConsumerLab 2024 镉检测**原始出处**，warn 里“ConsumerLab 检测”不再是无引用断言。
+- 硅藻土：补 OSHA 结晶二氧化硅健康危害一手页（矽肺/肺癌/COPD/肾病）；`osha.gov`、`cdc.gov` 已加入一级源白名单。
+
+**仍待补**（不阻塞使用、不承载强结论）：
+
+- 椰子糖：GI 数字仍为 Healthline / Cleveland Clinic 二级汇总；University of Sydney GI 库列为 54，但无确切单条目一手 URL，暂按二级处理、不编链接。
+- 鸡胸肉 vs 鸡腿肉：仍用 FoodStruct；USDA FoodData Central 为 JS 应用、无稳定直链可挂，暂不替换（FoodStruct 数值本身无误）。
 
 ## 重点来源
 

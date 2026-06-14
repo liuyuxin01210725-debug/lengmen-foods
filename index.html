@@ -684,7 +684,7 @@ var app=document.getElementById('app');if(app)app.setAttribute('data-density','c
 <script>(function(){
 
 function linkHost(u){try{return new URL(u).host;}catch(e){return "";}}
-var SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","hhs.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu","acc.org","cambridge.org","acs.org","plos.org","jacionline.org","clinicaltrials.gov"];
+var SRC_TIER1=["ncbi.nlm.nih.gov","nih.gov","nccih.nih.gov","cochranelibrary.com","who.int","iarc.who.int","fda.gov","hhs.gov","cdc.gov","osha.gov","efsa.europa.eu","ftc.gov","ahajournals.org","heart.org","jamanetwork.com","nejm.org","thelancet.com","nature.com","science.org","sciencedirect.com","springer.com","wiley.com","onlinelibrary.wiley.com","oup.com","academic.oup.com","nutrition.org","amjmed.com","liebertpub.com","frontiersin.org","mdpi.com","tandfonline.com","hsph.harvard.edu","oregonstate.edu","acc.org","cambridge.org","acs.org","plos.org","jacionline.org","clinicaltrials.gov"];
 var SRC_TIER2=["examine.com","healthline.com","medicalnewstoday.com","drugs.com","goodrx.com","clevelandclinic.org","mskcc.org","arthritis.org","breastcancer.org","wikipedia.org","foodstruct.com","omegaquant.com","glycemicsnap.com","merckvetmanual.com","ucihealth.org","associatesinnephrologypc.com","drkarafitzgerald.com","westonaprice.org","chriskresser.com","aafp.org"];
 function srcRank(u){var h=linkHost(u);if(h==="web.archive.org"){var wm=String(u).match(/web\.archive\.org\/web\/[^/]+\/(https?:\/\/[^\s"]+)/);if(wm)h=linkHost(wm[1]);}if(SRC_TIER1.some(function(d){return h===d||h.endsWith("."+d);}))return 1;if(SRC_TIER2.some(function(d){return h===d||h.endsWith("."+d);}))return 2;return 0;}
 function srcAccess(u){u=String(u||"");if(u.indexOf("examine.com")>-1)return "secondary";
@@ -893,7 +893,7 @@ const FOODS = [
     hype:'"抗衰老神果""增强免疫""明目养肝长寿"——好水果一个，但不是药。',
     use:{freq:"当零食、泡水、煮粥都行，正常吃就好。", scene:"喜欢这个味道、想补点护眼的玉米黄质。", caution:"服华法林等抗凝药者避免大量；其余人群正常吃无虞。"},
     evChips:["7 项低质量 RCT","护眼（玉米黄质）有点信号","华法林相互作用报告"],
-    links:[{label:"Drugs.com：枸杞（证据与安全）", url:"https://www.drugs.com/npp/goji-berry.html"}],
+    links:[{label:"Toxicology Reports：枸杞酒+华法林致出血案例（2015）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC5598317/"},{label:"Drugs.com：枸杞（证据与安全）", url:"https://www.drugs.com/npp/goji-berry.html"}],
     secondary:null
   },
   {
@@ -1298,7 +1298,7 @@ const FOODS = [
   {
     name:"添加糖", tier:"amber",
     verdict:"明确该少吃，但「果糖独家有毒」被夸大——等热量替换实验里果糖和葡萄糖差异远小于网红说法，过量+液体形式才是主因。",
-    targets:[], risks:["糖尿病用药","肝功能"],
+    targets:["血糖"], risks:["糖尿病用药","肝功能"],
     good:"限制添加糖能降低甘油三酯、减重、改善牙齿和肝脏脂肪。天然水果不算添加糖。",
     warn:"AHA 上限：女性 ≤25g/天（6 茶匙），男性 ≤36g/天（9 茶匙）；一罐可乐就接近女性上限。果糖几乎只在肝脏代谢、不直接升血糖却更容易转脂肪——但前提是过量+液体形式。",
     hype:'"果糖比葡萄糖更毒""糖是独家毒药"——在等热量对照下差异远小于宣传，关键变量是过量+液体形式（含糖饮料 > 水果）。',
@@ -1352,7 +1352,7 @@ const FOODS = [
     hype:'"生腰果更营养"——是误解，市售"生腰果"均经蒸汽/烘焙脱毒，没有真正能直接吃的纯生腰果。',
     use:{freq:"每天 1 盎司（约 28g，16-18 颗）。", scene:"零食、炒菜、坚果奶替代乳制品。", caution:"树坚果过敏者禁；漆树/芒果接触性皮炎史者偶尔交叉反应；不要尝试「树上现摘」。"},
     evChips:["镁 ~83mg/oz（20% DV）","漆酚约 80% 壳油成分","属漆树科 Anacardiaceae","市售一律已脱毒"],
-    links:[{label:"Wikipedia：腰果（含壳油毒性）", url:"https://en.wikipedia.org/wiki/Cashew"},{label:"Medical News Today：腰果营养与风险", url:"https://www.medicalnewstoday.com/articles/309369"}],
+    links:[{label:"Indian J Crit Care Med：腰果壳油（CNSL）中毒案例（2016）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC4759998/"},{label:"Medical News Today：腰果营养与风险", url:"https://www.medicalnewstoday.com/articles/309369"}],
     secondary:null
   },
   {
@@ -1388,7 +1388,7 @@ const FOODS = [
     hype:'"每天一把瓜子补维 E"——剂量没错，但忽略了累计镉负荷与高钠（盐焗瓜子）问题。',
     use:{freq:"每天 1 盎司（约 28g）以内。", scene:"无盐烤制作为零食。", caution:"选择产地透明、第三方检测过重金属的品牌；避免盐焗/重口味产品；孕妇注意镉累积风险。"},
     evChips:["维 E 7.4mg/oz（~50% RDA）","硒 ~27-40% DV","田间镉超欧盟限值（0.5mg/kg）","ConsumerLab：市售普遍含镉"],
-    links:[{label:"Springer：向日葵镉富集研究（2024）", url:"https://link.springer.com/article/10.1007/s11356-023-31631-0"},{label:"PMC：植物镉富集综述（2023）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10001555/"}],
+    links:[{label:"ConsumerLab：葵花籽/葵花籽酱镉检测（2024）", url:"https://www.consumerlab.com/news/cadmium-in-sunflower-seeds-2024/08-19-2024/"},{label:"Springer：向日葵镉富集研究（2024）", url:"https://link.springer.com/article/10.1007/s11356-023-31631-0"},{label:"PMC：植物镉富集综述（2023）", url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10001555/"}],
     secondary:null
   },
   {
@@ -1510,13 +1510,13 @@ const FOODS = [
     hype:"「寄生虫清除」「肠道排毒」「重金属排除」「补硅美容养颜」——人体研究几乎空白。",
     use:{freq:"如真要尝试，仅食品级、小剂量、短期；最好别碰。", scene:"无明确「必须用」的场景；寄生虫优先寻医，不是自疗。", caution:"孕妇、儿童、肺病患者；操作时务必戴口罩防吸入。"},
     evChips:["FDA GRAS（食品级）","无人体寄生虫证据","吸入有矽肺风险","物种类比谬误"],
-    links:[{label:"Healthline：硅藻土综述", url:"https://www.healthline.com/nutrition/what-is-diatomaceous-earth"}],
+    links:[{label:"OSHA：结晶二氧化硅健康危害（矽肺/肺癌）", url:"https://www.osha.gov/silica-crystalline/health-effects"},{label:"Healthline：硅藻土综述", url:"https://www.healthline.com/nutrition/what-is-diatomaceous-earth"}],
     secondary:null
   },
   {
     name:"小苏打（内服）", tier:"amber",
     verdict:"高强度运动前 0.2-0.3g/kg 是真有 RCT 证据的——但喝下去先要扛过腹泻和呕吐，「碱化抗癌」则是伪科学。",
-    targets:["运动表现"], risks:["高血压","孕妇","药物相互作用"],
+    targets:["运动表现"], risks:["高血压","孕妇","药物相互作用","肾病/高钾"],
     good:"国际运动营养学会（ISSN）立场声明：0.2-0.3 g/kg 体重，运动前 60-90 分钟服用，能改善 30 秒-12 分钟的高强度运动（冲刺、举重、间歇跑、划船）表现。短期偶尔缓解胃酸反流。",
     warn:"肠胃副作用普遍（胀气、腹泻、恶心、呕吐）；每克含约 273mg 钠；长期或大剂量可能引发代谢性碱中毒、低钾、高血压、心衰恶化。",
     hype:"「碱性体质抗癌」「排毒/净化血液」「治愈一切慢病」——主流肿瘤学不支持，属伪科学（Mark Sircus 那一套）。",
